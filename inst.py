@@ -18,7 +18,7 @@ class Thumb32BL(ctypes.LittleEndianStructure):
 	]
 
 	def __new__(cls, val : Union[int, bytes, bytearray] = None):
-		if isinstance(val, Union[bytes, bytearray]):
+		if isinstance(val, (bytes, bytearray)):
 			assert len(val) == 4, 'BL instruction must be 4 bytes'
 			return cls.from_buffer_copy(val)
 		else:
@@ -30,7 +30,7 @@ class Thumb32BL(ctypes.LittleEndianStructure):
 			struct.pack_into('I', self, 0, val)
 
 	def set(self, val : Union[int, bytes, bytearray]):
-		if isinstance(val, Union[bytes, bytearray]):
+		if isinstance(val, (bytes, bytearray)):
 			memmove(pointer(self), val, sizeof(self))
 		elif isinstance(val, int):
 			# value must be 32 bits, trim excess
@@ -65,7 +65,7 @@ class Thumb16BT1(ctypes.LittleEndianStructure):
 	]
 
 	def __new__(cls, val : Union[int, bytes, bytearray] = None):
-		if isinstance(val, Union[bytes, bytearray]):
+		if isinstance(val, (bytes, bytearray)):
 			assert len(val) == 2, 'T1 encoding must be 2 bytes'
 			return cls.from_buffer_copy(val)
 		else:
@@ -77,7 +77,7 @@ class Thumb16BT1(ctypes.LittleEndianStructure):
 			struct.pack_into('H', self, 0, val)
 
 	def set(self, val : Union[int, bytes, bytearray] = None):
-		if isinstance(val, Union[bytes, bytearray]):
+		if isinstance(val, (bytes, bytearray)):
 			memmove(pointer(self), val, sizeof(self))
 		elif isinstance(val, int):
 			# value must be 16 bits, trim excess
@@ -112,7 +112,7 @@ class Thumb16BT2(ctypes.LittleEndianStructure):
 	]
 
 	def __new__(cls, val : Union[int, bytes, bytearray] = None):
-		if isinstance(val, Union[bytes, bytearray]):
+		if isinstance(val, (bytes, bytearray)):
 			assert len(val) == 2, 'T2 encoding must be 2 bytes'
 			return cls.from_buffer_copy(val)
 		else:
@@ -124,7 +124,7 @@ class Thumb16BT2(ctypes.LittleEndianStructure):
 			struct.pack_into('H', self, 0, val)
 
 	def set(self, val : Union[int, bytes, bytearray] = None):
-		if isinstance(val, Union[bytes, bytearray]):
+		if isinstance(val, (bytes, bytearray)):
 			memmove(pointer(self), val, sizeof(self))
 		elif isinstance(val, int):
 			# value must be 16 bits, trim excess
@@ -165,7 +165,7 @@ class Thumb32BT3(ctypes.LittleEndianStructure):
 	]
 
 	def __new__(cls, val : Union[int, bytes, bytearray] = None):
-		if isinstance(val, Union[bytes, bytearray]):
+		if isinstance(val, (bytes, bytearray)):
 			assert len(val) == 4, 'T3 encoding must be 4 bytes'
 			return self.from_buffer_copy(val)
 		else:
@@ -177,7 +177,7 @@ class Thumb32BT3(ctypes.LittleEndianStructure):
 			struct.pack_into('I', self, 0, val)
 		
 	def set(self, val : Union[int, bytes, bytearray] = None):
-		if isinstance(val, Union[bytes, bytearray]):
+		if isinstance(val, (bytes, bytearray)):
 			memmove(pointer(self), val, sizeof(self))
 		elif isinstance(val, int):
 			# value must be 32 bits, trim excess
@@ -219,7 +219,7 @@ class Thumb32BT4(ctypes.LittleEndianStructure):
 	]
 
 	def __new__(cls, val : Union[int, bytes, bytearray] = None):
-		if isinstance(val, Union[bytes, bytearray]):
+		if isinstance(val, (bytes, bytearray)):
 			assert len(val) == 4, 'T4 encoding must be 4 bytes'
 			return self.from_buffer_copy(val)
 		else:
@@ -231,7 +231,7 @@ class Thumb32BT4(ctypes.LittleEndianStructure):
 			struct.pack_into('I', self, 0, val)
 
 	def set(self, val : Union[int, bytes, bytearray] = None):
-		if isinstance(val, Union[bytes, bytearray]):
+		if isinstance(val, (bytes, bytearray)):
 			memmove(pointer(self), val, sizeof(self))
 		elif isinstance(val, int):
 			# value must be 32 bits, trim excess
@@ -263,7 +263,7 @@ class ThumbBranch(ctypes.Union):
 	]
 
 	def __new__(cls, val : Union[int, bytes, bytearray]):
-		if isinstance(val, Union[bytes, bytearray]):
+		if isinstance(val, (bytes, bytearray)):
 			assert len(val) <= 4, 'branch has maximum 4 bytes'
 			if len(val) < 4:
 				val += b'\x00' * (4 - len(val))
@@ -316,7 +316,7 @@ class Thumb16CompareBranch(ctypes.LittleEndianStructure):
 		('op',   ctypes.c_uint16, 4),
 	]
 	def __new__(cls, val : Union[int, bytes, bytearray]):
-		if isinstance(val, Union[bytes, bytearray]):
+		if isinstance(val, (bytes, bytearray)):
 			assert len(val) == 2, 'CBZ and CBNZ encoding must be 2 bytes'
 			return cls.from_buffer_copy(val)
 		else:
@@ -359,7 +359,7 @@ class Thumb32TableBranch(ctypes.LittleEndianStructure):
 	]
 
 	def __new__(cls, val : Union[int, bytes, bytearray] = None):
-		if isinstance(val, Union[bytes, bytearray]):
+		if isinstance(val, (bytes, bytearray)):
 			assert len(val) == 4, 'T1 encoding must be 4 bytes'
 			return cls.from_buffer_copy(val)
 		else:
@@ -371,7 +371,7 @@ class Thumb32TableBranch(ctypes.LittleEndianStructure):
 			struct.pack_into('I', self, 0, val)
 
 	def set(self, val : Union[int, bytes, bytearray] = None):
-		if isinstance(val, Union[bytes, bytearray]):
+		if isinstance(val, (bytes, bytearray)):
 			memmove(pointer(self), val, sizeof(self))
 		elif isinstance(val, int):
 			# value must be 32 bits, trim excess

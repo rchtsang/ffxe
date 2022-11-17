@@ -130,7 +130,7 @@ class APSRRegister(ctypes.LittleEndianStructure):
 	}
 
 	def __new__(cls, val : Union[int, bytes, bytearray]):
-		if isinstance(val, Union[bytes, bytearray]):
+		if isinstance(val, (bytes, bytearray)):
 			assert len(val) == 4, "register is 4 bytes"
 			return self.from_buffer_copy(val)
 		else:
@@ -149,7 +149,7 @@ class APSRRegister(ctypes.LittleEndianStructure):
 		return result
 
 	def set(self, val : Union[int, bytes, bytearray]):
-		if isinstance(val, Union[bytes, bytearray]):
+		if isinstance(val, (bytes, bytearray)):
 			memmove(pointer(self), val, sizeof(self))
 		elif isinstance(val, int):
 			# value must be 32 bits, trim excess

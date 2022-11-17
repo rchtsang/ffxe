@@ -248,6 +248,7 @@ class EmFXEngine():
 		self.context.pc = self.entry
 		self.uc.reg_write(UC_ARM_REG_SP, self.stack_base)
 		self.uc.reg_write(UC_ARM_REG_PC, self.entry)
+		self.context.uc_context = self.uc.context_save()
 		self.context.callstack.append((
 			self.entry,							# function address
 			self.uc.reg_read(UC_ARM_REG_SP),	# frame pointer
@@ -276,7 +277,7 @@ class EmFXEngine():
 		if self.bblock:
 			# not the first block
 
-			self.bblock.quota -= 1
+			# self.bblock.quota -= 1
 
 			if address not in self.bblocks:
 				self.bblocks[address] = BBlock(
@@ -326,7 +327,7 @@ class EmFXEngine():
 				target = uc.reg_read(UC_ARM_REG_PC) + 4 + bl_insn.imm32
 			elif cs_insn.id == ARM_INS_BLX:
 				dest_reg = cs_insn.op_find(ARM_OP_REG, 1)
-				target = uc.reg_read(dest_reg)
+				target = uc.reg_read(dest_reg.reg)
 			else:
 				raise Exception("this shouldn't happen")
 
@@ -335,7 +336,6 @@ class EmFXEngine():
 				uc.reg_read(UC_ARM_REG_SP),			# frame pointer
 				uc.reg_read(UC_ARM_REG_PC) + size,	# return address
 			)
-
 			if itstate & 0xF:
 				# call in IT block
 				cs_cond = (((itstate >> 4) & 0xF) + 1) % 16
@@ -343,15 +343,17 @@ class EmFXEngine():
 				if self._get_cond_status(cs_cond):
 					# branch taken, backup context for next instruction
 					context.pc = address + size
-					self.context.callstack.append(stack_info)
+					context.callstack.append(stack_info)
 				else:
 					# branch not taken, backup context for jump target
 					context.pc = target
 					context.callstack.append(stack_info)
 				self.jobs.append(context)
+				self.context.callstack.append(stack_info)
 			else:
 				# unconditional call, just add to callstack
 				self.context.callstack.append(stack_info)
+				# self.logger.info('appended to stack')
 
 		elif cs_insn.id == ARM_INS_B:
 			# handle forking of context on conditional branches
@@ -401,7 +403,7 @@ class EmFXEngine():
 			# also a conditional branch, so handle forking
 			cb_insn = Thumb16CompareBranch(cs_insn.bytes)
 			cmp_reg = cs_insn.op_find(ARM_OP_REG, 1)
-			cmp_val = uc.reg_read(cmp_reg)
+			cmp_val = uc.reg_read(cmp_reg.reg)
 			context = self.backup()
 			if (cb_insn.nz and cmp_val) or not (cb_insn.nz or cmp_val):
 				# branch taken, backup context for next instruction
@@ -482,6 +484,7 @@ class EmFXEngine():
 
 	def backup(self):
 		"""save the cpu and mem state"""
+		self.logger.info("backup context @ 0x{:x}".format(self.context.pc))
 		context = copy(self.context)
 		context.uc_context = self.uc.context_save()
 		return context
@@ -490,6 +493,7 @@ class EmFXEngine():
 	def restore(self, context : Type[EmFXContext]):
 		"""restore cpu and mem state"""
 		# zero out locations that were written to after snapshot was taken
+		self.logger.info("restore context @ 0x{:x}".format(context.pc))
 		for addr in self.context.mem_state.keys():
 			if addr not in context.mem_state:
 				self.uc.mem_write(addr, b'\x00\x00\x00\x00')
