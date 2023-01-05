@@ -9,6 +9,79 @@ from unicorn.arm_const import *
 from mappings import *
 
 
+
+###########################################################
+## REGISTERS
+###########################################################
+
+
+class APSRRegister(ctypes.LittleEndianStructure):
+    """bit fields for apsr register"""
+    _pack_ = 1
+    _fields_ = [
+        ('rsvd0', ctypes.c_uint32, 16),
+        ('ge',    ctypes.c_uint32, 4),
+        ('rsvd1', ctypes.c_uint32, 7),
+        ('Q',     ctypes.c_uint32, 1),  # dsp overflow and saturation
+        ('V',     ctypes.c_uint32, 1),  # overflow
+        ('C',     ctypes.c_uint32, 1),  # carry or borrow
+        ('Z',     ctypes.c_uint32, 1),  # zero
+        ('N',     ctypes.c_uint32, 1),  # negative
+    ]
+    COND_CODE_SUFX = {
+        ARM_CC_EQ : lambda apsr: apsr.Z == 1,
+        ARM_CC_NE : lambda apsr: apsr.Z == 0,
+        ARM_CC_HS : lambda apsr: apsr.C == 1,
+        ARM_CC_LO : lambda apsr: apsr.C == 0,
+        ARM_CC_MI : lambda apsr: apsr.N == 1,
+        ARM_CC_PL : lambda apsr: apsr.N == 0,
+        ARM_CC_VS : lambda apsr: apsr.V == 1,
+        ARM_CC_VC : lambda apsr: apsr.V == 0,
+        ARM_CC_HI : lambda apsr: apsr.C == 1 and apsr.Z == 0,
+        ARM_CC_LS : lambda apsr: apsr.C == 0 or  apsr.Z == 1,
+        ARM_CC_GE : lambda apsr: apsr.N == apsr.V,
+        ARM_CC_LT : lambda apsr: apsr.N != apsr.V,
+        ARM_CC_GT : lambda apsr: apsr.Z == 0 and apsr.N == apsr.V,
+        ARM_CC_LE : lambda apsr: apsr.Z == 1 and apsr.N != apsr.V,
+        ARM_CC_AL : lambda apsr: True,
+    }
+
+    def __new__(cls, val : Union[int, bytes, bytearray]):
+        if isinstance(val, (bytes, bytearray)):
+            assert len(val) == 4, "register is 4 bytes"
+            return self.from_buffer_copy(val)
+        else:
+            return super().__new__(cls)
+
+    def __init__(self, val : Union[int, bytes, bytearray]):
+        if isinstance(val, int):
+            val &= 0xFFFFFFFF
+            struct.pack_into('I', self, 0, val)
+
+    def __copy__(self):
+        cls = self.__class__
+        result = cls.__new__(cls, int.from_bytes(self, 'little'))
+        for k, v in self.__dict__.items():
+            setattr(result, k, copy(v))
+        return result
+
+    def set(self, val : Union[int, bytes, bytearray]):
+        if isinstance(val, (bytes, bytearray)):
+            memmove(pointer(self), val, sizeof(self))
+        elif isinstance(val, int):
+            # value must be 32 bits, trim excess
+            val &= 0xFFFFFFFF
+            struct.pack_into('I', self, 0, val)
+        else:
+            raise Exception(f"APSRRegister: invalid set val {val}")
+
+    def get_cond(self, cond_code):
+        """get current conditional status 
+        based on capstone conditional code suffix definitions
+        """
+        return self.COND_CODE_SUFX[cond_code](self)
+
+
 ###########################################################
 ## BRANCH INSTRUCTIONS
 ###########################################################
@@ -431,6 +504,8 @@ class LDRImmT1(ctypes.LittleEndianStructure):
     def load_size(self):
         if self.op == 0b01101:
             return 4
+        elif self.op == 0b10001:
+            return 2
         elif self.op == 0b01111:
             return 1
 
@@ -456,7 +531,7 @@ class LDRImmT1(ctypes.LittleEndianStructure):
 
     @property
     def imm32(self):
-        return self.imm5 << 2
+        return self.imm5 << (self.load_size // 2)
 
 
 class LDRImmT2(ctypes.LittleEndianStructure):
@@ -938,6 +1013,8 @@ class LDRRegT2(ctypes.LittleEndianStructure):
     def load_size(self):
         if self.op0 == 0b111110000101:
             return 4 # ldr
+        elif self.op0 == 0b111110000011:
+            return 2 # ldrh
         elif self.op0 == 0b111110000001:
             return 1 # ldrb
 
@@ -1122,7 +1199,7 @@ class LDMT2(ctypes.LittleEndianStructure):
 
 
 class ThumbLDM(ctypes.Union):
-    """union class for ldm instruction
+    """union class for ldm/ldmia instruction
     see Section A7.7.40
     """
     _pack_ = 1
@@ -1162,6 +1239,55 @@ class ThumbLDM(ctypes.Union):
     def num_regs(self):
         return bin(self.enc.regs).count('1')
 
+    @property
+    def writes_pc(self):
+        return self.enc.regs & (1 << 15)
+
+
+class ThumbLDMDB(ctypes.LittleEndianStructure):
+    """struct class for ldmdb instruction
+    see Section A7.7.41
+    """
+    _pack_ = 1
+    _fields_ = [
+        ('Rn',      ctypes.c_uint32, 4),
+        ('op',      ctypes.c_uint32, 12),
+        ('reglist', ctypes.c_uint32, 16),
+    ]
+
+    def __new__(cls, val : Union[int, bytes, bytearray]):
+        if isinstance(val, (bytes, bytearray)):
+            assert len(val) <= 4, "LDM is 2 or 4 bytes"
+            if len(val) < 4:
+                val += b'\x00' * (4 - len(val))
+            return cls.from_buffer_copy(val)
+        else:
+            return super().__new__(cls)
+
+    def __init__(self, val : Union[int, bytes, bytearray]):
+        if isinstance(val, int):
+            val &= 0xFFFFFFFF
+            struct.pack_into('I', self, 0, val)
+        self.regs = self.reglist & 0xDFF
+        self.W = (self.op >> 1) & 1
+        self.P = (self.reglist >> 15) & 1
+        self.M = (self.reglist >> 14) & 1
+
+    @property
+    def valid(self):
+        return (self.op & (~2)) == 0b111010010001
+
+    def addresses(self, uc : Type[Uc]):
+        Rn = uc.reg_read(UC_REG_MAP[self.enc.n])
+        return [Rn + (i * 4) for i in range(15) if self.regs & (1 << i)]
+
+    @property
+    def num_regs(self):
+        return bin(self.regs).count('1')
+
+    @property
+    def writes_pc(self):
+        return bool(self.regs & (1 << 15))
 
 class LDRDImm(ctypes.LittleEndianStructure):
     """struct for ldrd instruction (A7.7.49)"""
@@ -1955,3 +2081,131 @@ class ThumbSTRD(ctypes.LittleEndianStructure):
             address: uc.reg_read(UC_REG_MAP[self.Rt]),
             address + 4: uc.reg_read(UC_REG_MAP[self.Rt2])
         }
+
+
+class ThumbPushT1(ctypes.LittleEndianStructure):
+    """struct for push instruction (A7.7.99)"""
+    _pack_ = 1
+    _fields_ = [
+        ('reglist', ctypes.c_uint16, 8),
+        ('M',       ctypes.c_uint16, 1),
+        ('op',      ctypes.c_uint16, 7),
+    ]
+
+    def __new__(cls, val : Union[int, bytes, bytearray]):
+        if isinstance(val, (bytes, bytearray)):
+            assert len(val) == 2, "push T1 is 2 bytes"
+            return cls.from_buffer_copy(val)
+        else:
+            return super().__new__(cls)
+
+    def __init__(self, val : Union[int, bytes, bytearray]):
+        if isinstance(val, int):
+            val &= 0xFFFF
+            struct.pack_into('H', self, 0, val)
+        self.registers = (self.M << 14) | self.reglist
+
+    @property
+    def valid(self):
+        return (self.op == 0b1011010)
+
+
+class ThumbPushT2(ctypes.LittleEndianStructure):
+    """struct for push instruction (A7.7.99)"""
+    _pack_ = 1
+    _fields_ = [
+        ('op',      ctypes.c_uint32, 16),
+        ('reglist', ctypes.c_uint32, 13),
+        ('rsvd0',   ctypes.c_uint32, 1),
+        ('M',       ctypes.c_uint32, 1),
+        ('rsvd1',   ctypes.c_uint32, 1),
+    ]
+
+    def __new__(cls, val : Union[int, bytes, bytearray]):
+        if isinstance(val, (bytes, bytearray)):
+            assert len(val) == 4, "push T2 is 4 bytes"
+            return cls.from_buffer_copy(val)
+        else:
+            return super().__new__(cls)
+
+    def __init__(self, val : Union[int, bytes, bytearray]):
+        if isinstance(val, int):
+            val &= 0xFFFFFFFF
+            struct.pack_into('I', self, 0, val)
+        self.registers = (self.M << 14) | self.reglist
+
+    @property
+    def valid(self):
+        return (self.op == 0b1110100100101101)
+
+
+class ThumbPushT3(ctypes.LittleEndianStructure):
+    """struct for push instruction (A7.7.99)"""
+    _pack_ = 1
+    _fields_ = [
+        ('op0',      ctypes.c_uint32, 16),
+        ('op1',      ctypes.c_uint32, 12),
+        ('Rt',       ctypes.c_uint32, 4),
+    ]
+
+    def __new__(cls, val : Union[int, bytes, bytearray]):
+        if isinstance(val, (bytes, bytearray)):
+            assert len(val) == 4, "push T3 is 4 bytes"
+            return cls.from_buffer_copy(val)
+        else:
+            return super().__new__(cls)
+
+    def __init__(self, val : Union[int, bytes, bytearray]):
+        if isinstance(val, int):
+            val &= 0xFFFFFFFF
+            struct.pack_into('I', self, 0, val)
+        self.registers = (1 << self.Rt)
+
+    @property
+    def valid(self):
+        return (
+            self.op0 == 0b1111100001001101
+            and self.op1 == 0b110100000100
+        )
+
+
+class ThumbPush(ctypes.Union):
+    """union for push instruction"""
+    _pack_ = 1
+    _fields_ = [
+        ('T1', ThumbPushT1),
+        ('T2', ThumbPushT2),
+        ('T3', ThumbPushT3),
+    ]
+
+    def __new__(cls, val : Union[int, bytes, bytearray]):
+        if isinstance(val, (bytes, bytearray)):
+            assert len(val) <= 4, "Thumb is 2 or 4 bytes"
+            val += b'\x00' * (4 - len(val))
+            return cls.from_buffer_copy(val)
+        else:
+            return super().__init__(cls)
+
+    def __init__(self, val : Union[int, bytes, bytearray]):
+        if isinstance(val, int):
+            val &= 0xFFFFFFFF
+            struct.pack_into('I', self, 0, val)
+
+    @property
+    def enc(self):
+        for e in ['T1', 'T2', 'T3']:
+            if getattr(self, e).valid:
+                return getattr(self, e)
+
+    @property
+    def valid(self):
+        return self.enc
+
+    @property
+    def regs(self):
+        return self.enc.registers
+
+    @property
+    def num_regs(self):
+        return bin(self.enc.regs).count('1')
+

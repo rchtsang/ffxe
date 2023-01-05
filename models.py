@@ -41,6 +41,17 @@ class FirmwareImage():
                 stdout=subprocess.PIPE,
             ).stdout.decode('utf-8').split('\n')
 
+            # convert tabs to spaces (maintaining visual spacing)
+            for i, line in enumerate(self.disasm_txt):
+                newline = []
+                for j, char in enumerate(line):
+                    if char == '\t':
+                        newline.append(' '*(4 - (j % 4)))
+                    else:
+                        newline.append(char)
+                self.disasm_txt[i] = ''.join(newline)
+
+
             # construct addr-to-line mapping and disasm dict
             for lineno, line in enumerate(self.disasm_txt):
                 match = self.RE_PTRN_DISASM.search(line)
@@ -113,68 +124,212 @@ class FirmwareImage():
         self.size = len(self.raw)
 
 
-class APSRRegister(ctypes.LittleEndianStructure):
-    """bit fields for apsr register"""
-    _pack_ = 1
-    _fields_ = [
-        ('rsvd0', ctypes.c_uint32, 16),
-        ('ge',    ctypes.c_uint32, 4),
-        ('rsvd1', ctypes.c_uint32, 7),
-        ('Q',     ctypes.c_uint32, 1),  # dsp overflow and saturation
-        ('V',     ctypes.c_uint32, 1),  # overflow
-        ('C',     ctypes.c_uint32, 1),  # carry or borrow
-        ('Z',     ctypes.c_uint32, 1),  # zero
-        ('N',     ctypes.c_uint32, 1),  # negative
-    ]
-    COND_CODE_SUFX = {
-        ARM_CC_EQ : lambda apsr: apsr.Z == 1,
-        ARM_CC_NE : lambda apsr: apsr.Z == 0,
-        ARM_CC_HS : lambda apsr: apsr.C == 1,
-        ARM_CC_LO : lambda apsr: apsr.C == 0,
-        ARM_CC_MI : lambda apsr: apsr.N == 1,
-        ARM_CC_PL : lambda apsr: apsr.N == 0,
-        ARM_CC_VS : lambda apsr: apsr.V == 1,
-        ARM_CC_VC : lambda apsr: apsr.V == 0,
-        ARM_CC_HI : lambda apsr: apsr.C == 1 and apsr.Z == 0,
-        ARM_CC_LS : lambda apsr: apsr.C == 0 or  apsr.Z == 1,
-        ARM_CC_GE : lambda apsr: apsr.N == apsr.V,
-        ARM_CC_LT : lambda apsr: apsr.N != apsr.V,
-        ARM_CC_GT : lambda apsr: apsr.Z == 0 and apsr.N == apsr.V,
-        ARM_CC_LE : lambda apsr: apsr.Z == 1 and apsr.N != apsr.V,
-        ARM_CC_AL : lambda apsr: True,
-    }
+class BBlock():
+    """
+    A class for basic block information
+    """
+    def __init__(self, address, size, fn_addr, bytedata, 
+            parent : Type['BBlock']=None, 
+            isr : int=0,
+            contrib : bool=False, 
+            indirect : bool=False, 
+            returns : bool=False):
+        self.addr = address         # starting address of the block
+        self.size = size            # block size in bytes
+        self.quota = 1              # execution quota
+        self.contrib = contrib      # contributes to indirect branch
+        self.indirect = indirect    # is indirect branch block
+        self.returns = returns      # ends in return (sp change then bx)
+        self.fn_addr = fn_addr      # starting address of the block's function
+        self.isrs = {isr}           # set of isrs the block belongs to
+        # parents and children are lists of basic blocks, not addresses
+        self.parents = {parent} if parent else set()
+        self.children = set()
+        self.mem_log = []
+        self.bytes = bytedata
+        self.delete = False
+        # mem log format:
+        # (inst addr, access type, value, mem addr)
 
-    def __new__(cls, val : Union[int, bytes, bytearray]):
-        if isinstance(val, (bytes, bytearray)):
-            assert len(val) == 4, "register is 4 bytes"
-            return self.from_buffer_copy(val)
-        else:
-            return super().__new__(cls)
+    def contains(self, addr):
+        if isinstance(addr, int):
+            return self.addr <= addr < (self.addr + size)
+        return False
 
-    def __init__(self, val : Union[int, bytes, bytearray]):
-        if isinstance(val, int):
-            val &= 0xFFFFFFFF
-            struct.pack_into('I', self, 0, val)
+    def __contains__(self, item):
+        return self.contains(item)
+
+    def accesses_mem(self):
+        return len(self.mem_log)
+
+    def __repr__(self):
+        return "<BBlock @ 0x{:08X} : 0x{:08X}>".format(
+            self.addr, self.addr + self.size)
+
+    def __str__(self):
+        return (
+            "[ BBlock @ 0x{:08X}\n".format(self.addr) +
+            "    size     : {}\n".format(hex(self.size)) +
+            "    fn_addr  : {}\n".format(hex(self.fn_addr)) +
+            "    contrib  : {}\n".format(str(self.contrib)) +
+            "    indirect : {}\n".format(str(self.indirect)) +
+            "    returns  : {}\n".format(str(self.returns)) + 
+            "    delete   : {}\n".format(str(self.delete)) +
+            "    parents  : [ {} ]\n".format((',\n' + ' '*16).join([repr(b) for b in self.parents])) +
+            "    children : [ {} ]\n".format((',\n' + ' '*16).join([repr(b) for b in self.children])) +
+            "]"
+        )
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.addr == other.addr
+        return False
+
+    def __hash__(self):
+        return self.addr
+
+    def fmt_mem_log(self):
+        return '\n'.join(["pc:0x{:x} {} 0x{:08X} @ 0x{:08X}".format(
+            *entry) for entry in self.mem_log])
 
     def __copy__(self):
-        cls = self.__class__
-        result = cls.__new__(cls, int.from_bytes(self, 'little'))
-        for k, v in self.__dict__.items():
-            setattr(result, k, copy(v))
-        return result
+        # a basic block is unique and cannot be copied
+        return self
 
-    def set(self, val : Union[int, bytes, bytearray]):
-        if isinstance(val, (bytes, bytearray)):
-            memmove(pointer(self), val, sizeof(self))
-        elif isinstance(val, int):
-            # value must be 32 bits, trim excess
-            val &= 0xFFFFFFFF
-            struct.pack_into('I', self, 0, val)
-        else:
-            raise Exception(f"APSRRegister: invalid set val {val}")
+NullBlock = BBlock(0, 0, 0, b'')
 
-    def get_cond(self, cond_code):
-        """get current conditional status 
-        based on capstone conditional code suffix definitions
-        """
-        return self.COND_CODE_SUFX[cond_code](self)
+
+class CFG():
+    """
+    class for CFG
+    """
+    def __init__(self):
+        self.bblocks = {}   # BBlock objects referenced by address
+        self.edges = set()  # tuples of bblock addresses
+
+    def is_new_block(self, address):
+        """check if block has not yet been added to cfg"""
+        return address not in self.bblocks
+
+    def connect_block(self, bblock : Union[BBlock], parent : Type[BBlock] = None):
+        """add a basic block to the cfg. returns true if successful"""
+        connected = False
+        if bblock.addr not in self.bblocks:
+            self.bblocks[bblock.addr] = bblock
+            connected = True
+        if isinstance(parent, BBlock):
+            self.edges.add((parent.addr, bblock.addr))
+            bblock.parents.add(parent)
+            parent.children.add(bblock)
+            connected = True
+        return connected
+
+    def remove_block(self, bblock : Union[BBlock, int]):
+        """remove a block from the cfg"""
+        # remove the block from the bblocks dict
+        # remove any edge connecting the block in the cfg
+        address = bblock
+        if isinstance(bblock, BBlock):
+            address = bblock.addr
+        if address in self.bblocks:
+            # remove block from bblock list
+            bblock = self.bblocks.pop(address)
+            # remove edges from edge list
+            for e in [e for e in self.edges if bblock.addr in e]:
+                self.edges.remove(e)
+            # remove from parents' child list
+            for parent in bblock.parents:
+                if bblock in parent.children:
+                    parent.children.remove(bblock)
+            # remove from children's parent list
+            for child in bblock.children:
+                if bblock in child.parents:
+                    child.parents.remove(bblock)
+
+    def remove_block_func_edges(self, bblock : Union[BBlock, int], fn_addr : int):
+        """used to remove parent edges with the given function address"""
+        # get block
+        if isinstance(bblock, int):
+            if bblock not in self.bblocks:
+                return
+            bblock = self.bblocks[bblock]
+        # get parent blocks that match fn_addr
+        invalid_parents = [
+            parent for parent in bblock.parents \
+                if parent.fn_addr == fn_addr]
+        # remove found edges
+        for parent in invalid_parents:
+            if parent == NullBlock:
+                continue
+            self.edges.remove((parent.addr, bblock.addr))
+            bblock.parents.remove(parent)
+            parent.children.remove(bblock)
+
+    def backward_reachability(self, bblock : Type[BBlock], ib=True):
+        """find all intraprocedural contributing blocks for given block"""
+        # explore predecessors in BFS fashion
+        queue = [bblock]
+        fn_addr = bblock.fn_addr
+        visited = []
+        current = None
+        # breakpoint()
+        while queue:
+            current = queue.pop(0)
+            print(current)
+            if ib:
+                current.contrib = 1
+            current.quota += 1
+            visited.append(current)
+            for parent in current.parents:
+                if parent.fn_addr == fn_addr and parent not in visited:
+                    queue.append(parent)
+
+    def forward_reachability(self, bblock : Type[BBlock]):
+        """find all return points for given block's function"""
+        fn_addr = bblock.fn_addr
+        ret_blocks = []
+        for block in self.bblocks.values():
+            if (block != bblock
+                    and block.fn_addr == fn_addr
+                    and block.returns):
+                ret_blocks.append(block)
+
+        return ret_blocks
+
+    def split_block(self, bblock : Type[BBlock], subblock : Type[BBlock]):
+        """bblock overlaps with subblock. split bblock and make subblock its child"""
+        # remove overlap
+        bblock.size = subblock.addr - bblock.addr
+        # bblock no longer ends in a branch, so cannot be indirect or return block
+        bblock.indirect = False
+        bblock.returns = False
+        # bblock now has edge to former subblock
+        # subblock's children is union'ed with bblock
+        # bblock's only child is now subblock, 
+        # add bblock as parent to subblock in addition to existing parents
+        self.edges.add((bblock.addr, subblock.addr))
+        subblock.children.union(
+            set([b for b in bblock.children if b not in subblock.children]))
+        bblock.children = [subblock]
+        subblock.parents.add(bblock)
+
+    def resolve_blocks(self):
+        """resolve all overlapping blocks and remove hanging blocks"""
+        addrs = list(sorted(self.bblocks.keys()))
+        for i, addr1 in enumerate(addrs):
+            if (i < len(addrs) - 1):
+                block1 = self.bblocks[addr1]
+                block2 = self.bblocks[addrs[i+1]]
+                if (block1 != block2
+                        and block2.addr < block1.addr + block1.size):
+                    # found overlapping blocks, split bigger one (always block 1)
+                    self.split_block(block1, block2)
+
+        for addr in addrs:
+            # remove floating blocks and blocks marked for delete
+            if ((not self.bblocks[addr].parents
+                    and not self.bblocks[addr].children)
+                    or self.bblocks[addr].delete):
+                self.remove_block(self.bblocks[addr])
+
+

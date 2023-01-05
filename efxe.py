@@ -456,6 +456,7 @@ class EmFXEngine():
                 if itstate & 0xF:
                     # branch is conditional if IT block active
                     cs_cond = (((itstate >> 4) & 0xF) + 1) % 16
+                    context = self.backup()
                     if self._get_cond_status(cs_cond):
                         # branch taken, backup context for next instruction
                         context.pc = self.context.pc + size
@@ -768,7 +769,14 @@ class EmFXEngine():
         # zero out locations that were written to after snapshot was taken
         for addr in self.context.mem_state.keys():
             if addr not in context.mem_state:
-                self.uc.mem_write(addr, b'\x00\x00\x00\x00')
+                try:
+                    self.uc.mem_write(addr, b'\x00\x00\x00\x00')
+                except UcError as e:
+                    self.logger.warning(f"UcError({e.args}) caught")
+                    if e.args == UC_ERR_WRITE_UNMAPPED:
+                        pass
+                    else:
+                        raise e
 
         # restore register state
         self.uc.context_restore(context.uc_context)
