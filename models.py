@@ -133,6 +133,7 @@ class BBlock():
             isr : int=0,
             contrib : bool=False, 
             indirect : bool=False, 
+            target : int=None,
             returns : bool=False):
         self.addr = address         # starting address of the block
         self.size = size            # block size in bytes
@@ -141,6 +142,7 @@ class BBlock():
         self.indirect = indirect    # is indirect branch block
         self.returns = returns      # ends in return (sp change then bx)
         self.fn_addr = fn_addr      # starting address of the block's function
+        self.direct_target = target # if a direct branch (conditional or otherwise)
         self.isrs = {isr}           # set of isrs the block belongs to
         # parents and children are lists of basic blocks, not addresses
         self.parents = {parent} if parent else set()

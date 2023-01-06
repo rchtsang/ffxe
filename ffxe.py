@@ -388,13 +388,17 @@ class FFXEngine():
 
                 # check if block has right function address
                 if (self.context.callstack[-1][0] != bblock.fn_addr
-                        and bblock.fn_addr ^ bblock.addr > 1):
+                        and bblock.fn_addr ^ bblock.addr > 1 # different func addrs
+                        and (self.context.bblock.direct_target
+                            and address ^ self.context.bblock.direct_target > 1)):
                     # if block's fn address conflicts, update it
                     # only if the block isn't already the start of a function
                     # and increment its quota if necessary
                     # also remove any edges from blocks that were 
                     # labelled with the incorrect function address
                     # since those are likely mistaken connections
+                    # ok, apparently not always. so don't do it if the 
+                    # edge is from a direct branch
                     # breakpoint()
                     self.cfg.remove_block_func_edges(bblock, bblock.fn_addr)
                     bblock.fn_addr = self.context.callstack[-1][0]
@@ -543,6 +547,9 @@ class FFXEngine():
                 # branch not taken, backup context for jump target
                 context.pc = address + 4 + b_insn.imm32
 
+            # keep track of the explicit target to prevent over-pruning of edges
+            self.context.bblock.direct_target = target=(address + 4 + b_insn.imm32) & (~1)
+
             branch = FBranch(
                 addr=address,
                 raw=cs_insn.bytes,
@@ -601,6 +608,9 @@ class FFXEngine():
             else:
                 # branch not taken, backup context for jump target
                 context.pc = address + 4 + cb_insn.imm32
+
+            # keep track of the explicit target to prevent over-pruning of edges
+            self.context.bblock.direct_target = (address + 4 + cb_insn.imm32) & (~1)
 
             branch = FBranch(
                 addr=address,
