@@ -8,6 +8,7 @@ ffxe = FFXEngine(
     path="examples/spi.elf",
     log_stdout=True,
     log_insn=True,
+    log_time=False
 )
 
 # 2d19 is spi handler, need to get this one.
@@ -21,6 +22,8 @@ for addr in [
             0x1914, # nrf_drv_spi_init
             0x1f70, # nrfx_spim_init
             0x1f08, # SPIM0_...Handler
+            0x18d8, # spim_evt_handler
+            0x2d19, # spi_handler
         ]:
     ffxe.add_breakpoint(addr)
 

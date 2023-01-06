@@ -37,6 +37,7 @@ class FContext():
         self.isr = isr
         self.mem_state = {}
         self.stack_state = b""
+        self.newblock = True
 
     def __copy__(self):
         cls = self.__class__
@@ -61,7 +62,12 @@ class FBranch():
     """
     base class for branches
     """
-    def __init__(self, addr, raw, target, bblock, context, btype='cond', ret=None, isr=0):
+    def __init__(self, addr, raw, target, bblock, context, 
+            btype='cond', 
+            ret=None, 
+            isr=0,
+            # inc_isr=False
+            ):
         self.addr = addr        # address of branch instruction
         self.raw = raw          # raw of branch instruction
         self.target = target    # target's address
@@ -70,6 +76,7 @@ class FBranch():
         self.ret_addr = ret     # return address if call branch
         self.unexplored = True  # true if alt path still unexplored
         self.isr = isr          # interrupt service number
+        # self.inc_isr = inc_isr  # increment quota on every block in the isr
 
     def __eq__(self, other):
         return (isinstance(other, self.__class__)
@@ -88,7 +95,8 @@ class FFXEngine():
             log_dir    : str = 'logs',
             log_name   : str = 'fxe.log',
             log_stdout : bool = False,
-            log_insn   : bool = False):
+            log_insn   : bool = False,
+            log_time   : bool = True):
         
         # setup logging
         self.logger = logging.getLogger('efxe.eng')
@@ -105,7 +113,8 @@ class FFXEngine():
             log_name = f"{fn}-{i}{ext}"
             i += 1
 
-        formatter = logging.Formatter("%(asctime)s : %(message)s")
+        formatter = logging.Formatter(
+            "%(asctime)s : %(message)s" if log_time else "%(message)s")
         fhandler = logging.FileHandler(f"{log_dir}/{log_name}", mode = 'a')
         fhandler.setFormatter(formatter)
         self.logger.addHandler(fhandler)
@@ -302,7 +311,7 @@ class FFXEngine():
         context.pc = self.isr_entries[isr]['target']
         # explicitly deal with registered functions
         # for addr, info in self.voladdrs.items():
-        #     for val, inst in info['w']:
+        #     for val, inst in info['w'].keys():
         #         if self.addr_in_region(val, 'flash'):
         #             # this is likely a registered function, write it into mem state
         #             context.mem_state[addr] = val.to_bytes(4, 'little')
@@ -327,7 +336,7 @@ class FFXEngine():
         try:
             # check if valid instruction
             next(self.cs.disasm(uc.mem_read(address, size), offset=address))
-        except CsError as e:
+        except StopIteration as e:
             raise UcError(UC_ERR_INSN_INVALID)
 
         # check if block is at a data location
@@ -338,6 +347,8 @@ class FFXEngine():
 
         block_kwargs = {}
         connected = False
+
+        self.logger.info("### TRANSLATION BLOCK @ 0x{:x}".format(address) + '-'*20)
 
         # check if returning block
         if (self.context.callstack 
@@ -393,7 +404,10 @@ class FFXEngine():
                     if bblock.quota < 1:
                         bblock.quota = 1
 
-                connected = self.cfg.connect_block(bblock, parent=self.context.bblock)
+                connected = False
+                if not self.context.newblock:
+                    connected = self.cfg.connect_block(bblock, parent=self.context.bblock)
+                    self.context.newblock = True
 
         # update current block
         self.context.bblock = bblock
@@ -758,8 +772,8 @@ class FFXEngine():
                 # if in isr, mark memory location as volatile
                 if self.context.isr:
                     if read_addr not in self.voladdrs:
-                        self.voladdrs[read_addr] = { 'r':set(), 'w':set() }
-                    self.voladdrs[read_addr]['r'].add((val, address))
+                        self.voladdrs[read_addr] = { 'r':{}, 'w':{}, 'm': set() }
+                    self.voladdrs[read_addr]['r'][(val, address)] = copy(self.context)
 
         ## STORE INSTRUCTIONS
         # because Unicorn also doesn't hook some STR instructions
@@ -810,11 +824,45 @@ class FFXEngine():
 
                 if self.context.isr and addr not in self.voladdrs:
                     # register volatile address
-                    self.voladdrs[addr] = { 'r':set(), 'w':set() }
+                    self.voladdrs[addr] = { 'r':{}, 'w':{}, 'm': set() }
 
                 if addr in self.voladdrs:
                     # log write to volatile addres
-                    self.voladdrs[addr]['w'].add((val, address))
+                    self.voladdrs[addr]['w'][(val, address)] = copy(self.context)
+
+                    # resume from any points that rely on this block
+                    # (will only happen if the resume point is a contributing block)
+                    # (also only do this if the volatile mem state is unique)
+                    # (also only consider it for writes to changes in the dataRAM)
+                    vol_ram_state = []
+                    for maddr, mval in sorted(self.context.mem_state.items()):
+                        if (maddr in self.voladdrs
+                                and self.addr_in_region(maddr, 'dataRAM')):
+                            vol_ram_state.append(
+                                "{:x}:{:x}".format(maddr, int.from_bytes(mval, 'little')))
+                    mem_hash = '_'.join(vol_ram_state)
+
+                    if (not any([val == v for (v, i) in self.voladdrs[addr]['r'].keys()])
+                            and mem_hash not in self.voladdrs[addr]['m']):
+                        self.voladdrs[addr]['m'].add(mem_hash)
+
+                        for (rval, inst), rcontext in self.voladdrs[addr]['r'].items():
+                            if (rcontext.bblock.contrib):
+                                resume_context = copy(rcontext)
+                                resume_context.mem_state = self.context.mem_state
+                                resume_context.newblock = False
+                                branch_info = {
+                                    'addr'    : addr,
+                                    'raw'     : b'',
+                                    'target'  : resume_context.pc,
+                                    'bblock'  : None,
+                                    'context' : resume_context,
+                                    'ret'     : addr,
+                                    'isr'     : resume_context.isr,
+                                    # 'inc_isr' : False,
+                                }
+                                self.unexplored.append(FBranch(**branch_info))
+
 
         # ## STACK STUFF
         # # ensure functions only execute when explicitly called by call instruction (bl, blx)
@@ -980,11 +1028,11 @@ class FFXEngine():
             if branch.bblock:
                 # restore correct current block so edges aren't screwed up
                 self.context.bblock = branch.bblock
-            if branch.isr:
-                # if loading an isr, add 1 to the quota of all blocks in that isr
-                for block in self.cfg.bblocks.values():
-                    if branch.isr in block.isrs:
-                        block.quota += 1
+            # if branch.inc_isr:
+            #     # if loading an isr, add 1 to the quota of all blocks in that isr
+            #     for block in self.cfg.bblocks.values():
+            #         if branch.isr in block.isrs:
+            #             block.quota += 1
             try:
                 self.logger.info(f"unexplored branches: {len(self.unexplored)}")
                 self.uc.emu_start(self.context.pc, 
