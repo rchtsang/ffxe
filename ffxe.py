@@ -65,9 +65,7 @@ class FBranch():
     def __init__(self, addr, raw, target, bblock, context, 
             btype='cond', 
             ret=None, 
-            isr=0,
-            # inc_isr=False
-            ):
+            isr=0):
         self.addr = addr        # address of branch instruction
         self.raw = raw          # raw of branch instruction
         self.target = target    # target's address
@@ -76,7 +74,6 @@ class FBranch():
         self.ret_addr = ret     # return address if call branch
         self.unexplored = True  # true if alt path still unexplored
         self.isr = isr          # interrupt service number
-        # self.inc_isr = inc_isr  # increment quota on every block in the isr
 
     def __eq__(self, other):
         return (isinstance(other, self.__class__)
@@ -859,7 +856,6 @@ class FFXEngine():
                                     'context' : resume_context,
                                     'ret'     : addr,
                                     'isr'     : resume_context.isr,
-                                    # 'inc_isr' : False,
                                 }
                                 self.unexplored.append(FBranch(**branch_info))
 
@@ -1028,11 +1024,6 @@ class FFXEngine():
             if branch.bblock:
                 # restore correct current block so edges aren't screwed up
                 self.context.bblock = branch.bblock
-            # if branch.inc_isr:
-            #     # if loading an isr, add 1 to the quota of all blocks in that isr
-            #     for block in self.cfg.bblocks.values():
-            #         if branch.isr in block.isrs:
-            #             block.quota += 1
             try:
                 self.logger.info(f"unexplored branches: {len(self.unexplored)}")
                 self.uc.emu_start(self.context.pc, 
