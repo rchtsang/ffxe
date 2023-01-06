@@ -175,6 +175,7 @@ class FFXEngine():
         self.voladdrs = {}
         self.isr_entries = {}
         self.breakpoints = set()
+        self.break_on_inst = False
 
         # load firmware if path provided
         self.fw = None
@@ -300,11 +301,11 @@ class FFXEngine():
         context.isr = isr
         context.pc = self.isr_entries[isr]['target']
         # explicitly deal with registered functions
-        for addr, info in self.voladdrs.items():
-            for val, inst in info['w']:
-                if self.addr_in_region(val, 'flash'):
-                    # this is likely a registered function, write it into mem state
-                    context.mem_state[addr] = val.to_bytes(4, 'little')
+        # for addr, info in self.voladdrs.items():
+        #     for val, inst in info['w']:
+        #         if self.addr_in_region(val, 'flash'):
+        #             # this is likely a registered function, write it into mem state
+        #             context.mem_state[addr] = val.to_bytes(4, 'little')
         branch_info = {
             'addr'    : isr * 4,
             'raw'     : b'',
@@ -440,7 +441,7 @@ class FFXEngine():
                 self.fw.disasm[address]['raw_str'],
                 self.fw.disasm[address]['mnemonic']))
 
-        if (address & (~1)) in self.breakpoints:
+        if (address & (~1)) in self.breakpoints or self.break_on_inst:
             breakpoint()
 
         # it state for it conditionals
@@ -609,21 +610,32 @@ class FFXEngine():
             tbl_base = uc.reg_read(UC_REG_MAP[tb_insn.Rn])
             if tb_insn.Rn == 15:
                 # if base register is PC, base starts after instruction
-                tbl_base += size
+                tbl_base += 4
             tbl_offset = uc.reg_read(UC_REG_MAP[tb_insn.Rm])
             read_size = 1
             if tb_insn.half:
                 tbl_offset <<= 1
+                # tbl_offset &= 0xFFFFFFFF
                 read_size = 2
+
+            # deal with overflow (very stupid)
+            mem_target = (tbl_base + tbl_offset) & 0xFFFFFFFF
+            target = int.from_bytes(uc.mem_read(mem_target, read_size), 'little')
 
             # add table addresses to jobs except for target
             # stop when hit invalid address or maximum offset
             # set an upper limit on the offset size as maximum size of flash region
-            for i in range(0, self.pd['mmap']['flash']['size'], read_size):
-                if i == tbl_offset:
-                    continue
+            # also skip duplicate targets
+            jump_targets = set()
+            for i in range(0, self.pd['mmap']['flash']['size'] - address, read_size):
+                # if i == tbl_offset:
+                #     continue
+                # breakpoint()
                 jump_rel = int.from_bytes(uc.mem_read(tbl_base + i, read_size), 'little')
                 jump_target = address + 4 + (jump_rel * 2)
+
+                if jump_target in jump_targets:
+                    continue
 
                 # specific to cortex m4
                 if ((jump_target < 0x200) 
@@ -632,7 +644,7 @@ class FFXEngine():
                     break
 
                 # check validity of jump target
-                target_bytes = uc.mem_read(jump_target & (~1), 0)
+                target_bytes = uc.mem_read(jump_target & (~1), 4)
                 if not int.from_bytes(target_bytes, 'little'):
                     # if the jump target is to zeroed out data, it's probably invalid
                     break
@@ -641,6 +653,8 @@ class FFXEngine():
                 except StopIteration as e:
                     # stop iteration means failed to disassemble. probably invalid inst
                     break
+
+                jump_targets.add(jump_target)
 
                 # create backup context for valid jump target
                 context = self.backup()
@@ -664,7 +678,7 @@ class FFXEngine():
                     context.pc = address + size
                 else:
                     # branch not taken, backup context for jump target
-                    context.pc = address + 4 + b_insn.imm32
+                    context.pc = target
                 self.unexplored.append(
                     FBranch(
                         addr=address, 

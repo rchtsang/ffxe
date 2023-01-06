@@ -10,12 +10,17 @@ ffxe = FFXEngine(
     log_insn=True,
 )
 
+# 2d19 is spi handler, need to get this one.
+# 18d8 is spim_evt_handler, which invokes the registered handler
 for addr in [
             # 0x10b8,
             # 0x1102,
             # 0x2e2,
             # 0x17d4,
-            0x1242,
+            # 0x1242,
+            0x1914, # nrf_drv_spi_init
+            0x1f70, # nrfx_spim_init
+            0x1f08, # SPIM0_...Handler
         ]:
     ffxe.add_breakpoint(addr)
 

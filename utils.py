@@ -16,3 +16,12 @@ def chunks(n, b : Union[bytes, bytearray]):
             return
         yield chunk
 
+def ipy_hexon():
+    formatter = get_ipython().display_formatter.formatters['text/plain']
+    formatter.for_type(int, lambda n, p, cycle: p.text("0x%x"%n))
+
+def ipy_hexoff():
+    formatter = get_ipython().display_formatter.formatters['text/plain']
+    formatter.for_type(int, lambda n, p, cycle: p.text("%d"%n))
+
+    
