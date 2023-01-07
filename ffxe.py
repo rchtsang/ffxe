@@ -387,10 +387,12 @@ class FFXEngine():
                     bblock.isrs.add(self.context.isr)
 
                 # check if block has right function address
-                if (self.context.callstack[-1][0] != bblock.fn_addr
-                        and bblock.fn_addr ^ bblock.addr > 1 # different func addrs
+                if (self.context.callstack[-1][0] != bblock.fn_addr # block was called
+                        and bblock.fn_addr ^ bblock.addr > 1 # block not func start
                         and (self.context.bblock.direct_target == None
-                            or address ^ self.context.bblock.direct_target <= 1)):
+                            or address ^ self.context.bblock.direct_target > 1)
+                            # block not direct target
+                        ):
                     # if block's fn address conflicts, update it
                     # only if the block isn't already the start of a function
                     # and increment its quota if necessary
@@ -652,11 +654,18 @@ class FFXEngine():
                 # if i == tbl_offset:
                 #     continue
                 # breakpoint()
-                jump_rel = int.from_bytes(uc.mem_read(tbl_base + i, read_size), 'little')
+                mem_loc = tbl_base + i
+                jump_rel = int.from_bytes(uc.mem_read(mem_loc, read_size), 'little')
                 jump_target = address + 4 + (jump_rel * 2)
+                # self.mem_reads.append(mem_loc)
 
                 if jump_target in jump_targets:
                     continue
+
+                # if the mem_loc in jump_targets, it's definitely the end of the table
+                # if the table is embedded in the code
+                if mem_loc in jump_targets:
+                    break
 
                 # specific to cortex m4
                 if ((jump_target < 0x200) 

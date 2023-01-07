@@ -66,8 +66,9 @@ class FirmwareImage():
                     # deal with the delay block specially
                     # for whatever reason, objdump doesn't treat it as instructions
                     # when disassembling from elf
-                    if "3803 d8fd" in match.group('raw') \
-                            and "4770 0000" in match.group('mnemonic'):
+                    if (("3803 d8fd" in match.group('raw')
+                            and "4770 0000" in match.group('mnemonic'))
+                            or "d8fd3803 00004770" in match.group('raw')):
                         self.disasm[addr + 2] = self.disasm[addr]
                         self.disasm[addr + 4] = self.disasm[addr]
 
