@@ -389,8 +389,8 @@ class FFXEngine():
                 # check if block has right function address
                 if (self.context.callstack[-1][0] != bblock.fn_addr
                         and bblock.fn_addr ^ bblock.addr > 1 # different func addrs
-                        and (self.context.bblock.direct_target
-                            and address ^ self.context.bblock.direct_target > 1)):
+                        and (self.context.bblock.direct_target == None
+                            or address ^ self.context.bblock.direct_target <= 1)):
                     # if block's fn address conflicts, update it
                     # only if the block isn't already the start of a function
                     # and increment its quota if necessary
