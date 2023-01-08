@@ -182,6 +182,7 @@ class FFXEngine():
         self.isr_entries = {}
         self.breakpoints = set()
         self.break_on_inst = False
+        self.protected_edges = set()
 
         # load firmware if path provided
         self.fw = None
@@ -347,6 +348,9 @@ class FFXEngine():
 
         self.logger.info("### TRANSLATION BLOCK @ 0x{:x}".format(address) + '-'*20)
 
+        if (address & (~1)) in self.breakpoints:
+            breakpoint()
+
         # check if returning block
         if (self.context.callstack 
                 and address == self.context.callstack[-1][-1]):
@@ -359,7 +363,7 @@ class FFXEngine():
             bblock = BBlock(
                 address=address, 
                 size=size, 
-                fn_addr=self.context.callstack[-1][0], 
+                fn_addr=(self.context.callstack[-1][0] | 1) ^ 1, 
                 bytedata=self.uc.mem_read(address, size),
                 isr=self.context.isr,
                 parent=NullBlock)
@@ -373,7 +377,7 @@ class FFXEngine():
                 bblock = BBlock(
                     address=address,
                     size=size,
-                    fn_addr=self.context.callstack[-1][0],
+                    fn_addr=(self.context.callstack[-1][0] | 1) ^ 1,
                     bytedata=self.uc.mem_read(address, size),
                     isr=self.context.isr,
                     **block_kwargs)
@@ -387,23 +391,38 @@ class FFXEngine():
                     bblock.isrs.add(self.context.isr)
 
                 # check if block has right function address
-                if (self.context.callstack[-1][0] != bblock.fn_addr # block was called
-                        and bblock.fn_addr ^ bblock.addr > 1 # block not func start
+                # this bit is added because some functions end with unconditional
+                # branches that are for some reason treated as conditional...
+                if ((self.context.callstack[-1][0] | 1) != (bblock.fn_addr | 1)
+                        # block parent did not use call instruction
+                        and bblock.fn_addr ^ bblock.addr > 1 
+                        # block must not be a func start
                         and (self.context.bblock.direct_target == None
                             or address ^ self.context.bblock.direct_target > 1)
-                            # block not direct target
+                            # block must not be direct target of another branch
                         ):
-                    # if block's fn address conflicts, update it
-                    # only if the block isn't already the start of a function
-                    # and increment its quota if necessary
-                    # also remove any edges from blocks that were 
-                    # labelled with the incorrect function address
-                    # since those are likely mistaken connections
-                    # ok, apparently not always. so don't do it if the 
-                    # edge is from a direct branch
-                    # breakpoint()
-                    self.cfg.remove_block_func_edges(bblock, bblock.fn_addr)
+
+                    # if previous block is a known parent of current block 
+                    # and parents mismatch, just fix this block's fn_addr
+                    # without doing any edge removal
+                    if self.context.bblock not in bblock.parents:
+                        # breakpoint()
+                        # if block's fn address conflicts, update it
+                        # only if the block isn't already the start of a function
+                        # and increment its quota if necessary
+                        # also remove any edges from blocks that were 
+                        # labelled with the incorrect function address
+                        # since those are likely mistaken connections
+                        # ok, apparently not always. so don't do it if the 
+                        # edge is from a direct branch
+                        # darn there's other cases where this doesn't apply...
+                        # breakpoint()
+
+                        # this will only remove edges from bblock
+                        self.cfg.remove_block_func_edges(bblock, bblock.fn_addr,
+                            protected=self.protected_edges)
                     bblock.fn_addr = self.context.callstack[-1][0]
+
                     if bblock.quota < 1:
                         bblock.quota = 1
 
@@ -446,13 +465,14 @@ class FFXEngine():
         self.context.apsr.set(uc.reg_read(UC_ARM_REG_APSR))
         cs_insn = next(self.cs.disasm(uc.mem_read(address, size), offset=address))
 
+        if address not in self.fw.disasm:
+            # instruction not in pre-computed disassembly,
+            # probably invalid, delete block and raise error
+            self.context.bblock.delete = True
+            self.cfg.remove_block(self.context.bblock)
+            raise UcError(UC_ERR_INSN_INVALID)
+
         if self.log_insn:
-            if address not in self.fw.disasm:
-                # instruction not in pre-computed disassembly,
-                # probably invalid, delete block and raise error
-                self.context.bblock.delete = True
-                self.cfg.remove_block(self.context.bblock)
-                raise UcError(UC_ERR_INSN_INVALID)
             self.logger.info("0x{:x}: {:<10} {}".format(
                 address,
                 self.fw.disasm[address]['raw_str'],
@@ -542,24 +562,35 @@ class FFXEngine():
                 # T2 and T4 encoding only conditional in IT block
                 cs_cond = (((itstate >> 4) & 0xF) + 1) % 16
 
-            if self._get_cond_status(cs_cond):
-                # branch taken, backup context for next instruction
-                context.pc = self.context.pc + size
-            else:
-                # branch not taken, backup context for jump target
-                context.pc = address + 4 + b_insn.imm32
+            if cs_cond != ARM_CC_AL:
+                # only do backups for conditional branches
+
+                if self._get_cond_status(cs_cond):
+                    # branch taken, backup context for next instruction
+                    context.pc = self.context.pc + size
+                else:
+                    # branch not taken, backup context for jump target
+                    context.pc = address + 4 + b_insn.imm32
+
+                    # protect edge from accidental removal
+                    self.protected_edges.add((self.context.bblock.addr, address + size))
+
+                branch = FBranch(
+                    addr=address,
+                    raw=cs_insn.bytes,
+                    target=context.pc,
+                    bblock=self.context.bblock,
+                    context=context)
+                if branch not in self.unexplored:
+                    self.unexplored.append(branch)
+            
+            # always protect the direct target edge
+            self.protected_edges.add(
+                (self.context.bblock.addr, (address + 4 + b_insn.imm32) & (~1)))
 
             # keep track of the explicit target to prevent over-pruning of edges
-            self.context.bblock.direct_target = target=(address + 4 + b_insn.imm32) & (~1)
+            self.context.bblock.direct_target = (address + 4 + b_insn.imm32) & (~1)
 
-            branch = FBranch(
-                addr=address,
-                raw=cs_insn.bytes,
-                target=context.pc,
-                bblock=self.context.bblock,
-                context=context)
-            if branch not in self.unexplored:
-                self.unexplored.append(branch)
 
         elif cs_insn.id == ARM_INS_BX:
             # update for indirect branch block
@@ -610,6 +641,9 @@ class FFXEngine():
             else:
                 # branch not taken, backup context for jump target
                 context.pc = address + 4 + cb_insn.imm32
+
+                # protect edge from accidental removal
+                self.protected_edges.add((self.context.bblock.addr, address + size))
 
             # keep track of the explicit target to prevent over-pruning of edges
             self.context.bblock.direct_target = (address + 4 + cb_insn.imm32) & (~1)

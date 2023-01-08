@@ -42,7 +42,7 @@ class APSRRegister(ctypes.LittleEndianStructure):
         ARM_CC_GE : lambda apsr: apsr.N == apsr.V,
         ARM_CC_LT : lambda apsr: apsr.N != apsr.V,
         ARM_CC_GT : lambda apsr: apsr.Z == 0 and apsr.N == apsr.V,
-        ARM_CC_LE : lambda apsr: apsr.Z == 1 and apsr.N != apsr.V,
+        ARM_CC_LE : lambda apsr: apsr.Z == 1 or apsr.N != apsr.V,
         ARM_CC_AL : lambda apsr: True,
     }
 

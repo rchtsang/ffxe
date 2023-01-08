@@ -103,6 +103,16 @@ class FirmwareImage():
                 stdout=subprocess.PIPE,
             ).stdout.decode('utf-8').split('\n')
 
+            # convert tabs to spaces (maintaining visual spacing)
+            for i, line in enumerate(self.disasm_txt):
+                newline = []
+                for j, char in enumerate(line):
+                    if char == '\t':
+                        newline.append(' '*(4 - (j % 4)))
+                    else:
+                        newline.append(char)
+                self.disasm_txt[i] = ''.join(newline)
+
             # construct addr-to-line mapping and disasm dict
             for lineno, line in enumerate(self.disasm_txt):
                 match = self.RE_PTRN_DISASM.search(line)
@@ -209,6 +219,8 @@ class CFG():
     def __init__(self):
         self.bblocks = {}   # BBlock objects referenced by address
         self.edges = set()  # tuples of bblock addresses
+        self.removed_edges = []
+        self.removed_blocks = []
 
     def is_new_block(self, address):
         """check if block has not yet been added to cfg"""
@@ -237,6 +249,7 @@ class CFG():
         if address in self.bblocks:
             # remove block from bblock list
             bblock = self.bblocks.pop(address)
+            self.removed_blocks.append(bblock)
             # remove edges from edge list
             for e in [e for e in self.edges if bblock.addr in e]:
                 self.edges.remove(e)
@@ -249,7 +262,8 @@ class CFG():
                 if bblock in child.parents:
                     child.parents.remove(bblock)
 
-    def remove_block_func_edges(self, bblock : Union[BBlock, int], fn_addr : int):
+    def remove_block_func_edges(self, bblock : Union[BBlock, int], fn_addr : int,
+            protected : set = set()):
         """used to remove parent edges with the given function address"""
         # get block
         if isinstance(bblock, int):
@@ -262,11 +276,13 @@ class CFG():
                 if parent.fn_addr == fn_addr]
         # remove found edges
         for parent in invalid_parents:
-            if parent == NullBlock:
+            edge = (parent.addr, bblock.addr)
+            if parent == NullBlock or edge in protected:
                 continue
-            self.edges.remove((parent.addr, bblock.addr))
+            self.edges.remove(edge)
             bblock.parents.remove(parent)
             parent.children.remove(bblock)
+            self.removed_edges.append(edge)
 
     def backward_reachability(self, bblock : Type[BBlock], ib=True):
         """find all intraprocedural contributing blocks for given block"""
@@ -278,7 +294,7 @@ class CFG():
         # breakpoint()
         while queue:
             current = queue.pop(0)
-            print(current)
+            # print(current)
             if ib:
                 current.contrib = 1
             current.quota += 1
