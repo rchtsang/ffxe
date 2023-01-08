@@ -463,7 +463,13 @@ class FFXEngine():
         self.context.pc = address
         self.context.pc |= 1 if uc.reg_read(UC_ARM_REG_CPSR) & (1 << 5) else 0
         self.context.apsr.set(uc.reg_read(UC_ARM_REG_APSR))
-        cs_insn = next(self.cs.disasm(uc.mem_read(address, size), offset=address))
+        try:
+            cs_insn = next(self.cs.disasm(uc.mem_read(address, size), offset=address))
+        except StopIteration as e:
+            # if hit a bad instruction, the block isn't valid
+            self.context.bblock.delete = True
+            self.cfg.remove_block(self.context.bblock)
+            raise UcError(UC_ERR_INSN_INVALID)
 
         if address not in self.fw.disasm:
             # instruction not in pre-computed disassembly,
