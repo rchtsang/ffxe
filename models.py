@@ -6,6 +6,7 @@ import shlex
 import ctypes
 import struct
 from os.path import splitext
+from copy import deepcopy
 from typing import Type, Union
 from ctypes import memmove, pointer, sizeof
 
@@ -133,6 +134,144 @@ class FirmwareImage():
             raise Exception("fw image file must be elf, ihex, or binary")
 
         self.size = len(self.raw)
+
+    def print_cfg(self, cfg : dict, need_iedges=True):
+        """print the disassembly with CFG edge representation"""
+        assert 'nodes' in cfg and 'edges' in cfg, \
+            "cfg missing nodes and edges"
+        assert isinstance(cfg['nodes'], set) and isinstance(cfg['edges'], set), \
+            "cfg nodes and edges should be sets of tuples"
+
+        # disasm_txt = deepcopy(ffxe.fw.disasm_txt)
+        # for block in ffxe.cfg.bblocks.values():
+        #     insn_addr = block.addr
+        #     for insn in ffxe.cs.disasm(
+        #             ffxe.uc.mem_read(block.addr, block.size), block.size):
+        #         try:
+        #             lineno = ffxe.fw.disasm[insn_addr]['line']
+        #             insn_addr += insn.size
+        #             disasm_txt[lineno] = "{}{}{}{:<90}\u001b[0m".format(
+        #                 "\u001b[103m",  # bright yellow background
+        #                 "\u001b[30m",   # black foreground
+        #                 "\u001b[1m",    # bold font
+        #                 disasm_txt[lineno])
+        #         except Exception:
+        #             pass
+        # print('\n'.join(disasm_txt))
+
+        edges = deepcopy(cfg['edges'])
+        nodes = deepcopy(cfg['nodes'])
+
+        # need to first turn block edges into insn edges
+        # which means we need to compute last addr in block 
+        # (size won't work great for this...)
+        blocks = list(sorted(nodes))
+        bedges = list(sorted(edges))
+
+        if need_iedges:
+            iedges = []
+            current_block = None
+            prev_addr = None
+            for addr, info in sorted(self.disasm.items()):
+                if current_block and addr >= current_block[0] + current_block[1]:
+                    # reached end of current block
+                    # update all edges
+                    # that come from current block to come from addr of 
+                    # last instruction of the current block (instead of start)
+                    if current_block and bedges:
+                        hits = [e for e in bedges if e[0] == current_block[0]]
+                        for hit in hits:
+                            bedges.remove(hit)
+                            iedges.append((prev_addr, hit[1]))
+                    # while current_block and bedges and bedges[0][0] == current_block[0]:
+                    #     edge = bedges.pop(0)
+                    #     iedges.append((prev_addr, edge[1]))
+                
+                if blocks and addr == blocks[0][0]:
+                    # found new block
+                    # update current block
+                    current_block = blocks.pop(0)
+                
+                prev_addr = addr
+        else:
+            iedges = bedges
+        if bedges:
+            iedges.extend(bedges)
+
+        breakpoint()
+
+        # create an arrows matrix that runs accross the side of the 
+        # disassembly. fill in the small arrows at the bottom and work up
+        arrows = [{addr: '\u2500' for addr in sorted(self.disasm.keys())}]
+        iedges.sort(key=lambda e: (max(e) - min(e), min(e)))
+
+        for edge in iedges:
+
+            start = min(edge)
+            end = max(edge)
+            i = start
+            col = 0
+            # determine which column arrow goes in
+            while i <= end:
+                if i in arrows[col]:
+                    # valid address, check for collision
+                    while arrows[col][i] != '\u2500':
+                        # collision, go up a column
+                        if col == len(arrows) - 1:
+                            arrows.append({addr: '\u2500' for addr in sorted(self.disasm.keys())})
+                        col += 1
+                i += 2
+
+            # now draw the arrow
+            i = start
+            direction = 'down' if start == edge[0] else 'up'
+            while i <= end:
+                if i in arrows[col]:
+                    sym = '\u2503' # arrow shaft
+                    if i == start:
+                        if direction == 'down':
+                            sym = '\u2533' # down end
+                        else:
+                            sym = '\u25b2' # up arrowhead
+                    elif i == end:
+                        if direction == 'down':
+                            sym = '\u25bc' # down arrowhead
+                        else:
+                            sym = '\u253b' # up end
+                    arrows[col][i] = sym
+                i += 2
+
+        # now transpose the arrows matrix
+        vert_arrows = {
+            addr: ''.join([col[addr] for col in reversed(arrows)]) for addr in arrows[0]
+        }
+
+        # now append to all the lines of the disassembly text
+        blank = '\u2500' * len(arrows)
+        prepend = blank
+        disptxt = []
+        p = re.compile(r'^ +')
+        for i, line in enumerate(self.disasm_txt):
+            match = self.RE_PTRN_DISASM.search(line)
+            if match:
+                addr = int(match.group('addr'), base=16)
+                if addr in vert_arrows:
+                    prepend = vert_arrows[addr]
+            else:
+                tmp = []
+                for c in prepend:
+                    if c in ['\u2533', '\u25b2']:
+                        tmp.append('\u2503')
+                    elif c in ['\u253b', '\u25bc']:
+                        tmp.append('\u2500')
+                    else:
+                        tmp.append(c)
+                prepend = ''.join(tmp)
+            line = p.sub(lambda x: x.group().replace(' ', '\u2500'), line)
+            disptxt.append(f"{prepend}{line}")
+
+        print('\n'.join(disptxt))
+        return disptxt
 
 
 class BBlock():
@@ -350,5 +489,9 @@ class CFG():
                     and not self.bblocks[addr].children)
                     or self.bblocks[addr].delete):
                 self.remove_block(self.bblocks[addr])
+
+
+    # def to_networkx(self):
+    #     """convert the cfg to a networkx digraph"""
 
 
