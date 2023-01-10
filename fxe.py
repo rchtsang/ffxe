@@ -412,21 +412,22 @@ class FXEngine():
                 # T2 and T4 encoding only conditional in IT block
                 cs_cond = (((itstate >> 4) & 0xF) + 1) % 16
 
-            if self._get_cond_status(cs_cond):
-                # branch taken, backup context for next instruction
-                context.pc = self.context.pc + size
-            else:
-                # branch not taken, backup context for jump target
-                context.pc = address + 4 + b_insn.imm32
+            if cs_cond != ARM_CC_AL:
+                if self._get_cond_status(cs_cond):
+                    # branch taken, backup context for next instruction
+                    context.pc = self.context.pc + size
+                else:
+                    # branch not taken, backup context for jump target
+                    context.pc = address + 4 + b_insn.imm32
 
-            branch = Branch(
-                addr=address,
-                raw=cs_insn.bytes,
-                target=context.pc,
-                bblock=self.context.bblock,
-                context=context)
-            if branch not in self.unexplored:
-                self.unexplored.append(branch)
+                branch = Branch(
+                    addr=address,
+                    raw=cs_insn.bytes,
+                    target=context.pc,
+                    bblock=self.context.bblock,
+                    context=context)
+                if branch not in self.unexplored:
+                    self.unexplored.append(branch)
 
         elif cs_insn.id == ARM_INS_BX:
             # update for indirect branch block
@@ -619,7 +620,7 @@ class FXEngine():
 
     def run(self):
         """
-        fun FXE recovery algorithm until timeout or completion
+        run FXE recovery algorithm until timeout or completion
         """
         assert self.fw, "no firmware loaded"
 
