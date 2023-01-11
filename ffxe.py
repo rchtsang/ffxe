@@ -332,8 +332,12 @@ class FFXEngine():
         # this should construct the block and connect it to the CFG as needed
 
         try:
-            # check if valid instruction
-            next(self.cs.disasm(uc.mem_read(address, size), offset=address))
+            # # check if valid instruction
+            # next(self.cs.disasm(uc.mem_read(address, size), offset=address))
+
+            # check if all block instructions valid
+            insn_addrs = [ins.address for ins in self.cs.disasm(
+                uc.mem_read(address, size), offset=address)]
         except StopIteration as e:
             raise UcError(UC_ERR_INSN_INVALID)
 
@@ -363,6 +367,7 @@ class FFXEngine():
             bblock = BBlock(
                 address=address, 
                 size=size, 
+                insn_addrs=insn_addrs,
                 fn_addr=(self.context.callstack[-1][0] | 1) ^ 1, 
                 bytedata=self.uc.mem_read(address, size),
                 isr=self.context.isr,
@@ -377,6 +382,7 @@ class FFXEngine():
                 bblock = BBlock(
                     address=address,
                     size=size,
+                    insn_addrs=insn_addrs,
                     fn_addr=(self.context.callstack[-1][0] | 1) ^ 1,
                     bytedata=self.uc.mem_read(address, size),
                     isr=self.context.isr,
