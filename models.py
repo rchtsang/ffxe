@@ -135,70 +135,63 @@ class FirmwareImage():
 
         self.size = len(self.raw)
 
-    def print_cfg(self, cfg : dict, need_iedges=True):
-        """print the disassembly with CFG edge representation"""
+    def annotated_disasm(self, cfg : dict):
+        """print the disassembly with CFG edge representation
+        expects edges to be instruction addr to instruction addr
+            instead of block to block
+        """
         assert 'nodes' in cfg and 'edges' in cfg, \
             "cfg missing nodes and edges"
         assert isinstance(cfg['nodes'], set) and isinstance(cfg['edges'], set), \
             "cfg nodes and edges should be sets of tuples"
 
-        # disasm_txt = deepcopy(ffxe.fw.disasm_txt)
-        # for block in ffxe.cfg.bblocks.values():
-        #     insn_addr = block.addr
-        #     for insn in ffxe.cs.disasm(
-        #             ffxe.uc.mem_read(block.addr, block.size), block.size):
-        #         try:
-        #             lineno = ffxe.fw.disasm[insn_addr]['line']
-        #             insn_addr += insn.size
-        #             disasm_txt[lineno] = "{}{}{}{:<90}\u001b[0m".format(
-        #                 "\u001b[103m",  # bright yellow background
-        #                 "\u001b[30m",   # black foreground
-        #                 "\u001b[1m",    # bold font
-        #                 disasm_txt[lineno])
-        #         except Exception:
-        #             pass
-        # print('\n'.join(disasm_txt))
-
         edges = deepcopy(cfg['edges'])
         nodes = deepcopy(cfg['nodes'])
 
-        # need to first turn block edges into insn edges
-        # which means we need to compute last addr in block 
-        # (size won't work great for this...)
-        blocks = list(sorted(nodes))
-        bedges = list(sorted(edges))
+        remove = []
+        for n in [n for n in nodes if None in n]:
+            print(f'cannot print bad node: {n}')
+            nodes.remove(n)
 
-        if need_iedges:
-            iedges = []
-            current_block = None
-            prev_addr = None
-            for addr, info in sorted(self.disasm.items()):
-                if current_block and addr >= current_block[0] + current_block[1]:
-                    # reached end of current block
-                    # update all edges
-                    # that come from current block to come from addr of 
-                    # last instruction of the current block (instead of start)
-                    if current_block and bedges:
-                        hits = [e for e in bedges if e[0] == current_block[0]]
-                        for hit in hits:
-                            bedges.remove(hit)
-                            iedges.append((prev_addr, hit[1]))
-                    # while current_block and bedges and bedges[0][0] == current_block[0]:
-                    #     edge = bedges.pop(0)
-                    #     iedges.append((prev_addr, edge[1]))
-                
-                if blocks and addr == blocks[0][0]:
-                    # found new block
-                    # update current block
-                    current_block = blocks.pop(0)
-                
-                prev_addr = addr
-        else:
-            iedges = bedges
-        if bedges:
-            iedges.extend(bedges)
+        iedges = list(edges)
 
-        breakpoint()
+        # # need to first turn block edges into insn edges
+        # # which means we need to compute last addr in block 
+        # # (size won't work great for this...)
+        # blocks = list(sorted(nodes))
+        # bedges = list(sorted(edges))
+
+        # if need_iedges:
+        #     iedges = []
+        #     current_block = None
+        #     prev_addr = None
+        #     for addr, info in sorted(self.disasm.items()):
+        #         if current_block and addr >= current_block[0] + current_block[1]:
+        #             # reached end of current block
+        #             # update all edges
+        #             # that come from current block to come from addr of 
+        #             # last instruction of the current block (instead of start)
+        #             if current_block and bedges:
+        #                 hits = [e for e in bedges if e[0] == current_block[0]]
+        #                 for hit in hits:
+        #                     bedges.remove(hit)
+        #                     iedges.append((prev_addr, hit[1]))
+        #             # while current_block and bedges and bedges[0][0] == current_block[0]:
+        #             #     edge = bedges.pop(0)
+        #             #     iedges.append((prev_addr, edge[1]))
+                
+        #         if blocks and addr == blocks[0][0]:
+        #             # found new block
+        #             # update current block
+        #             current_block = blocks.pop(0)
+                
+        #         prev_addr = addr
+        # else:
+        #     iedges = bedges
+        # if bedges:
+        #     iedges.extend(bedges)
+
+        # breakpoint()
 
         # create an arrows matrix that runs accross the side of the 
         # disassembly. fill in the small arrows at the bottom and work up
@@ -209,9 +202,14 @@ class FirmwareImage():
 
             start = min(edge)
             end = max(edge)
+
+            if start not in self.disasm or end not in self.disasm:
+                print(f"invalid edge: ({hex(edge[0])}, {hex(edge[1])})")
+                continue
+
             i = start
             col = 0
-            # determine which column arrow goes in
+            # determine which column arrow can go in
             while i <= end:
                 if i in arrows[col]:
                     # valid address, check for collision
@@ -220,26 +218,32 @@ class FirmwareImage():
                         if col == len(arrows) - 1:
                             arrows.append({addr: '\u2500' for addr in sorted(self.disasm.keys())})
                         col += 1
+                        i = start
                 i += 2
 
             # now draw the arrow
             i = start
             direction = 'down' if start == edge[0] else 'up'
-            while i <= end:
-                if i in arrows[col]:
-                    sym = '\u2503' # arrow shaft
-                    if i == start:
-                        if direction == 'down':
-                            sym = '\u2533' # down end
-                        else:
-                            sym = '\u25b2' # up arrowhead
-                    elif i == end:
-                        if direction == 'down':
-                            sym = '\u25bc' # down arrowhead
-                        else:
-                            sym = '\u253b' # up end
-                    arrows[col][i] = sym
-                i += 2
+
+            if start == end:
+                # handle the self loop case
+                arrows[col][start] = '\u25c9'
+            else:
+                while i <= end:
+                    if i in arrows[col]:
+                        sym = '\u2503' # arrow shaft
+                        if i == start:
+                            if direction == 'down':
+                                sym = '\u2533' # down end
+                            else:
+                                sym = '\u25b2' # up arrowhead
+                        elif i == end:
+                            if direction == 'down':
+                                sym = '\u25bc' # down arrowhead
+                            else:
+                                sym = '\u253b' # up end
+                        arrows[col][i] = sym
+                    i += 2
 
         # now transpose the arrows matrix
         vert_arrows = {
@@ -262,7 +266,7 @@ class FirmwareImage():
                 for c in prepend:
                     if c in ['\u2533', '\u25b2']:
                         tmp.append('\u2503')
-                    elif c in ['\u253b', '\u25bc']:
+                    elif c in ['\u253b', '\u25bc', '\u25c9']:
                         tmp.append('\u2500')
                     else:
                         tmp.append(c)
@@ -270,30 +274,34 @@ class FirmwareImage():
             line = p.sub(lambda x: x.group().replace(' ', '\u2500'), line)
             disptxt.append(f"{prepend}{line}")
 
-        print('\n'.join(disptxt))
         return disptxt
+
+    def print_cfg(self, cfg : dict):
+        disptxt = self.annotated_disasm(cfg)
+        print('\n'.join(disptxt))
 
 
 class BBlock():
     """
     A class for basic block information
     """
-    def __init__(self, address, size, fn_addr, bytedata, 
+    def __init__(self, address, size, insn_addrs, fn_addr, bytedata, 
             parent : Type['BBlock']=None, 
             isr : int=0,
             contrib : bool=False, 
             indirect : bool=False, 
             target : int=None,
             returns : bool=False):
-        self.addr = address         # starting address of the block
-        self.size = size            # block size in bytes
-        self.quota = 1              # execution quota
-        self.contrib = contrib      # contributes to indirect branch
-        self.indirect = indirect    # is indirect branch block
-        self.returns = returns      # ends in return (sp change then bx)
-        self.fn_addr = fn_addr      # starting address of the block's function
-        self.direct_target = target # if a direct branch (conditional or otherwise)
-        self.isrs = {isr}           # set of isrs the block belongs to
+        self.addr = address             # starting address of the block
+        self.size = size                # block size in bytes
+        self.insn_addrs = insn_addrs    # addresses of instructions in block
+        self.quota = 1                  # execution quota
+        self.contrib = contrib          # contributes to indirect branch
+        self.indirect = indirect        # is indirect branch block
+        self.returns = returns          # ends in return (sp change then bx)
+        self.fn_addr = fn_addr          # starting address of the block's function
+        self.direct_target = target     # if a direct branch (conditional or otherwise)
+        self.isrs = {isr}               # set of isrs the block belongs to
         # parents and children are lists of basic blocks, not addresses
         self.parents = {parent} if parent else set()
         self.children = set()
@@ -348,7 +356,7 @@ class BBlock():
         # a basic block is unique and cannot be copied
         return self
 
-NullBlock = BBlock(0, 0, 0, b'')
+NullBlock = BBlock(address=0, size=0, insn_addrs=[], fn_addr=0, bytedata=b'')
 
 
 class CFG():

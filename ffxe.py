@@ -355,12 +355,6 @@ class FFXEngine():
         if (address & (~1)) in self.breakpoints:
             breakpoint()
 
-        # check if returning block
-        if (self.context.callstack 
-                and address == self.context.callstack[-1][-1]):
-            self.context.callstack.pop(-1)
-            self.context.bblock.returns = True
-
         # add block to cfg
         if not self.context.bblock:
             # handle the first block specially
@@ -374,6 +368,13 @@ class FFXEngine():
                 parent=NullBlock)
             connected = self.cfg.connect_block(bblock)
         else:
+            # check if returning block
+            if (self.context.callstack 
+                    and address == self.context.callstack[-1][-1]):
+                self.context.callstack.pop(-1)
+                # potential bug here
+                self.context.bblock.returns = True
+
             # decrement quota of previously executed block
             self.context.bblock.quota -= 1 
 
@@ -433,8 +434,11 @@ class FFXEngine():
                         bblock.quota = 1
 
                 connected = False
-                if not self.context.newblock:
+                # why is this necessary?
+                # in order to not track edges between volatile loads
+                if self.context.newblock:
                     connected = self.cfg.connect_block(bblock, parent=self.context.bblock)
+                else:
                     self.context.newblock = True
 
         # update current block
@@ -836,6 +840,9 @@ class FFXEngine():
                     if read_addr not in self.voladdrs:
                         self.voladdrs[read_addr] = { 'r':{}, 'w':{}, 'm': set() }
                     self.voladdrs[read_addr]['r'][(val, address)] = copy(self.context)
+
+                    # if encountering for first time and there are already logged reads,
+                    # need to resume with those memory contexts.
 
         ## STORE INSTRUCTIONS
         # because Unicorn also doesn't hook some STR instructions

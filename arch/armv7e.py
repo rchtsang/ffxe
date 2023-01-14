@@ -1278,7 +1278,7 @@ class ThumbLDMDB(ctypes.LittleEndianStructure):
         return (self.op & (~2)) == 0b111010010001
 
     def addresses(self, uc : Type[Uc]):
-        Rn = uc.reg_read(UC_REG_MAP[self.enc.n])
+        Rn = uc.reg_read(UC_REG_MAP[self.Rn])
         return [Rn + (i * 4) for i in range(15) if self.regs & (1 << i)]
 
     @property
