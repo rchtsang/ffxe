@@ -178,6 +178,8 @@ class FFXEngine():
         self.explored = []
         self.branches = []
         self.ibtargets = {} # track targets for indirect branches
+        self.mem_reads = []
+        self.mem_writes = {}
         self.voladdrs = {}
         self.isr_entries = {}
         self.breakpoints = set()
@@ -201,7 +203,6 @@ class FFXEngine():
         self.stack_base = int.from_bytes(self.fw.raw[0:4], 'little')
         self.entry = int.from_bytes(self.fw.raw[4:8], 'little')
 
-        self.mem_reads = []
         self.context.pc = self.entry
         self.uc.reg_write(UC_ARM_REG_SP, self.stack_base)
         self.uc.reg_write(UC_ARM_REG_PC, self.entry)
@@ -837,8 +838,30 @@ class FFXEngine():
 
                 # if in isr, mark memory location as volatile
                 if self.context.isr:
+                    # check if known volatile addr
                     if read_addr not in self.voladdrs:
                         self.voladdrs[read_addr] = { 'r':{}, 'w':{}, 'm': set() }
+
+                        # if not known volatile addr, check if written to before
+                        if read_addr in self.mem_writes:
+                            # if written to before, set up forks with all the known values
+                            for wval in self.mem_writes[read_addr]:
+                                resume_context = copy(self.context)
+                                resume_context.mem_state[read_addr] = wval
+                                resume_context.newblock = False
+                                self.voladdrs[read_addr]['w'][wval] = resume_context
+
+                                branch_info = {
+                                    'addr'    : address,
+                                    'raw'     : b'',
+                                    'target'  : resume_context.pc,
+                                    'bblock'  : None,
+                                    'context' : resume_context,
+                                    'ret'     : address,
+                                    'isr'     : resume_context.isr,
+                                }
+                                self.unexplored.append(FBranch(**branch_info))
+
                     self.voladdrs[read_addr]['r'][(val, address)] = copy(self.context)
 
                     # if encountering for first time and there are already logged reads,
@@ -876,6 +899,9 @@ class FFXEngine():
                     addr,                       # write location
                 )
                 self.context.bblock.mem_log.append(info)
+                if addr not in self.mem_writes:
+                    self.mem_writes[addr] = []
+                self.mem_writes[addr].append(val)
                 self.logger.info("pc @ 0x{:>08X} : {} 0x{:>08x} @ {:>08X}".format(*info))
                 self.context.mem_state[addr] = val.to_bytes(size, 'little')
 
