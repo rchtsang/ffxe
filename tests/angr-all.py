@@ -63,7 +63,7 @@ if __name__ == "__main__":
         # save static cfg result
         fast_graph = {
             'nodes': set([(node.addr & (~1), node.size) for node in cfg_fast.nodes()]),
-            'edges': set([(n1.addr & (~1), n2.addr & (~1)) for (n1, n2) in cfg_fast.graph.edges()])
+            'edges': set([(n1.instruction_addrs[-1] & (~1), n2.addr & (~1)) for (n1, n2) in cfg_fast.graph.edges() if n1.instruction_addrs])
         }
         with open(f"tests/cfgs/{name}-angr_fast-cfg.pkl", 'wb') as pklfile:
             dill.dump(fast_graph, pklfile)

@@ -61,7 +61,7 @@ if __name__ == "__main__":
         (name, ext) = splitext(fn)
         graph = {
             'nodes': set([(b.addr, b.size) for b in cfg.bblocks.values()]),
-            'edges': cfg.edges,
+            'edges': set([(cfg.bblocks[e[0]].insn_addrs[-1], e[1]) for e in cfg.edges]),
         }
         with open(f"tests/cfgs/{name}-ffxe-cfg.pkl", 'wb') as pklfile:
             dill.dump(graph, pklfile)

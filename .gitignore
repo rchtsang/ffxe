@@ -1,6 +1,7 @@
 **/__pycache__/
 **/.ipynb_checkpoints/
 **/logs/
+**/cfgs/
 **/*.egg-info/
 .DS_Store
 
