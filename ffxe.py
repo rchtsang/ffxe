@@ -11,6 +11,7 @@ import yaml
 import unicorn
 import elftools
 import capstone
+from IPython import embed
 
 from unicorn import *
 from unicorn.arm_const import *
@@ -43,7 +44,10 @@ class FContext():
         cls = self.__class__
         result = cls.__new__(cls)
         for k, v in self.__dict__.items():
-            setattr(result, k, copy(v))
+            if k == 'uc_context':
+                setattr(result, k, deepcopy(v))
+            else:
+                setattr(result, k, copy(v))
         return result
 
     def __eq__(self, other):
@@ -377,10 +381,11 @@ class FFXEngine():
                 self.context.bblock.returns = True
 
             # decrement quota of previously executed block
-            self.context.bblock.quota -= 1 
+            if self.context.newblock:
+                self.context.bblock.quota -= 1 
 
             # add block if not already in cfg
-            if self.cfg.is_new_block(address):
+            if self.cfg.is_new_block(address) and self.context.newblock:
                 bblock = BBlock(
                     address=address,
                     size=size,
@@ -391,7 +396,10 @@ class FFXEngine():
                     **block_kwargs)
                 connected = self.cfg.connect_block(bblock, parent=self.context.bblock)
             else:
-                bblock = self.cfg.bblocks[address] 
+                if not self.context.newblock:
+                    bblock = self.context.bblock
+                else:
+                    bblock = self.cfg.bblocks[address] 
 
                 if self.context.isr not in bblock.isrs:
                     # if already in cfg and different isr context, 
@@ -446,7 +454,7 @@ class FFXEngine():
         self.context.bblock = bblock
 
         # check execution quota
-        if self.cfg.bblocks[address].quota <= 0:
+        if self.context.bblock.quota <= 0:
             # check if calling block and do forward reachability if needed
             current = self.explored[-1]
             if (current.ret_addr
@@ -457,7 +465,7 @@ class FFXEngine():
                 # do forward reachability on the existing function
                 # and connect the return block to each return point
                 ret_blocks = self.cfg.forward_reachability(
-                    self.cfg.bblocks[address])
+                    self.context.bblock)
                 for block in ret_blocks:
                     self.cfg.connect_block(
                         bblock=self.cfg.bblocks[current.ret_addr],
@@ -521,17 +529,27 @@ class FFXEngine():
                 dest_reg = cs_insn.op_find(ARM_OP_REG, 1)
                 target = uc.reg_read(dest_reg.reg)
 
+                self.context.bblock.indirect = True
+                self.context.bblock.contrib = True
+
                 # tracking indirect branches
                 if address not in self.ibtargets:
-                    self.context.bblock.indirect = True
                     self.ibtargets[address] = []
 
+                # need to account for case where indirect block reached, but
+                # state is invalid and so not getting marked properly
+
+                # limiting the backwarrd reachability might be causing 
+                # cases where quotas not getting incremented and legit
+                # memory states are being ignored.
                 if (target not in self.ibtargets[address]
                         and (self.addr_in_region(target, 'flash')
                             or self.addr_in_region(target, 'codeRAM'))):
                     self.ibtargets[address].append(target)
                     self.logger.info("backward reachability @ 0x{:x}".format(self.context.pc))
+                    # self.context.bblock.quota += 1
                     self.cfg.backward_reachability(self.context.bblock)
+
             else:
                 raise Exception("this shouldn't happen")
 
@@ -613,9 +631,11 @@ class FFXEngine():
             # update for indirect branch block
             target = uc.reg_read(cs_insn.op_find(CS_OP_REG, 1).reg)
 
+            self.context.bblock.indirect = True
+            self.context.bblock.contrib = True
+
             # indirect branch target tracking
             if address not in self.ibtargets:
-                self.context.bblock.indirect = True
                 self.ibtargets[address] = []
 
             if (target not in self.ibtargets[address]
@@ -846,8 +866,8 @@ class FFXEngine():
                         if read_addr in self.mem_writes:
                             # if written to before, set up forks with all the known values
                             for wval in self.mem_writes[read_addr]:
-                                resume_context = copy(self.context)
-                                resume_context.mem_state[read_addr] = wval
+                                resume_context = self.backup()
+                                resume_context.mem_state[read_addr] = wval.to_bytes(4, 'little')
                                 resume_context.newblock = False
                                 self.voladdrs[read_addr]['w'][wval] = resume_context
 
@@ -862,7 +882,10 @@ class FFXEngine():
                                 }
                                 self.unexplored.append(FBranch(**branch_info))
 
-                    self.voladdrs[read_addr]['r'][(val, address)] = copy(self.context)
+                    if (val, address) not in self.voladdrs[read_addr]['r']:
+                        self.voladdrs[read_addr]['r'][(val, address)] = []
+
+                    self.voladdrs[read_addr]['r'][(val, address)].append(self.backup())
 
                     # if encountering for first time and there are already logged reads,
                     # need to resume with those memory contexts.
@@ -922,8 +945,13 @@ class FFXEngine():
                     self.voladdrs[addr] = { 'r':{}, 'w':{}, 'm': set() }
 
                 if addr in self.voladdrs:
-                    # log write to volatile addres
-                    self.voladdrs[addr]['w'][(val, address)] = copy(self.context)
+                    # log write to volatile addrs
+                    if (val, address) not in self.voladdrs[addr]['w']:
+                        self.voladdrs[addr]['w'][(val, address)] = []
+                    self.voladdrs[addr]['w'][(val, address)].append(self.backup())
+
+                        # try not allowing overwrite
+                        # self.voladdrs[addr]['w'][(val, address)] = copy(self.context)
 
                     # resume from any points that rely on this block
                     # (will only happen if the resume point is a contributing block)
@@ -936,26 +964,30 @@ class FFXEngine():
                             vol_ram_state.append(
                                 "{:x}:{:x}".format(maddr, int.from_bytes(mval, 'little')))
                     mem_hash = '_'.join(vol_ram_state)
+                    # could try adding arg reg state to hash
 
                     if (not any([val == v for (v, i) in self.voladdrs[addr]['r'].keys()])
                             and mem_hash not in self.voladdrs[addr]['m']):
                         self.voladdrs[addr]['m'].add(mem_hash)
 
-                        for (rval, inst), rcontext in self.voladdrs[addr]['r'].items():
-                            if (rcontext.bblock.contrib):
-                                resume_context = copy(rcontext)
-                                resume_context.mem_state = self.context.mem_state
-                                resume_context.newblock = False
-                                branch_info = {
-                                    'addr'    : addr,
-                                    'raw'     : b'',
-                                    'target'  : resume_context.pc,
-                                    'bblock'  : None,
-                                    'context' : resume_context,
-                                    'ret'     : addr,
-                                    'isr'     : resume_context.isr,
-                                }
-                                self.unexplored.append(FBranch(**branch_info))
+                        for (rval, inst), rcontexts in self.voladdrs[addr]['r'].items():
+                            for rcontext in rcontexts:
+                                if (rcontext.bblock.contrib):
+                                    resume_context = copy(rcontext)
+                                    if resume_context.bblock.quota < 1:
+                                        self.cfg.inc_quota_forward(resume_context.bblock)
+                                    resume_context.mem_state = self.context.mem_state
+                                    resume_context.newblock = False
+                                    branch_info = {
+                                        'addr'    : addr,
+                                        'raw'     : b'',
+                                        'target'  : resume_context.pc,
+                                        'bblock'  : None,
+                                        'context' : resume_context,
+                                        'ret'     : addr,
+                                        'isr'     : resume_context.isr,
+                                    }
+                                    self.unexplored.append(FBranch(**branch_info))
 
 
         # ## STACK STUFF
@@ -1139,9 +1171,18 @@ class FFXEngine():
                 # if block has invalid instruction, mark for delete
                 if e.args == UC_ERR_INSN_INVALID:
                     self.context.bblock.delete = True
-                # # if block tried to access unmapped data, let it try to execute again
-                # if e.args in [UC_ERR_READ_UNMAPPED, UC_ERR_WRITE_UNMAPPED]:
+                
+                # if block tried to access unmapped data, let it try to execute again
+                # elif (e.args in [UC_ERR_READ_UNMAPPED, UC_ERR_WRITE_UNMAPPED]
+                #         and self.context.bblock.contrib):
                 #     self.cfg.backward_reachability(self.context.bblock)
+
+                # if block errored out but was a contibuting block, need to reset the quotas
+                elif self.context.newblock and self.context.bblock.contrib:
+                    # the current block never got decremented, so don't
+                    # increment it
+                    self.context.bblock.quota -= 1
+                    self.cfg.backward_reachability(self.context.bblock)
 
             except Exception as e:
                 self.logger.error("{}\n{}\n".format(

@@ -444,6 +444,10 @@ class CFG():
             # print(current)
             if ib:
                 current.contrib = 1
+            # if current.quota <= 0:
+            #     current.quota = 1
+            # else:
+            #     current.quota += 1
             current.quota += 1
             visited.append(current)
             for parent in current.parents:
@@ -461,6 +465,23 @@ class CFG():
                 ret_blocks.append(block)
 
         return ret_blocks
+
+    def inc_quota_forward(self, bblock : Type[BBlock]):
+        """find intraprocedural contributing forward blocks"""
+        queue = [bblock]
+        fn_addr = bblock.fn_addr
+        visited = []
+        current = None
+
+        while queue:
+            current = queue.pop(0)
+            current.quota = 1
+            visited.append(current)
+            for child in current.children:
+                if (child.fn_addr == fn_addr 
+                        and child not in visited
+                        and (child.contrib or child.indirect)):
+                    queue.append(child)
 
     def split_block(self, bblock : Type[BBlock], subblock : Type[BBlock]):
         """bblock overlaps with subblock. split bblock and make subblock its child"""

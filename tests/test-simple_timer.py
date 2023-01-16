@@ -5,12 +5,21 @@ from ffxe import *
 
 ffxe = FFXEngine(
     pd="mmaps/nrf52832.yml",
-    path="examples/simple_timer.elf",
+    path="examples/simple_timer-o0.elf",
     log_stdout=True,
     log_insn=True,
 )
-ffxe.run()
 
+bpts = [
+    0x1250, # resume point for timer isr
+    0x620, # load point for timeout_handler
+    0x628, # call point for timeout_handler
+]
+
+for addr in bpts:
+    ffxe.add_breakpoint(addr)
+
+ffxe.run()
 
 disasm_txt = deepcopy(ffxe.fw.disasm_txt)
 for block in ffxe.cfg.bblocks.values():
