@@ -5,7 +5,7 @@ from ffxe import *
 
 ffxe = FFXEngine(
     pd="mmaps/nrf52832.yml",
-    path="examples/gpiote.elf",
+    path="examples/gpiote-o2.elf",
     log_stdout=True,
     log_insn=True,
 )

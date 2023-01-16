@@ -475,7 +475,9 @@ class CFG():
 
         while queue:
             current = queue.pop(0)
-            current.quota = 1
+            current.quota += 1
+            if current.quota > 1:
+                current.quota = 1
             visited.append(current)
             for child in current.children:
                 if (child.fn_addr == fn_addr 

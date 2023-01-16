@@ -547,7 +547,7 @@ class FFXEngine():
                             or self.addr_in_region(target, 'codeRAM'))):
                     self.ibtargets[address].append(target)
                     self.logger.info("backward reachability @ 0x{:x}".format(self.context.pc))
-                    # self.context.bblock.quota += 1
+                    self.context.bblock.quota -= 1
                     self.cfg.backward_reachability(self.context.bblock)
 
             else:
@@ -974,7 +974,8 @@ class FFXEngine():
                             for rcontext in rcontexts:
                                 if (rcontext.bblock.contrib):
                                     resume_context = copy(rcontext)
-                                    if resume_context.bblock.quota < 1:
+                                    if (resume_context.bblock.quota < 1
+                                            and resume_context.bblock.contrib):
                                         self.cfg.inc_quota_forward(resume_context.bblock)
                                     resume_context.mem_state = self.context.mem_state
                                     resume_context.newblock = False
@@ -1178,11 +1179,11 @@ class FFXEngine():
                 #     self.cfg.backward_reachability(self.context.bblock)
 
                 # if block errored out but was a contibuting block, need to reset the quotas
-                elif self.context.newblock and self.context.bblock.contrib:
-                    # the current block never got decremented, so don't
-                    # increment it
-                    self.context.bblock.quota -= 1
-                    self.cfg.backward_reachability(self.context.bblock)
+                # elif self.context.newblock and self.context.bblock.contrib:
+                #     # the current block never got decremented, so don't
+                #     # increment it
+                #     self.context.bblock.quota -= 1
+                #     self.cfg.backward_reachability(self.context.bblock)
 
             except Exception as e:
                 self.logger.error("{}\n{}\n".format(
