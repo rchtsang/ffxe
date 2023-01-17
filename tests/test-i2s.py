@@ -5,10 +5,22 @@ from ffxe import *
 
 ffxe = FFXEngine(
     pd="mmaps/nrf52832.yml",
-    path="examples/gpiote-o2.bin",
+    path="examples/i2s-o0.elf",
     log_stdout=True,
     log_insn=True,
+    log_time=True
 )
+
+# 2d19 is spi handler, need to get this one.
+# 18d8 is spim_evt_handler, which invokes the registered handler
+bpts = [
+]
+
+# from IPython import embed ; embed()
+
+for addr in bpts:
+    ffxe.add_breakpoint(addr)
+
 ffxe.run()
 
 

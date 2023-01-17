@@ -12,6 +12,7 @@ ffxe = FFXEngine(
 
 bpts = [
     0x1250, # resume point for timer isr
+    0x125a, # blx for timer isr
     0x620, # load point for timeout_handler
     0x628, # call point for timeout_handler
 ]
