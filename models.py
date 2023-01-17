@@ -485,6 +485,11 @@ class CFG():
                         and (child.contrib or child.indirect)):
                     queue.append(child)
 
+    def reset_quotas(self):
+        """reset quotas for all blocks in cfg"""
+        for addr, block in self.bblocks.items():
+            block.quota = 1
+
     def split_block(self, bblock : Type[BBlock], subblock : Type[BBlock]):
         """bblock overlaps with subblock. split bblock and make subblock its child"""
         # remove overlap

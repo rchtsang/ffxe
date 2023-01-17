@@ -953,7 +953,8 @@ class FFXEngine():
                         # try not allowing overwrite
                         # self.voladdrs[addr]['w'][(val, address)] = copy(self.context)
 
-                    # resume from any points that rely on this block
+                    # resume from any points that rely on this block 
+                    # only if this block isn't in isr and the resume point is or vice versa
                     # (will only happen if the resume point is a contributing block)
                     # (also only do this if the volatile mem state is unique)
                     # (also only consider it for writes to changes in the dataRAM)
@@ -972,7 +973,8 @@ class FFXEngine():
 
                         for (rval, inst), rcontexts in self.voladdrs[addr]['r'].items():
                             for rcontext in rcontexts:
-                                if (rcontext.bblock.contrib):
+                                if (rcontext.bblock.contrib
+                                        and self.context.isr != rcontext.isr):
                                     resume_context = copy(rcontext)
                                     if (resume_context.bblock.quota < 1
                                             and resume_context.bblock.contrib):
@@ -1148,6 +1150,11 @@ class FFXEngine():
         while self.unexplored:
             branch = self.unexplored.pop(-1)
             self.explored.append(branch)
+
+            # reset quotas after all isrs
+            if (branch.target == self.entry):
+                self.logger.info("RESETTING QUOTAS")
+                self.cfg.reset_quotas()
 
             # restore from unexplored branch
             branch.unexplored = False
