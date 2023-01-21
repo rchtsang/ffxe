@@ -94,13 +94,13 @@ class FFXEngine():
             mmio       : dict = None,
             path       : str = None,
             log_dir    : str = 'logs',
-            log_name   : str = 'fxe.log',
+            log_name   : str = 'ffxe.log',
             log_stdout : bool = False,
             log_insn   : bool = False,
             log_time   : bool = True):
         
         # setup logging
-        self.logger = logging.getLogger('efxe.eng')
+        self.logger = logging.getLogger('ffxe.eng')
         self.logger.setLevel(logging.DEBUG)
         self.log_insn = log_insn
         
@@ -1144,8 +1144,6 @@ class FFXEngine():
                 self.unexplored.append(
                     FBranch(**branch_info))
             table_offset += 4
-
-        visited = []
 
         while self.unexplored:
             branch = self.unexplored.pop(-1)

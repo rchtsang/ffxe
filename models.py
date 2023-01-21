@@ -155,44 +155,6 @@ class FirmwareImage():
 
         iedges = list(edges)
 
-        # # need to first turn block edges into insn edges
-        # # which means we need to compute last addr in block 
-        # # (size won't work great for this...)
-        # blocks = list(sorted(nodes))
-        # bedges = list(sorted(edges))
-
-        # if need_iedges:
-        #     iedges = []
-        #     current_block = None
-        #     prev_addr = None
-        #     for addr, info in sorted(self.disasm.items()):
-        #         if current_block and addr >= current_block[0] + current_block[1]:
-        #             # reached end of current block
-        #             # update all edges
-        #             # that come from current block to come from addr of 
-        #             # last instruction of the current block (instead of start)
-        #             if current_block and bedges:
-        #                 hits = [e for e in bedges if e[0] == current_block[0]]
-        #                 for hit in hits:
-        #                     bedges.remove(hit)
-        #                     iedges.append((prev_addr, hit[1]))
-        #             # while current_block and bedges and bedges[0][0] == current_block[0]:
-        #             #     edge = bedges.pop(0)
-        #             #     iedges.append((prev_addr, edge[1]))
-                
-        #         if blocks and addr == blocks[0][0]:
-        #             # found new block
-        #             # update current block
-        #             current_block = blocks.pop(0)
-                
-        #         prev_addr = addr
-        # else:
-        #     iedges = bedges
-        # if bedges:
-        #     iedges.extend(bedges)
-
-        # breakpoint()
-
         # create an arrows matrix that runs accross the side of the 
         # disassembly. fill in the small arrows at the bottom and work up
         arrows = [{addr: '\u2500' for addr in sorted(self.disasm.keys())}]

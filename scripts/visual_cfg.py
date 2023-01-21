@@ -31,7 +31,7 @@ if __name__ == "__main__":
     cfgs = {
         os.path.basename(path) : load_cfg(path) for path in cfg_paths
     }
-    for path in cfg_paths:
+    for path in sorted(cfg_paths):
         cfg = load_cfg(path)
         (name, ext) = os.path.splitext(os.path.basename(path))
         print(f"drawing {name}")

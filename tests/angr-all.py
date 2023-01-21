@@ -78,7 +78,7 @@ if __name__ == "__main__":
             # save dynamic cfg result
             emu_graph = {
                 'nodes': set([((node.addr & (~1)), node.size) for node in cfg_emu.nodes()]),
-                'edges': set([(n1.addr & (~1), n2.addr & (~1)) for (n1, n2) in cfg_emu.graph.edges()])
+                'edges': set([(n1.instruction_addrs[-1] & (~1), n2.addr & (~1)) for (n1, n2) in cfg_emu.graph.edges() if n1.instruction_addrs])
             }
         except Exception as e:
             print(e, file=sys.stderr)

@@ -88,7 +88,7 @@ class FXEngine():
             log_insn   : bool = False):
         
         # setup logging
-        self.logger = logging.getLogger('efxe.eng')
+        self.logger = logging.getLogger('fxe.eng')
         self.logger.setLevel(logging.DEBUG)
         self.log_insn = log_insn
         
@@ -193,18 +193,18 @@ class FXEngine():
             user_data={},
         )
 
-        # setup mem access hooks
-        self.uc.hook_add(
-            (UC_HOOK_MEM_READ | 
-                UC_HOOK_MEM_READ_PROT |
-                UC_HOOK_MEM_READ_AFTER |
-                UC_HOOK_MEM_WRITE |
-                UC_HOOK_MEM_WRITE_PROT),
-            self._hook_mem,
-            begin=0x0,
-            end=0xFFFFFFFF,
-            user_data={},
-        )
+        # # setup mem access hooks
+        # self.uc.hook_add(
+        #     (UC_HOOK_MEM_READ | 
+        #         UC_HOOK_MEM_READ_PROT |
+        #         UC_HOOK_MEM_READ_AFTER |
+        #         UC_HOOK_MEM_WRITE |
+        #         UC_HOOK_MEM_WRITE_PROT),
+        #     self._hook_mem,
+        #     begin=0x0,
+        #     end=0xFFFFFFFF,
+        #     user_data={},
+        # )
 
 
     def load_fw(self, path):
@@ -245,9 +245,10 @@ class FXEngine():
         # this should construct the block and connect it to the CFG as needed
 
         try:
-            # check if valid instruction
-            next(self.cs.disasm(uc.mem_read(address, size), size))
-        except CsError as e:
+            # check if all block instructions valid
+            insn_addrs = [ins.address for ins in self.cs.disasm(
+                uc.mem_read(address, size), offset=address)]
+        except StopIteration as e:
             raise UcError(UC_ERR_INSN_INVALID)
 
         # check if block is at a data location
@@ -259,23 +260,24 @@ class FXEngine():
         block_kwargs = {}
         connected = False
 
-        # check if returning block
-        if (self.context.callstack 
-                and address == self.context.callstack[-1][-1]):
-            self.context.callstack.pop(-1)
-            self.context.bblock.returns = True
-
         # add block to cfg
         if not self.context.bblock:
             # handle the first block specially
             bblock = BBlock(
                 address=address, 
                 size=size, 
+                insn_addrs=insn_addrs,
                 fn_addr=self.context.callstack[-1][0], 
                 bytedata=self.uc.mem_read(address, size),
                 parent=NullBlock)
             connected = self.cfg.connect_block(bblock)
         else:
+            # check if returning block
+            if (self.context.callstack 
+                    and address == self.context.callstack[-1][-1]):
+                self.context.callstack.pop(-1)
+                self.context.bblock.returns = True
+
             # decrement quota of previously executed block
             self.context.bblock.quota -= 1 
 
@@ -284,12 +286,15 @@ class FXEngine():
                 bblock = BBlock(
                     address=address,
                     size=size,
+                    insn_addrs=insn_addrs,
                     fn_addr=self.context.callstack[-1][0],
                     bytedata=self.uc.mem_read(address, size),
                     **block_kwargs)
-                connected = self.cfg.connect_block(bblock, parent=self.context.bblock)
             else:
                 bblock = self.cfg.bblocks[address]
+
+        connected = self.cfg.connect_block(bblock, parent=self.context.bblock)
+        
         # update current block
         self.context.bblock = bblock
 
@@ -322,15 +327,22 @@ class FXEngine():
         self.context.pc = address
         self.context.pc |= 1 if uc.reg_read(UC_ARM_REG_CPSR) & (1 << 5) else 0
         self.context.apsr.set(uc.reg_read(UC_ARM_REG_APSR))
-        cs_insn = next(self.cs.disasm(uc.mem_read(address, size), size))
+        try:
+            cs_insn = next(self.cs.disasm(uc.mem_read(address, size), offset=address))
+        except StopIteration as e:
+            # if hit a bad instruction, the block isn't valid
+            self.context.bblock.delete = True
+            self.cfg.remove_block(self.context.bblock)
+            raise UcError(UC_ERR_INSN_INVALID)
+
+        if address not in self.fw.disasm:
+            # instruction not in pre-computed disassembly,
+            # probably invalid, delete block and raise error
+            self.context.bblock.delete = True
+            self.cfg.remove_block(self.context.bblock)
+            raise UcError(UC_ERR_INSN_INVALID)
 
         if self.log_insn:
-            if address not in self.fw.disasm:
-                # instruction not in pre-computed disassembly,
-                # probably invalid, delete block and raise error
-                self.context.bblock.delete = True
-                self.cfg.remove_block(self.context.bblock)
-                raise UcError(UC_ERR_INSN_INVALID)
             self.logger.info("0x{:x}: {:<10} {}".format(
                 address,
                 self.fw.disasm[address]['raw_str'],
@@ -364,6 +376,7 @@ class FXEngine():
                             or self.addr_in_region(target, 'codeRAM'))):
                     self.ibtargets[address].append(target)
                     self.logger.info("backward reachability @ 0x{:x}".format(self.context.pc))
+                    self.context.bblock.quota -= 1
                     self.cfg.backward_reachability(self.context.bblock)
             else:
                 raise Exception("this shouldn't happen")
@@ -508,16 +521,43 @@ class FXEngine():
             # add table addresses to jobs except for target
             # stop when hit invalid address or maximum offset
             # set an upper limit on the offset size as maximum size of flash region
+            # also skip duplicate targets
+            jump_targets = set()
             for i in range(0, self.pd['mmap']['flash']['size'], read_size):
-                if i == tbl_offset:
-                    continue
-                jump_rel = uc.mem_read(tbl_base + i, read_size)
+                # if i == tbl_offset:
+                #     continue
+                mem_loc = tbl_base + i
+                jump_rel = int.from_bytes(uc.mem_read(mem_loc, read_size), 'little')
                 jump_target = address + 4 + (jump_rel * 2)
+                # self.mem_reads.append(mem_loc)
+
+                if jump_target in jump_targets:
+                    continue
+
+                # if the mem_loc in jump_targets, it's definitely the end of the table
+                # if the table is embedded in the code
+                if mem_loc in jump_targets:
+                    break
+
                 # specific to cortex m4
                 if ((jump_target < 0x200) 
                         or (jump_target > self.pd['mmap']['flash']['size'])):
                     # invalid jump target
                     break
+
+                # check validity of jump target
+                target_bytes = uc.mem_read(jump_target & (~1), 4)
+                if not int.from_bytes(target_bytes, 'little'):
+                    # if the jump target is to zeroed out data, it's probably invalid
+                    break
+                try:
+                    target_insn = next(self.cs.disasm(target_bytes, 0))
+                except StopIteration as e:
+                    # stop iteration means failed to disassemble. probably invalid inst
+                    break
+
+                jump_targets.add(jump_target)
+
                 # create backup context for valid jump target
                 context = self.backup()
                 context.pc = jump_target
@@ -540,7 +580,7 @@ class FXEngine():
                     context.pc = address + size
                 else:
                     # branch not taken, backup context for jump target
-                    context.pc = address + 4 + b_insn.imm32
+                    context.pc = target
                 self.unexplored.append(
                     Branch(
                         addr=address, 
@@ -549,18 +589,18 @@ class FXEngine():
                         bblock=self.context.bblock,
                         context=context))
 
-    def _hook_mem(self, uc, access, address, size, value, user_data):
-        """callback after every memory access"""
-        # tracking memory accesses
-        info = (
-            uc.reg_read(UC_ARM_REG_PC),             # inst addr
-            'w' if access in [UC_MEM_WRITE, UC_MEM_WRITE_PROT] else 'r', # access type
-            value,
-            address,
-        )
-        self.context.bblock.mem_log.append(info)
-        self.logger.info("pc @ 0x{:08X} : {} 0x{:>8x} @ 0x{:08X}".format(
-            *self.context.bblock.mem_log[-1]))
+    # def _hook_mem(self, uc, access, address, size, value, user_data):
+    #     """callback after every memory access"""
+    #     # tracking memory accesses
+    #     info = (
+    #         uc.reg_read(UC_ARM_REG_PC),             # inst addr
+    #         'w' if access in [UC_MEM_WRITE, UC_MEM_WRITE_PROT] else 'r', # access type
+    #         value,
+    #         address,
+    #     )
+    #     self.context.bblock.mem_log.append(info)
+    #     self.logger.info("pc @ 0x{:08X} : {} 0x{:>8x} @ 0x{:08X}".format(
+    #         *self.context.bblock.mem_log[-1]))
 
     def _get_cond_status(self, uc_cond):
         self.context.apsr.set(self.uc.reg_read(UC_ARM_REG_APSR))
@@ -640,13 +680,11 @@ class FXEngine():
                     Branch(
                         addr=table_offset,
                         raw=b'',
-                        target=self.entry,
+                        target=word,
                         bblock=None,
                         context=context,
                         ret=table_offset))
             table_offset += 4
-
-        visited = []
 
         while self.unexplored:
             branch = self.unexplored.pop(-1)
