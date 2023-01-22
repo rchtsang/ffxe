@@ -25,7 +25,7 @@ if __name__ == "__main__":
             pd="mmaps/nrf52832.yml",
             path=fw_path,
             log_stdout=False,
-            log_insn=True,
+            log_insn=False,
         )
 
         t = perf_counter()

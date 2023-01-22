@@ -9,9 +9,12 @@ from os.path import splitext
 from copy import deepcopy
 from typing import Type, Union
 from ctypes import memmove, pointer, sizeof
+from tempfile import NamedTemporaryFile
 
 from elftools.elf.elffile import ELFFile
 from capstone.arm_const import *
+
+from utils import *
 
 
 class FirmwareImage():
@@ -30,6 +33,7 @@ class FirmwareImage():
         self.disasm = {}
         self.disasm_txt = []
         self.raw = None
+        self.isa = isa
 
         # elf format
         if self.ext == '.elf':
@@ -94,37 +98,37 @@ class FirmwareImage():
                 self.img = binfile.read()
             self.raw = self.img
 
-            # disassemble with objdump
-            self.disasm_txt = subprocess.run([
-                    'arm-none-eabi-objdump', '-D',
-                    '-bbinary',
-                    f'-m{isa}',
-                    '-Mforce-thumb',
-                    path],
-                stdout=subprocess.PIPE,
-            ).stdout.decode('utf-8').split('\n')
+            # # disassemble with objdump
+            # self.disasm_txt = subprocess.run([
+            #         'arm-none-eabi-objdump', '-D',
+            #         '-bbinary',
+            #         f'-m{isa}',
+            #         '-Mforce-thumb',
+            #         path],
+            #     stdout=subprocess.PIPE,
+            # ).stdout.decode('utf-8').split('\n')
 
-            # convert tabs to spaces (maintaining visual spacing)
-            for i, line in enumerate(self.disasm_txt):
-                newline = []
-                for j, char in enumerate(line):
-                    if char == '\t':
-                        newline.append(' '*(4 - (j % 4)))
-                    else:
-                        newline.append(char)
-                self.disasm_txt[i] = ''.join(newline)
+            # # convert tabs to spaces (maintaining visual spacing)
+            # for i, line in enumerate(self.disasm_txt):
+            #     newline = []
+            #     for j, char in enumerate(line):
+            #         if char == '\t':
+            #             newline.append(' '*(4 - (j % 4)))
+            #         else:
+            #             newline.append(char)
+            #     self.disasm_txt[i] = ''.join(newline)
 
-            # construct addr-to-line mapping and disasm dict
-            for lineno, line in enumerate(self.disasm_txt):
-                match = self.RE_PTRN_DISASM.search(line)
-                if match:
-                    addr = int(match.group('addr'), base=16)
-                    self.disasm[addr] = {
-                        'line': lineno,
-                        'raw': int(''.join(match.group('raw').split()), base=16),
-                        'raw_str': match.group('raw'),
-                        'mnemonic': match.group('mnemonic'),
-                    }
+            # # construct addr-to-line mapping and disasm dict
+            # for lineno, line in enumerate(self.disasm_txt):
+            #     match = self.RE_PTRN_DISASM.search(line)
+            #     if match:
+            #         addr = int(match.group('addr'), base=16)
+            #         self.disasm[addr] = {
+            #             'line': lineno,
+            #             'raw': int(''.join(match.group('raw').split()), base=16),
+            #             'raw_str': match.group('raw'),
+            #             'mnemonic': match.group('mnemonic'),
+            #         }
 
         # intel hex format
         elif self.ext == '.hex':
@@ -135,6 +139,85 @@ class FirmwareImage():
 
         self.size = len(self.raw)
 
+
+    def disasm_chunk(self, address : int, size : int):
+        """disassemble only the indicated chunk and return the
+        disassembly as a list of strings
+        using arm-none-eabi-objdump
+        """
+        assert 0 <= address < self.size, "invalid address"
+        assert address + size < self.size, "block out of bounds"
+
+        with NamedTemporaryFile() as ntf:
+            # write block to temporary file for objdump
+            ntf.write(self.raw[address:address + size])
+            ntf.flush()
+
+            block_txt = subprocess.run([
+                    'arm-none-eabi-objdump', 
+                    '-bbinary',
+                    f'-m{self.isa}',
+                    '-Mforce-thumb',
+                    f'--adjust-vma={hex(address)}',
+                    '-D', ntf.name],
+                stdout=subprocess.PIPE,
+            ).stdout.decode('utf-8').split('\n')
+
+        disasm_txt = []
+        for line in block_txt:
+            if not self.RE_PTRN_DISASM.search(line):
+                # found actual disassembly line
+                continue
+
+            # convert tabs to spaces (maintaining visual spacing)
+            newline = []
+            for j, char in enumerate(line):
+                if char == '\t':
+                    newline.append(' '*(4 - (j % 4)))
+                else:
+                    newline.append(char)
+            disasm_txt.append(''.join(newline))
+
+        return disasm_txt
+
+
+    def disassemble(self, cfg : dict):
+        """disassemble all blocks in cfg 
+        and update current disasm properties
+        """
+        # assuming that no blocks overlap
+        disasm_txt = []
+        # add the vector table to the disassembly
+        for i, chunk in enumerate(chunks(4, self.raw[:0x200])):
+            val = int.from_bytes(chunk, 'little')
+            disasm_txt.append(
+                "{:>8x}: {:08x}  .word    0x{:08x}".format(
+                    i * 4, # table offset
+                    val,
+                    val,
+            ))
+
+        # add all disassembled basic blocks to disasm_txt
+        for (addr, size) in sorted(cfg['nodes']):
+            disasm_txt.extend(self.disasm_chunk(addr, size))
+            disasm_txt.append('')
+
+        self.disasm_txt = disasm_txt
+        self.disasm = {}
+
+        # construct addr-to-line mapping and disasm dict
+        for lineno, line in enumerate(self.disasm_txt):
+            match = self.RE_PTRN_DISASM.search(line)
+            if match:
+                addr = int(match.group('addr'), base=16)
+                self.disasm[addr] = {
+                    'line': lineno,
+                    'raw': int(''.join(match.group('raw').split()), base=16),
+                    'raw_str': match.group('raw'),
+                    'mnemonic': match.group('mnemonic'),
+                }
+
+
     def annotated_disasm(self, cfg : dict):
         """print the disassembly with CFG edge representation
         expects edges to be instruction addr to instruction addr
@@ -144,6 +227,10 @@ class FirmwareImage():
             "cfg missing nodes and edges"
         assert isinstance(cfg['nodes'], set) and isinstance(cfg['edges'], set), \
             "cfg nodes and edges should be sets of tuples"
+
+        if not self.disasm_txt:
+            # disassemble using cfg if not done so yet
+            self.disassemble(cfg)
 
         edges = deepcopy(cfg['edges'])
         nodes = deepcopy(cfg['nodes'])

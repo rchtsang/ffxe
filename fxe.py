@@ -257,6 +257,10 @@ class FXEngine():
                 or (address < 0x200)):
             raise UcError(UC_ERR_FETCH_PROT)
 
+        # check if block beyond end of fw
+        if (address > self.fw.size):
+            raise UcError(UC_ERR_INSN_INVALID)
+
         block_kwargs = {}
         connected = False
 
@@ -335,18 +339,20 @@ class FXEngine():
             self.cfg.remove_block(self.context.bblock)
             raise UcError(UC_ERR_INSN_INVALID)
 
-        if address not in self.fw.disasm:
-            # instruction not in pre-computed disassembly,
-            # probably invalid, delete block and raise error
-            self.context.bblock.delete = True
-            self.cfg.remove_block(self.context.bblock)
-            raise UcError(UC_ERR_INSN_INVALID)
+        # if address not in self.fw.disasm:
+        #     # instruction not in pre-computed disassembly,
+        #     # probably invalid, delete block and raise error
+        #     self.context.bblock.delete = True
+        #     self.cfg.remove_block(self.context.bblock)
+        #     raise UcError(UC_ERR_INSN_INVALID)
 
-        if self.log_insn:
-            self.logger.info("0x{:x}: {:<10} {}".format(
-                address,
-                self.fw.disasm[address]['raw_str'],
-                self.fw.disasm[address]['mnemonic']))
+        ## TODO: getting rid of predisasm means this needs to be dealt with.
+        ## will likely need to disasm on block encounter...
+        # if self.log_insn:
+        #     self.logger.info("0x{:x}: {:<10} {}".format(
+        #         address,
+        #         self.fw.disasm[address]['raw_str'],
+        #         self.fw.disasm[address]['mnemonic']))
 
         # it state for it conditionals
         itstate = uc.reg_read(UC_ARM_REG_ITSTATE)
