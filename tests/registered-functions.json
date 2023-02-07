@@ -1,0 +1,205 @@
+{
+  "blinky": {
+    "comment": "no registered functions"
+  },
+  "gpiote": {
+    "o0": {
+      "timer_dummy_handler": "183e"
+    },
+    "o1": {
+      "timer_dummy_handler": "974"
+    },
+    "o2": {
+      "timer_dummy_handler": "950"
+    },
+    "o3": {
+      "timer_dummy_handler": "ac8"
+    },
+    "comment-timer_dummy_handler": "registered in main"
+  },
+  "i2s": {
+    "o0": {
+      "uart_evt_handler": "4c8",
+      "uarte_evt_handler": "2594",
+      "nrfx_uarte_0_irq_handler": "4a78",
+      "data_handler": "4d34"
+    },
+    "o1": {
+      "uart_evt_handler": "3c8",
+      "uarte_evt_handler": "16e0",
+      "nrfx_uarte_0_irq_handler": "2180",
+      "data_handler": "2730"
+    },
+    "o2": {
+      "uart_evt_handler": "3c4",
+      "uarte_evt_handler": "18e0",
+      "nrfx_uarte_0_irq_handler": "2330",
+      "data_handler": "28c0"
+    },
+    "o3": {
+      "uart_evt_handler": "3c4",
+      "uarte_evt_handler": "19bc",
+      "nrfx_uarte_0_irq_handler": "2420",
+      "data_handler": "2958"
+    },
+    "comment-uart_evt_handler": "registered in log_default_backends",
+    "comment-uarte_evt_handler": "registered in nrf_drv_uart",
+    "comment-nrfx_uarte_0_irq_handler": "registered in nrfx_uarte",
+    "comment-data_handler": "registered in main"
+  },
+  "saadc": {
+    "o0": {
+      "timer_handler": "34e2",
+      "saadc_callback": "35fc"
+    },
+    "o1": {
+      "timer_handler": "1c58",
+      "saadc_callback": "1c5c"
+    },
+    "o2": {
+      "timer_handler": "1e24",
+      "saadc_callback": "1e28"
+    },
+    "o3": {
+      "timer_handler": "1eac",
+      "saadc_callback": "1eb0"
+    },
+    "comment-timer_handler": "registered in main",
+    "comment-saadc_callback": "registered in main"
+  },
+  "simple_timer": {
+    "o0": {
+      "timeout_handler": "13c8",
+      "app_simple_timer_event_handler": "5fc"
+    },
+    "o1": {
+      "timeout_handler": "900",
+      "app_simple_timer_event_handler": "3c0"
+    },
+    "o2": {
+      "timeout_handler": "898",
+      "app_simple_timer_event_handler": "3d4"
+    },
+    "o3": {
+      "timeout_handler": "b4c",
+      "app_simple_timer_event_handler": "3d0"
+    },
+    "comment-timeout_handler": "registered in main",
+    "comment-app_simple_timer_event_handler": "registered in app_simple_timer"
+  },
+  "spi": {
+    "o0": {
+      "spi_event_handler": "51dc",
+      "spim_evt_handler": "26b8",
+      "uart_evt_handler": "4c8",
+      "uarte_evt_handler": "27b4",
+      "nrfx_uarte_0_irq_handler": "5124"
+    },
+    "o1": {
+      "spi_event_handler": "282c",
+      "spim_evt_handler": "1650",
+      "uart_evt_handler": "3c8",
+      "uarte_evt_handler": "171c",
+      "nrfx_uarte_0_irq_handler": "22f4"
+    },
+    "o2": {
+      "spi_event_handler": "29b0",
+      "spim_evt_handler": "1844",
+      "uart_evt_handler": "3c4",
+      "uarte_evt_handler": "18f4",
+      "nrfx_uarte_0_irq_handler": "2484"
+    },
+    "o3": {
+      "spi_event_handler": "2d18",
+      "spim_evt_handler": "18d8",
+      "uart_evt_handler": "3c4",
+      "uarte_evt_handler": "1988",
+      "nrfx_uarte_0_irq_handler": "27e0"
+    },
+    "comment-spi_event_handler": "registered in main",
+    "comment-spim_evt_handler": "registered in nrf_drv_spi",
+    "comment-uart_evt_handler": "registered in log_default_backends",
+    "comment-uarte_evt_handler": "registered in nrf_drv_uart",
+    "comment-nrfx_uarte_0_irq_handler": "registered in nrfx_uarte"
+  },
+  "timer": {
+    "o0": {
+      "timer_led_event_handler": "ca0"
+    },
+    "o1": {
+      "timer_led_event_handler": "5c0"
+    },
+    "o2": {
+      "timer_led_event_handler": "59c"
+    },
+    "o3": {
+      "timer_led_event_handler": "598"
+    },
+    "comment-timer_led_event_handler": "registered in main"
+  },
+  "twi_sensor": {
+    "o0": {
+      "twi_handler": "5130",
+      "twim_evt_handler": "24c4",
+      "uart_evt_handler": "4c8",
+      "uarte_evt_handler": "2594",
+      "nrfx_uarte_0_irq_handler": "4f6c"
+    },
+    "o1": {
+      "twi_handler": "29b4",
+      "twim_evt_handler": "1544",
+      "uart_evt_handler": "3c8",
+      "uarte_evt_handler": "1690",
+      "nrfx_uarte_0_irq_handler": "247c"
+    },
+    "o2": {
+      "twi_handler": "2cb8",
+      "twim_evt_handler": "1764",
+      "uart_evt_handler": "3c4",
+      "uarte_evt_handler": "18a8",
+      "nrfx_uarte_0_irq_handler": "278c"
+    },
+    "o3": {
+      "twi_handler": "2c30",
+      "twim_evt_handler": "17f0",
+      "uart_evt_handler": "3c4",
+      "uarte_evt_handler": "1948",
+      "nrfx_uarte_0_irq_handler": "26f8"
+    },
+    "comment-twi_handler": "registered in main",
+    "comment-twim_evt_handler": "registered in nrf_drv_twi",
+    "comment-uart_evt_handler": "registered in log_default_backends",
+    "comment-uarte_evt_handler": "registered in nrf_drv_uart",
+    "comment-nrfx_uarte_0_irq_handler": "registered in nrfx_uarte"
+  },
+  "uart": {
+    "o0": {
+      "uart_error_handle": "2618",
+      "uart_event_handler": "868",
+      "uarte_evt_handler": "c2c",
+      "nrfx_uarte_0_irq_handler": "2600"
+    },
+    "o1": {
+      "uart_error_handle": "13e0",
+      "uart_event_handler": "428",
+      "uarte_evt_handler": "794",
+      "nrfx_uarte_0_irq_handler": "e80"
+    },
+    "o2": {
+      "uart_error_handle": "134c",
+      "uart_event_handler": "418",
+      "uarte_evt_handler": "740",
+      "nrfx_uarte_0_irq_handler": "e0c"
+    },
+    "o3": {
+      "uart_error_handle": "1364",
+      "uart_event_handler": "414",
+      "uarte_evt_handler": "73c",
+      "nrfx_uarte_0_irq_handler": "e18"
+    },
+    "comment-uart_error_handle": "registered in main",
+    "comment-uart_event_handler": "registered in app_uart",
+    "comment-uarte_evt_handler": "registered in nrf_drv_uart",
+    "comment-nrfx_uarte_0_irq_handler": "registered in nrfx_uarte"
+  }
+}

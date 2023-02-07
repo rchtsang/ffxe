@@ -348,7 +348,7 @@ class FFXEngine():
 
         # check if block is at a data location
         # check if block is in vector table
-        if ((address in self.mem_reads)
+        if (any([iaddr in self.mem_reads for iaddr in insn_addrs])
                 or (address < 0x200)):
             raise UcError(UC_ERR_FETCH_PROT)
 

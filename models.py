@@ -1,6 +1,7 @@
 import os
 import re
 import shutil
+import binascii
 import subprocess
 import shlex
 import ctypes
@@ -10,11 +11,13 @@ from copy import deepcopy
 from typing import Type, Union
 from ctypes import memmove, pointer, sizeof
 from tempfile import NamedTemporaryFile
+from collections import OrderedDict
 
 from elftools.elf.elffile import ELFFile
 from capstone.arm_const import *
 
 from utils import *
+from ihex import IHex
 
 
 class FirmwareImage():
@@ -132,7 +135,8 @@ class FirmwareImage():
 
         # intel hex format
         elif self.ext == '.hex':
-            assert 0, "not implemented yet"
+            self.img = IHex(path)
+            self.raw = self.img.raw
 
         else:
             raise Exception("fw image file must be elf, ihex, or binary")

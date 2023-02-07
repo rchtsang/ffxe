@@ -1,6 +1,6 @@
 import os
 import sys
-from os.path import basename, splitext
+from os.path import realpath, dirname, basename, splitext
 from glob import glob
 from time import perf_counter
 
@@ -10,6 +10,9 @@ import angr
 """
 script to get angr cfgs for all firmware examples
 """
+
+PARENT_DIR = dirname(realpath(__file__))
+PROJ_DIR = realpath(f"{PARENT_DIR}/..")
 
 def load_proj(path : str) -> angr.project.Project:
     try:
@@ -65,7 +68,7 @@ if __name__ == "__main__":
             'nodes': set([(node.addr & (~1), node.size) for node in cfg_fast.nodes()]),
             'edges': set([(n1.instruction_addrs[-1] & (~1), n2.addr & (~1)) for (n1, n2) in cfg_fast.graph.edges() if n1.instruction_addrs])
         }
-        with open(f"tests/cfgs/{name}-angr_fast-cfg.pkl", 'wb') as pklfile:
+        with open(f"{PROJ_DIR}/tests/cfgs/{name}-angr_fast-cfg.pkl", 'wb') as pklfile:
             dill.dump(fast_graph, pklfile)
 
         # do dynamic cfg recovery
@@ -87,7 +90,7 @@ if __name__ == "__main__":
                 'edges': set()
             }
 
-        with open(f"tests/cfgs/{name}-angr_emu-cfg.pkl", 'wb') as pklfile:
+        with open(f"{PROJ_DIR}/tests/cfgs/{name}-angr_emu-cfg.pkl", 'wb') as pklfile:
             dill.dump(emu_graph, pklfile)
 
         table.append(
@@ -103,7 +106,7 @@ if __name__ == "__main__":
                 emu_elapsed))
 
     print('\n'.join(table))
-    with open('tests/angr-cfg-results.txt', 'w') as f:
+    with open(f'{PARENT_DIR}/angr-cfg-results.txt', 'w') as f:
         f.write('\n'.join(table))
 
 
