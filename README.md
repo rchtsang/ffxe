@@ -2,7 +2,7 @@
 
 ## Dynamic Control Flow Graph Recovery for Embedded Firmware Binaries
 
-This repository contains the artifacts for the paper **FFXE: Dynamic Control Flow Graph Recovery for Embedded Firmware Binaries**, which presents a novel technique for resolving callback functions that is based on dynamic forced execution.
+This repository contains the artifacts for the paper **FFXE: Dynamic Control Flow Graph Recovery for Embedded Firmware Binaries**, which presents a novel technique for resolving indirect branches dependent on asynchronous writes (callback functions) that is based on dynamic forced execution.
 
 Our implementation of the Forced Firmware Execution Engine can be found in the file `ffxe.py`, and a reimplementation of the original Forced Execution Engine by Xu et al. can be found in `fxe.py`. 
 
