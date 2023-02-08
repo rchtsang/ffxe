@@ -62,7 +62,8 @@ if __name__ == "__main__":
 
     table.append((
         "\\multicolumn{2}{l}{\\textbf{Firmware}} & "
-        + " & ".join([eng.replace('_', '\\_') for eng in sorted(engs)])
+        + " & ".join([eng.replace('_', '\\_') if eng != 'ffxe' else "\\textbf{ffxe}"\
+            for eng in sorted(engs)])
         + " \\\\ \\midrule"
     ))
 
@@ -90,7 +91,12 @@ if __name__ == "__main__":
                     for edge in graphs[fw][eng][opt]['edges']:
                         if edge[1] == loc:
                             found_rf_edges.add(edge)
-                row += " & {:>8}".format(f"{len(found_rf_edges)}/{len(found_rf_blocks)}/{total_rf}")
+                if eng == 'ffxe':
+                    row += " & \\textbf{{{:>8}}}".format(
+                        f"{len(found_rf_edges)}/{len(found_rf_blocks)}/{total_rf}")
+                else:
+                    row += " & {:>8}".format(
+                        f"{len(found_rf_edges)}/{len(found_rf_blocks)}/{total_rf}")
             row += " \\\\"
             table.append(row)
         table[-1] = table[-1] + " \\midrule"

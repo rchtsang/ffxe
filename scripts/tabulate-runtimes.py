@@ -71,7 +71,8 @@ if __name__ == "__main__":
 
     table.append((
         "\\multicolumn{2}{l}{\\textbf{Firmware}} & "
-        + " & ".join([eng.replace('_', '\\_') for eng in engs])
+        + " & ".join([eng.replace('_', '\\_') if eng != "ffxe" else "\\textbf{ffxe}" \
+            for eng in engs])
         + " \\\\ \\midrule"
     ))
 
@@ -84,6 +85,7 @@ if __name__ == "__main__":
                 opt.upper(),
                 " & ".join(
                     ["{:>8.04f}".format(round(runtimes[eng][fw][opt], 4)) \
+                        if eng != "ffxe" else "\\textbf{{{:>8.04f}}}".format(round(runtimes[eng][fw][opt], 4)) \
                         for eng in engs])
             )
             table.append(row)

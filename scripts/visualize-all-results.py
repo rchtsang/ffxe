@@ -233,7 +233,7 @@ if __name__ == "__main__":
             
             if settype == 'nodes':
                 ax.set_title(eng,
-                    fontsize=20)
+                    fontsize=32)
             
             # hide plot borders
             ax.spines['top'].set_visible(False)
@@ -251,14 +251,15 @@ if __name__ == "__main__":
             ax.set_xlim(left=(llim - space), right=(rlim + space))
             
             if sublabels.size:
+                # nodes/edges y axis
                 ax.set_ylabel(settype,
-                    fontsize=20)
+                    fontsize=32)
 
                 # set major y labels
                 ax.set_yticks(fw_label_locs, fw_labels,
                     # verticalalignment='center',
                     rotation=45,
-                    fontsize=14)
+                    fontsize=20)
                 # add optimization labels
                 locs = list(sublabels[1].astype(float))
                 text = list(sublabels[0])
