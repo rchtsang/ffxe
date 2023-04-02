@@ -96,9 +96,14 @@ def plot_comparison(graphs, other,
     fig.gca().use_sticky_edges = False
 
     sublabel_positions = []
+    subtitle_fontsize = 32
+    tick_fontsize = 20
+    minor_tick_fontsize = 12
+    label_fontsize = 10
 
     for k, ax in zip(('nodes', 'edges'), (ax0, ax1)):
-        ax.xaxis.set_major_locator(ticker.MaxNLocator(symmetric=True))
+        ax.xaxis.set_major_locator(
+            ticker.MaxNLocator(symmetric=True))
 
         ffxe_rects = {}
         ovlp_rects = {}
@@ -128,7 +133,7 @@ def plot_comparison(graphs, other,
                     round(bar.get_width()),
                     va='center',
                     ha='right',
-                    size=10
+                    size=label_fontsize
                 )
             ovlp_rects[opt] = ax.barh(
                 fw_label_locs + (bar_width * offset / 2) - down_shift, 
@@ -146,7 +151,7 @@ def plot_comparison(graphs, other,
                     va='center',
                     ha='center',
                     color='w',
-                    size=10
+                    size=label_fontsize
                 )
             othr_rects[opt] = ax.barh(
                 fw_label_locs + (bar_width * offset / 2) - down_shift, 
@@ -163,15 +168,24 @@ def plot_comparison(graphs, other,
                     round(bar.get_width()),
                     va='center',
                     ha='left',
-                    size=10
+                    size=label_fontsize
                 )
+
+            # add edge space
+            space = 50
+            if k == 'edges':
+                space = 100
+            (llim, rlim) = ax.get_xlim()
+            ax.set_xlim(left=(llim - space), right=(rlim + space))
+
             if k == 'nodes':
                 for bar in ffxe_rects[opt]:
                     bar_center = (bar.get_y() + bar.get_height() / 2)
                     sublabel_positions.append(bar_center)
 
 
-        ax.set_title(k)
+        ax.set_title(k,
+            fontsize=subtitle_fontsize)
 
         # hide plot borders
         ax.spines['top'].set_visible(False)
@@ -182,15 +196,19 @@ def plot_comparison(graphs, other,
         ax.xaxis.set_visible(False) # hide x axis labels
 
         if k == 'nodes':
-            ax.set_ylabel('Samples')
+            ax.set_ylabel('Samples',
+                fontsize=subtitle_fontsize)
 
             # set major y labels
             ax.set_yticks(fw_label_locs, fw_labels,
                 # verticalalignment='center',
-                rotation=45)
+                rotation=45,
+                fontsize=tick_fontsize)
             # add optimization labels
             sublabels = ['-' + opt for opt in opts for fw in graphs.keys()]
-            ax.set_yticks(sublabel_positions, sublabels, minor=True)
+            ax.set_yticks(sublabel_positions, sublabels, 
+                fontsize=minor_tick_fontsize,
+                minor=True)
 
             ax.tick_params(axis='y', which='major', pad=25) # spacing between y axis and major labels 
             # ax.tick_params(axis='y', which='major', left=False)
