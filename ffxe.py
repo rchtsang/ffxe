@@ -103,7 +103,8 @@ class FBranch():
     def __eq__(self, other):
         return (isinstance(other, self.__class__)
             and self.addr == other.addr
-            and self.target == other.target)
+            and self.target == other.target
+            and self.bblock == other.bblock)
 
 
 class FFXEngine():
@@ -376,6 +377,22 @@ class FFXEngine():
         self.logger.info("isr {:d} queued".format(isr))
 
 
+    def _queue_branch(self, branch : Type[FBranch]):
+        """make it easier to change branch queueing logic"""
+        if branch in self.explored:
+            # # if branch already been visited, connect the current block 
+            # # to the branch's target block
+            # for explored_branch in self.explored:
+            #     if branch == explored_branch:
+            #         target_block = self.cfg.bblocks[explored_branch.target & (~1)]
+            #         self.cfg.connect_block(target_block, parent=branch.bblock)
+            target_block = self.cfg.bblocks[branch.target & (~1)]
+            if target_block.contrib:
+                self.unexplored.append(branch)
+
+        elif branch not in self.unexplored:
+            self.unexplored.append(branch)
+
     def _hook_block(self, uc, address, size, user_data):
         """callback at beginning of new basic block"""
         # this should construct the block and connect it to the CFG as needed
@@ -636,8 +653,7 @@ class FFXEngine():
                 bblock=self.context.bblock,
                 context=context,
                 ret=self.context.pc + size)
-            if branch not in self.unexplored:
-                self.unexplored.append(branch)
+            self._queue_branch(branch)
 
         elif cs_insn.id == ARM_INS_B:
             # handle forking of context on conditional branches
@@ -671,8 +687,7 @@ class FFXEngine():
                     target=context.pc,
                     bblock=self.context.bblock,
                     context=context)
-                if branch not in self.unexplored:
-                    self.unexplored.append(branch)
+                self._queue_branch(branch)
             
             # always protect the direct target edge
             self.protected_edges.add(
@@ -717,8 +732,7 @@ class FFXEngine():
                     target=context.pc,
                     bblock=self.context.bblock,
                     context=context)
-                if branch not in self.unexplored:
-                    self.unexplored.append(branch)
+                self._queue_branch(branch)
 
         elif (cs_insn.id == ARM_INS_CBNZ 
                 or cs_insn.id == ARM_INS_CBZ):

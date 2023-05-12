@@ -13,9 +13,10 @@ from ctypes import memmove, pointer, sizeof
 from tempfile import NamedTemporaryFile
 from collections import OrderedDict
 
-from elftools.elf.elffile import ELFFile
+import capstone
 from capstone import Cs
 from capstone.arm_const import *
+from elftools.elf.elffile import ELFFile
 
 from utils import *
 from ihex import IHex
@@ -47,10 +48,10 @@ class FirmwareImage():
         self.pd = pd
         self.cs = cs
         if not cs:
-            arch = globals()[f"CS_ARCH_{pd['cpu']['arch']}"]
+            arch = getattr(capstone, f"CS_ARCH_{pd['cpu']['arch']}")
             mode = 0
-            for mode in pd['cpu']['mode']:
-                mode |= globals()[f"UC_MODE_{mode}"]
+            for m in pd['cpu']['mode']:
+                mode |= getattr(capstone, f"CS_MODE_{m}")
             self.cs = Cs(arch, mode)
 
         # elf format
