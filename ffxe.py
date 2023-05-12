@@ -6,6 +6,7 @@ import traceback
 from os.path import splitext
 from typing import Union, Type
 from copy import copy, deepcopy
+from collections import namedtuple
 
 import yaml
 import unicorn
@@ -24,10 +25,24 @@ from mappings import *
 from utils import *
 
 
+CallStackEntry = namedtuple('CallStackEntry', 
+    ['fn_addr', 'frame_ptr', 'ret_addr'])
+
 class FContext():
     """
     class for context backup and restores
     """
+    __slots__ = [
+        'pc',           # program counter state
+        'apsr',         # application program status register state
+        'callstack',    # function call stack (list of CallStackEntry objects)
+        'uc_context',   # unicorn context (from context_save())
+        'bblock',       # pointer to current BBlock instance
+        'isr',          # current ISR thread
+        'mem_state',    # memory state dictionary
+        'stack_state',  # current stack data
+        'newblock'      # whether the next block should be added to cfg
+    ]
     def __init__(self, pc, apsr, callstack, uc_context, bblock, isr=0):
         self.pc = pc 
         self.apsr = apsr
@@ -43,7 +58,8 @@ class FContext():
     def __copy__(self):
         cls = self.__class__
         result = cls.__new__(cls)
-        for k, v in self.__dict__.items():
+        for k in self.__slots__:
+            v = getattr(self, k)
             if k == 'uc_context':
                 setattr(result, k, deepcopy(v))
             else:
@@ -66,6 +82,11 @@ class FBranch():
     """
     base class for branches
     """
+    __slots__ = [
+        'addr', 'raw', 'target', 'bblock', 'context', 
+        'ret_addr', 'unexplored', 'isr'
+    ]
+
     def __init__(self, addr, raw, target, bblock, context, 
             btype='cond', 
             ret=None, 
@@ -81,7 +102,8 @@ class FBranch():
 
     def __eq__(self, other):
         return (isinstance(other, self.__class__)
-            and self.addr == other.addr)
+            and self.addr == other.addr
+            and self.target == other.target)
 
 
 class FFXEngine():
@@ -93,6 +115,7 @@ class FFXEngine():
             pd         : Union[str, dict],
             mmio       : dict = None,
             path       : str = None,
+            vtoffsets  : list[int] = [0x0],
             log_dir    : str = 'logs',
             log_name   : str = 'ffxe.log',
             log_stdout : bool = False,
@@ -114,9 +137,11 @@ class FFXEngine():
             log_name = f"{fn}-{i}{ext}"
             i += 1
 
+        self.log_path = f"{log_dir}/{log_name}"
+
         formatter = logging.Formatter(
             "%(asctime)s : %(message)s" if log_time else "%(message)s")
-        fhandler = logging.FileHandler(f"{log_dir}/{log_name}", mode = 'a')
+        fhandler = logging.FileHandler(self.log_path, mode = 'a')
         fhandler.setFormatter(formatter)
         self.logger.addHandler(fhandler)
 
@@ -124,16 +149,6 @@ class FFXEngine():
             shandler = logging.StreamHandler(sys.stdout)
             shandler.setFormatter(formatter)
             self.logger.addHandler(shandler)
-
-        # create emulator instance
-        # unicorn updates mode automatically on emu_start
-        self.uc = Uc(UC_ARCH_ARM, UC_MODE_THUMB)
-        self.uc.ctl_set_cpu_model(UC_CPU_ARM_CORTEX_M4)
-
-        # create disassembler instance
-        # mode updated in callbacks
-        self.cs = Cs(CS_ARCH_ARM, CS_MODE_THUMB)
-        self.cs.detail = 1 # enable detailed disassembly (slower)
 
         # platform description will be dictionary
         if isinstance(pd, str):
@@ -148,6 +163,27 @@ class FFXEngine():
             "platform description must provide 'mmap'"
 
         self.pd = pd
+
+        self.uc_arch = globals()[f"UC_ARCH_{pd['cpu']['arch']}"]
+        self.uc_model = globals()[f"UC_CPU_{pd['cpu']['arch']}_{pd['cpu']['model']}"]
+
+        self.cs_arch = globals()[f"CS_ARCH_{pd['cpu']['arch']}"]
+        
+        self.cpu_mode = 0
+        for mode in pd['cpu']['mode']:
+            self.cpu_mode |= globals()[f"UC_MODE_{mode}"]
+        # for whatever reason, capstone and unicorn mode values are shared,
+        # but arch values are not, hence, shared mode, but different arch
+
+        # create emulator instance
+        # unicorn updates mode automatically on emu_start
+        self.uc = Uc(self.uc_arch, self.cpu_mode)
+        self.uc.ctl_set_cpu_model(self.uc_model)
+
+        # create disassembler instance
+        # mode updated in callbacks
+        self.cs = Cs(self.cs_arch, self.cpu_mode)
+        self.cs.detail = 1 # enable detailed disassembly (slower)
 
         # map memory in unicorn emulator
         for region, kwargs in self.pd['mmap'].items():
@@ -196,8 +232,11 @@ class FFXEngine():
             self.load_fw(path)
 
 
-    def load_fw(self, path):
-        self.fw = FirmwareImage(path)
+    def load_fw(self, path, 
+            vtoffsets : list[int] = [0x0]):
+        """instantiate firmware image and load into unicorn"""
+        self.fw = FirmwareImage(path, self.pd, vtoffsets,
+            cs=self.cs)
 
         # load firmware image to unicorn
         self.uc.mem_write(self.pd['mmap']['flash']['address'], self.fw.raw)
@@ -211,7 +250,7 @@ class FFXEngine():
         self.uc.reg_write(UC_ARM_REG_SP, self.stack_base)
         self.uc.reg_write(UC_ARM_REG_PC, self.entry)
         self.context.uc_context = self.uc.context_save()
-        self.context.callstack.append((
+        self.context.callstack.append(CallStackEntry(
             self.entry,         # function address
             self.stack_base,    # frame pointer
             None,               # return address
@@ -240,6 +279,11 @@ class FFXEngine():
             return True
 
         return False
+
+    def addr_in_vtable(self, addr : int):
+        """true if address is in any vector table"""
+        return any([off <= addr < off + self.pd['vt']['size'] \
+            for off in self.fw.vector_tables.keys()])
 
     def addr_valid(self, addr : int):
         """true if address is in a mapped region"""
@@ -341,19 +385,21 @@ class FFXEngine():
             # next(self.cs.disasm(uc.mem_read(address, size), offset=address))
 
             # check if all block instructions valid
-            insn_addrs = [ins.address for ins in self.cs.disasm(
-                uc.mem_read(address, size), offset=address)]
+            insns = {
+                insn.address: insn for insn in self.cs.disasm(
+                uc.mem_read(address, size), offset=address) 
+            }
         except StopIteration as e:
             raise UcError(UC_ERR_INSN_INVALID)
 
         # check if block is at a data location
         # check if block is in vector table
-        if (any([iaddr in self.mem_reads for iaddr in insn_addrs])
-                or (address < 0x200)):
+        if (any([insn.address in self.mem_reads for insn in insns.values()])
+                or self.addr_in_vtable(address)):
             raise UcError(UC_ERR_FETCH_PROT)
 
         # check if block beyond end of fw
-        if (address > self.fw.size):
+        if (address > self.fw.size + self.pd['mmap']['flash']['address']):
             raise UcError(UC_ERR_INSN_INVALID)
 
         block_kwargs = {}
@@ -370,8 +416,8 @@ class FFXEngine():
             bblock = BBlock(
                 address=address, 
                 size=size, 
-                insn_addrs=insn_addrs,
-                fn_addr=(self.context.callstack[-1][0] | 1) ^ 1, 
+                insns=insns,
+                fn_addr=(self.context.callstack[-1].fn_addr | 1) ^ 1, 
                 bytedata=self.uc.mem_read(address, size),
                 isr=self.context.isr,
                 parent=NullBlock)
@@ -379,7 +425,7 @@ class FFXEngine():
         else:
             # check if returning block
             if (self.context.callstack 
-                    and address == self.context.callstack[-1][-1]):
+                    and address == self.context.callstack[-1].ret_addr):
                 self.context.callstack.pop(-1)
                 # potential bug here
                 self.context.bblock.returns = True
@@ -393,8 +439,8 @@ class FFXEngine():
                 bblock = BBlock(
                     address=address,
                     size=size,
-                    insn_addrs=insn_addrs,
-                    fn_addr=(self.context.callstack[-1][0] | 1) ^ 1,
+                    insns=insns,
+                    fn_addr=(self.context.callstack[-1].fn_addr | 1) ^ 1,
                     bytedata=self.uc.mem_read(address, size),
                     isr=self.context.isr,
                     **block_kwargs)
@@ -413,7 +459,7 @@ class FFXEngine():
                 # check if block has right function address
                 # this bit is added because some functions end with unconditional
                 # branches that are for some reason treated as conditional...
-                if ((self.context.callstack[-1][0] | 1) != (bblock.fn_addr | 1)
+                if ((self.context.callstack[-1].fn_addr | 1) != (bblock.fn_addr | 1)
                         # block parent did not use call instruction
                         and bblock.fn_addr ^ bblock.addr > 1 
                         # block must not be a func start
@@ -441,7 +487,7 @@ class FFXEngine():
                         # this will only remove edges from bblock
                         self.cfg.remove_block_func_edges(bblock, bblock.fn_addr,
                             protected=self.protected_edges)
-                    bblock.fn_addr = self.context.callstack[-1][0]
+                    bblock.fn_addr = self.context.callstack[-1].fn_addr
 
                     if bblock.quota < 1:
                         bblock.quota = 1
@@ -509,6 +555,9 @@ class FFXEngine():
         #         self.fw.disasm[address]['raw_str'],
         #         self.fw.disasm[address]['mnemonic']))
 
+        if self.log_insn:
+            self.logger.info(str(self.context.bblock.insns[address]))
+
         if (address & (~1)) in self.breakpoints or self.break_on_inst:
             breakpoint()
 
@@ -559,7 +608,7 @@ class FFXEngine():
             else:
                 raise Exception("this shouldn't happen")
 
-            stack_info = (
+            stack_info = CallStackEntry(
                 target,                             # function address
                 uc.reg_read(UC_ARM_REG_SP),         # frame pointer
                 uc.reg_read(UC_ARM_REG_PC) + size,  # return address
@@ -745,7 +794,7 @@ class FFXEngine():
                     break
 
                 # specific to cortex m4
-                if ((jump_target < 0x200) 
+                if (self.addr_in_vtable(jump_target) 
                         or (jump_target > self.pd['mmap']['flash']['size'])):
                     # invalid jump target
                     break
@@ -934,17 +983,18 @@ class FFXEngine():
                 self.logger.info("pc @ 0x{:>08X} : {} 0x{:>08x} @ {:>08X}".format(*info))
                 self.context.mem_state[addr] = val.to_bytes(size, 'little')
 
-                # when interrupts enabled for peripheral, 
-                # do fxe on that peripheral's isr with current context
-                if (((addr & 0xFFF) == 0x304) 
-                        and ((addr & 0xFFFFF000) in self.pd['peri'])
-                        and val):
-                    # 0x304 is interrupt enable register offset for peripheral
-                    # peripheral is determined by base address (in platform description)
-                    # this is specific to nrf52
-                    isr = (0x40 + (4 * self.pd['peri'][addr & 0xFFFFF000])) // 4
-                    self.logger.info("peripheral enabled: IRQn {:d}".format(isr - 16))
-                    self._queue_isr(isr)
+                # # when interrupts enabled for peripheral, 
+                # # do fxe on that peripheral's isr with current context
+                # # TODO: Figure out how to make this non-arch specific
+                # if (((addr & 0xFFF) == 0x304) 
+                #         and ((addr & 0xFFFFF000) in self.pd['peri'])
+                #         and val):
+                #     # 0x304 is interrupt enable register offset for peripheral
+                #     # peripheral is determined by base address (in platform description)
+                #     # this is specific to nrf52
+                #     isr = (0x40 + (4 * self.pd['peri'][addr & 0xFFFFF000])) // 4
+                #     self.logger.info("peripheral enabled: IRQn {:d}".format(isr - 16))
+                #     self._queue_isr(isr)
 
                 if self.context.isr and addr not in self.voladdrs:
                     # register volatile address
@@ -1116,40 +1166,91 @@ class FFXEngine():
         #     user_data={},
         # )
 
-        # load all addresses in vector table first
-        # see section 2.3.4 of Cortex M4 generic user guide
-        # exclude sp and entry point
-        vector_table = self.uc.mem_read(0x4, 0x200 - 4)
-        table_offset = 0x4
-        for word in chunks(4, vector_table):
-            word = int.from_bytes(word, 'little')
-            if word:
-                context = self.backup()
-                context.pc = word | 1 # force thumb mode
-                stack_info = (
-                    context.pc,                         # function address
-                    self.uc.reg_read(UC_ARM_REG_SP),    # frame pointer
-                    None,                               # return address
-                )
-                context.callstack.append(stack_info)
+        # ffxe goes through ISRs first, then main threads.
+        # if there are multiple vector tables, there may be 
+        # multiple defined entry points. in this case, we need to
+        # queue these entry points first, since the algorithm pops
+        # the last branch/job in the queue, starting with the
+        # absolute entry point, as defined by the processor 
+        # architecture. in ffxe, we have hard-coded it for ARM 
+        # since ARM processors always start at 0x4 of the loaded
+        # firmware image.
 
-                branch_info = {
-                    'addr'    : table_offset,
-                    'raw'     : b'',
-                    'target'  : word,
-                    'bblock'  : None,
-                    'context' : context,
-                    'ret'     : table_offset,
-                    'isr'     : table_offset // 4,
-                }
-                if word != self.entry:
-                    # any entry point that isn't main entry i
-                    # is treated as ISR entry point
-                    context.isr = table_offset // 4
+
+        # load absolute entry point (last to be executed)
+        # only if the vector table gets relocated at runtime
+        # NOTE: for whatever reason, adding it regardlessly leads to more
+        # resolved blocks...
+        # raw entry point is 0x4 offset of the actual firmware binary,
+        # if True:
+        if 0x0 not in self.fw.vector_tables.keys():
+            branch_info = {
+                'addr'      : 0x4,
+                'raw'       : b'',
+                'target'    : self.entry,
+                'bblock'    : None,
+                'context'   : self.backup(),
+                'ret'       : 0x4,
+                'isr'       : 0x4,
+            }
+            self.unexplored.append(FBranch(**branch_info))
+
+        for vtoffset, vector_table in self.fw.vector_tables.items():
+            # now queue all the Reset handlers in each vector table
+            # making sure to reinitialize the sp with the associated
+            # vector table's stack base pointer
+            context = self.backup()
+            sp = int.from_bytes(vector_table[:4], 'little')
+            context.uc_context.reg_write(UC_ARM_REG_SP, sp)
+            target = int.from_bytes(vector_table[4:8], 'little')
+
+            branch_info = {
+                'addr'      : vtoffset + 0x4,
+                'raw'       : b'',
+                'target'    : target,
+                'bblock'    : None,
+                'context'   : context,
+                'ret'       : vtoffset + 0x4,
+                'isr'       : 0x4,
+            }
+
+            self.unexplored.append(FBranch(**branch_info))
+
+        # now load all isr addresses in vector tables
+        # see section 2.3.4 of Cortex M4 generic user guide
+        
+        for vtoffset, vector_table in self.fw.vector_tables.items():
+            table_offset = 0x8
+            for word in chunks(4, vector_table[8:]):
+                word = int.from_bytes(word, 'little')
+                if word:
+                    context = self.backup()
+                    context.pc = word | 1 # force thumb mode
+                    stack_info = CallStackEntry(
+                        context.pc,                         # function address
+                        self.uc.reg_read(UC_ARM_REG_SP),    # frame pointer
+                        None,                               # return address
+                    )
+                    context.callstack.append(stack_info)
+
+                    branch_info = {
+                        'addr'    : vtoffset + table_offset,
+                        'raw'     : b'',
+                        'target'  : word,
+                        'bblock'  : None,
+                        'context' : context,
+                        'ret'     : vtoffset + table_offset,
+                        'isr'     : table_offset,   # based on IRQn
+                    }
+
+                    # indicate context is isr, not main thread
+                    context.isr = vtoffset + table_offset
                     self.isr_entries[context.isr] = branch_info
-                self.unexplored.append(
-                    FBranch(**branch_info))
-            table_offset += 4
+
+                    self.unexplored.append(
+                        FBranch(**branch_info))
+                table_offset += 4
+
 
         while self.unexplored:
             branch = self.unexplored.pop(-1)

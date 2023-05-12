@@ -14,6 +14,7 @@ from tempfile import NamedTemporaryFile
 from collections import OrderedDict
 
 from elftools.elf.elffile import ELFFile
+from capstone import Cs
 from capstone.arm_const import *
 
 from utils import *
@@ -29,7 +30,11 @@ class FirmwareImage():
         r"(?P<raw>[0-9a-fA-F]+(?: [0-9a-fA-F]+)?)\s+"
         r"(?P<mnemonic>.+)"))
 
-    def __init__(self, path : str, isa : str = 'armv7e-m'):
+    def __init__(self, path : str, pd : dict,
+                vtoffsets : list[int],  # list of known vector table offsets
+                isa : str = 'armv7e-m', # isa for arm-none-eabi-objdump
+                cs : Type[Cs] = None,   # optionally pass in a capstone instance
+            ):
         self.path = path
         self.ext = splitext(path)[1]
         self.img = None
@@ -37,6 +42,16 @@ class FirmwareImage():
         self.disasm_txt = []
         self.raw = None
         self.isa = isa
+        # note: the platform description should be the same as 
+        # the one passed to the FFXEngine
+        self.pd = pd
+        self.cs = cs
+        if not cs:
+            arch = globals()[f"CS_ARCH_{pd['cpu']['arch']}"]
+            mode = 0
+            for mode in pd['cpu']['mode']:
+                mode |= globals()[f"UC_MODE_{mode}"]
+            self.cs = Cs(arch, mode)
 
         # elf format
         if self.ext == '.elf':
@@ -72,8 +87,8 @@ class FirmwareImage():
                         'mnemonic': match.group('mnemonic'),
                     }
                     # deal with the delay block specially
-                    # for whatever reason, objdump doesn't treat it as instructions
-                    # when disassembling from elf
+                    # objdump doesn't treat it as instructions
+                    # when disassembling from elf since it's in .data
                     if (("3803 d8fd" in match.group('raw')
                             and "4770 0000" in match.group('mnemonic'))
                             or "d8fd3803 00004770" in match.group('raw')):
@@ -101,38 +116,6 @@ class FirmwareImage():
                 self.img = binfile.read()
             self.raw = self.img
 
-            # # disassemble with objdump
-            # self.disasm_txt = subprocess.run([
-            #         'arm-none-eabi-objdump', '-D',
-            #         '-bbinary',
-            #         f'-m{isa}',
-            #         '-Mforce-thumb',
-            #         path],
-            #     stdout=subprocess.PIPE,
-            # ).stdout.decode('utf-8').split('\n')
-
-            # # convert tabs to spaces (maintaining visual spacing)
-            # for i, line in enumerate(self.disasm_txt):
-            #     newline = []
-            #     for j, char in enumerate(line):
-            #         if char == '\t':
-            #             newline.append(' '*(4 - (j % 4)))
-            #         else:
-            #             newline.append(char)
-            #     self.disasm_txt[i] = ''.join(newline)
-
-            # # construct addr-to-line mapping and disasm dict
-            # for lineno, line in enumerate(self.disasm_txt):
-            #     match = self.RE_PTRN_DISASM.search(line)
-            #     if match:
-            #         addr = int(match.group('addr'), base=16)
-            #         self.disasm[addr] = {
-            #             'line': lineno,
-            #             'raw': int(''.join(match.group('raw').split()), base=16),
-            #             'raw_str': match.group('raw'),
-            #             'mnemonic': match.group('mnemonic'),
-            #         }
-
         # intel hex format
         elif self.ext == '.hex':
             self.img = IHex(path)
@@ -143,6 +126,12 @@ class FirmwareImage():
 
         self.size = len(self.raw)
 
+        self.base_addr = self.pd['mmap']['flash']['address']
+        self.vector_tables = {
+            off: self.raw[off-self.base_addr:off-self.base_addr+self.pd['vt']['size']] \
+            for off in vtoffsets
+        }
+
 
     def disasm_chunk(self, address : int, size : int):
         """disassemble only the indicated chunk and return the
@@ -152,35 +141,56 @@ class FirmwareImage():
         assert 0 <= address < self.size, "invalid address"
         assert address + size < self.size, "block out of bounds"
 
-        with NamedTemporaryFile() as ntf:
-            # write block to temporary file for objdump
-            ntf.write(self.raw[address:address + size])
-            ntf.flush()
+        # make sure address is even
+        address = address & (~1)
 
-            block_txt = subprocess.run([
-                    'arm-none-eabi-objdump', 
-                    '-bbinary',
-                    f'-m{self.isa}',
-                    '-Mforce-thumb',
-                    f'--adjust-vma={hex(address)}',
-                    '-D', ntf.name],
-                stdout=subprocess.PIPE,
-            ).stdout.decode('utf-8').split('\n')
+        # binary chunk to disassemble
+        chunk = self.raw[address:address + size]
+
+        # # disassembling with objdump, but this is extremely slow...
+        # # going to need to default to capstone despite its obvious bugs
+        # with NamedTemporaryFile() as ntf:
+        #     # write block to temporary file for objdump
+        #     ntf.write(self.raw[address:address + size])
+        #     ntf.flush()
+
+        #     block_txt = subprocess.run([
+        #             'arm-none-eabi-objdump', 
+        #             '-bbinary',
+        #             f'-m{self.isa}',
+        #             '-Mforce-thumb',
+        #             f'--adjust-vma={hex(address)}',
+        #             '-D', ntf.name],
+        #         stdout=subprocess.PIPE,
+        #     ).stdout.decode('utf-8').split('\n')
+
+        # disasm_txt = []
+        # for line in block_txt:
+        #     if not self.RE_PTRN_DISASM.search(line):
+        #         # found actual disassembly line
+        #         continue
+
+        #     # convert tabs to spaces (maintaining visual spacing)
+        #     newline = []
+        #     for j, char in enumerate(line):
+        #         if char == '\t':
+        #             newline.append(' '*(4 - (j % 4)))
+        #         else:
+        #             newline.append(char)
+        #     disasm_txt.append(''.join(newline))
+
+        # helper function to format bytes
+        format_bytes = lambda b: b''.join([c[::-1] for c in chunks(2, b)]).hex(' ', 2)
 
         disasm_txt = []
-        for line in block_txt:
-            if not self.RE_PTRN_DISASM.search(line):
-                # found actual disassembly line
-                continue
-
-            # convert tabs to spaces (maintaining visual spacing)
-            newline = []
-            for j, char in enumerate(line):
-                if char == '\t':
-                    newline.append(' '*(4 - (j % 4)))
-                else:
-                    newline.append(char)
-            disasm_txt.append(''.join(newline))
+        for info in self.cs.disasm_lite(
+                data, offset=0):
+            disasm_txt.append("{:>8x}: {:<10} {:<5} {}".format(
+                address + info[0],
+                format_bytes(data[info[0]:info[0]+info[1]]),
+                info[2],
+                info[3]
+            ))
 
         return disasm_txt
 
@@ -203,7 +213,7 @@ class FirmwareImage():
 
         # add all disassembled basic blocks to disasm_txt
         for (addr, size) in sorted(cfg['nodes']):
-            disasm_txt.extend(self.disasm_chunk(addr, size))
+            disasm_txt.extend(self.disasm_chunk(addr-self.base_addr, size))
             disasm_txt.append('')
 
         self.disasm_txt = disasm_txt
@@ -338,23 +348,41 @@ class BBlock():
     """
     A class for basic block information
     """
-    def __init__(self, address, size, insn_addrs, fn_addr, bytedata, 
+    __slots__ = [
+        'addr',             # starting address of the block
+        'size',             # block size in bytes
+        'insns',            # dict of capstone instructions in block
+        'quota',            # execution quota
+        'contrib',          # contributes to indirect branch
+        'indirect',         # is indirect branch block
+        'returns',          # ends in return (sp change then bx)
+        'fn_addr',          # starting address of the block's function
+        'direct_target',    # if a direct branch (conditional or otherwise)
+        'isrs',             # set of isrs the block belongs to
+        'parents',          # set of parent (precursor) blocks (actual instances)
+        'children',         # set of child (successor) blocks (actual isntances)
+        'mem_log',          # list of memory access tuples
+        'bytes',            # block data bytes (bytearray)
+        'delete',           # whether block is marked for delete
+    ]
+
+    def __init__(self, address, size, insns, fn_addr, bytedata, 
             parent : Type['BBlock']=None, 
             isr : int=0,
             contrib : bool=False, 
             indirect : bool=False, 
             target : int=None,
             returns : bool=False):
-        self.addr = address             # starting address of the block
-        self.size = size                # block size in bytes
-        self.insn_addrs = insn_addrs    # addresses of instructions in block
-        self.quota = 1                  # execution quota
-        self.contrib = contrib          # contributes to indirect branch
-        self.indirect = indirect        # is indirect branch block
-        self.returns = returns          # ends in return (sp change then bx)
-        self.fn_addr = fn_addr          # starting address of the block's function
-        self.direct_target = target     # if a direct branch (conditional or otherwise)
-        self.isrs = {isr}               # set of isrs the block belongs to
+        self.addr = address             
+        self.size = size                
+        self.insns = insns    
+        self.quota = 1                  
+        self.contrib = contrib          
+        self.indirect = indirect        
+        self.returns = returns          
+        self.fn_addr = fn_addr          
+        self.direct_target = target     
+        self.isrs = {isr}               
         # parents and children are lists of basic blocks, not addresses
         self.parents = {parent} if parent else set()
         self.children = set()
@@ -409,7 +437,7 @@ class BBlock():
         # a basic block is unique and cannot be copied
         return self
 
-NullBlock = BBlock(address=0, size=0, insn_addrs=[], fn_addr=0, bytedata=b'')
+NullBlock = BBlock(address=0, size=0, insns={}, fn_addr=0, bytedata=b'')
 
 
 class CFG():

@@ -4,6 +4,7 @@
 **/cfgs/
 **/tbl/
 **/img/
+**/examples/*.disasm
 **/*.egg-info/
 .DS_Store
 

@@ -1,5 +1,12 @@
 # nRF52832 Platform Description
 
+# Processor Information
+# based on Unicorn and Capstone Python binding constants
+cpu:
+    arch    : "ARM"
+    model   : "CORTEX_M4"
+    mode    : [ "THUMB", "MCLASS" ]
+
 # Memory Map
 # see product spec Section 8.3 Figure 5
 # note: unicorn access permissions are { read=1, write=2, exec=4 }
@@ -84,6 +91,10 @@ mmio:
         address : 0xE00F0000
         size    : 0x10000
         perms   : 0b011
+
+# Vector Table Info
+vt:
+    size: 0xdc
 
 # Base Addr to Peripheral IDs (for mapping to NVIC)
 # see section 15.8 and section 8.4 Table 11
