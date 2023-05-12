@@ -115,7 +115,7 @@ class FFXEngine():
             pd         : Union[str, dict],
             mmio       : dict = None,
             path       : str = None,
-            vtoffsets  : list[int] = [0x0],
+            vtbases  : list[int] = [0x0],
             log_dir    : str = 'logs',
             log_name   : str = 'ffxe.log',
             log_stdout : bool = False,
@@ -233,9 +233,9 @@ class FFXEngine():
 
 
     def load_fw(self, path, 
-            vtoffsets : list[int] = [0x0]):
+            vtbases : list[int] = [0x0]):
         """instantiate firmware image and load into unicorn"""
-        self.fw = FirmwareImage(path, self.pd, vtoffsets,
+        self.fw = FirmwareImage(path, self.pd, vtbases,
             cs=self.cs)
 
         # load firmware image to unicorn
@@ -983,18 +983,18 @@ class FFXEngine():
                 self.logger.info("pc @ 0x{:>08X} : {} 0x{:>08x} @ {:>08X}".format(*info))
                 self.context.mem_state[addr] = val.to_bytes(size, 'little')
 
-                # # when interrupts enabled for peripheral, 
-                # # do fxe on that peripheral's isr with current context
-                # # TODO: Figure out how to make this non-arch specific
-                # if (((addr & 0xFFF) == 0x304) 
-                #         and ((addr & 0xFFFFF000) in self.pd['peri'])
-                #         and val):
-                #     # 0x304 is interrupt enable register offset for peripheral
-                #     # peripheral is determined by base address (in platform description)
-                #     # this is specific to nrf52
-                #     isr = (0x40 + (4 * self.pd['peri'][addr & 0xFFFFF000])) // 4
-                #     self.logger.info("peripheral enabled: IRQn {:d}".format(isr - 16))
-                #     self._queue_isr(isr)
+                # when interrupts enabled for peripheral, 
+                # do fxe on that peripheral's isr with current context  
+                # requires mapping of interrupt enable register addrs to 
+                # corresponding vector table entry              
+                if (addr in self.pd['intenable']
+                        and (val & self.pd['intenable'][addr]['mask'])):
+                    vtoffset = self.pd['intenable'][addr]['offset']
+                    self.logger.info("peripheral enabled: IRQn {:x}".format(vtoffset // 4))
+
+                    for vtbase in self.fw.vector_tables.keys():
+                        self._queue_isr(vtbase + vtoffset)
+
 
                 if self.context.isr and addr not in self.voladdrs:
                     # register volatile address
@@ -1195,7 +1195,7 @@ class FFXEngine():
             }
             self.unexplored.append(FBranch(**branch_info))
 
-        for vtoffset, vector_table in self.fw.vector_tables.items():
+        for vtbase, vector_table in self.fw.vector_tables.items():
             # now queue all the Reset handlers in each vector table
             # making sure to reinitialize the sp with the associated
             # vector table's stack base pointer
@@ -1205,12 +1205,12 @@ class FFXEngine():
             target = int.from_bytes(vector_table[4:8], 'little')
 
             branch_info = {
-                'addr'      : vtoffset + 0x4,
+                'addr'      : vtbase + 0x4,
                 'raw'       : b'',
                 'target'    : target,
                 'bblock'    : None,
                 'context'   : context,
-                'ret'       : vtoffset + 0x4,
+                'ret'       : vtbase + 0x4,
                 'isr'       : 0x4,
             }
 
@@ -1219,7 +1219,7 @@ class FFXEngine():
         # now load all isr addresses in vector tables
         # see section 2.3.4 of Cortex M4 generic user guide
         
-        for vtoffset, vector_table in self.fw.vector_tables.items():
+        for vtbase, vector_table in self.fw.vector_tables.items():
             table_offset = 0x8
             for word in chunks(4, vector_table[8:]):
                 word = int.from_bytes(word, 'little')
@@ -1234,17 +1234,17 @@ class FFXEngine():
                     context.callstack.append(stack_info)
 
                     branch_info = {
-                        'addr'    : vtoffset + table_offset,
+                        'addr'    : vtbase + table_offset,
                         'raw'     : b'',
                         'target'  : word,
                         'bblock'  : None,
                         'context' : context,
-                        'ret'     : vtoffset + table_offset,
+                        'ret'     : vtbase + table_offset,
                         'isr'     : table_offset,   # based on IRQn
                     }
 
                     # indicate context is isr, not main thread
-                    context.isr = vtoffset + table_offset
+                    context.isr = vtbase + table_offset
                     self.isr_entries[context.isr] = branch_info
 
                     self.unexplored.append(

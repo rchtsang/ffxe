@@ -96,46 +96,47 @@ mmio:
 vt:
     size: 0xdc
 
-# Base Addr to Peripheral IDs (for mapping to NVIC)
+# Mapping Peripheral Interrupt Enable registers 
+# to vector table entries
 # see section 15.8 and section 8.4 Table 11
-peri:
-    0x40000000 : 0    # CLOCK, POWER, BPROT
-    0x40001000 : 1    # RADIO
-    0x40002000 : 2    # UART0, UARTE0
-    0x40003000 : 3    # SPIM0, SPIS0, TWIM0, TWI0, SPI0, TWIS0
-    0x40004000 : 4    # SPIM1, SPIS1, TWIM1, TWI1, SPI1, TWIS1
-    0x40005000 : 5    # NFCT
-    0x40006000 : 6    # GPIOTE
-    0x40007000 : 7    # SAADC
-    0x40008000 : 8    # TIMER0
-    0x40009000 : 9    # TIMER1
-    0x4000a000 : 10   # TIMER2
-    0x4000b000 : 11   # RTC0
-    0x4000c000 : 12   # TEMP
-    0x4000d000 : 13   # RNG
-    0x4000e000 : 14   # ECB
-    0x4000f000 : 15   # CCM, AAR
-    0x40010000 : 16   # WDT
-    0x40011000 : 17   # RTC1
-    0x40012000 : 18   # QDEC
-    0x40013000 : 19   # LPCOMP, COMP
-    0x40014000 : 20   # SWI0, EGU0
-    0x40015000 : 21   # SWI1, EGU1
-    0x40016000 : 22   # SWI2, EGU2
-    0x40017000 : 23   # SWI3, EGU3
-    0x40018000 : 24   # SWI4, EGU4
-    0x40019000 : 25   # SWI5, EGU5
-    0x4001a000 : 26   # TIMER3
-    0x4001b000 : 27   # TIMER4
-    0x4001c000 : 28   # PWM0
-    0x4001d000 : 29   # PDM
-    0x4001e000 : 30   # NVMC
-    0x4001f000 : 31   # PPI
-    0x40020000 : 32   # MWU
-    0x40021000 : 33   # PWM1
-    0x40022000 : 34   # PWM2
-    0x40023000 : 35   # SPI2, SPIS2, SPIM2
-    0x40024000 : 36   # RTC2
-    0x40025000 : 37   # I2S
-    0x40026000 : 38   # FPU
+intenable:
+    0x40000304 : { mask : 0x00000064,   offset : 0x40 }     # CLOCK, POWER, BPROT
+    0x40001304 : { mask : 0x000034ff,   offset : 0x44 }    # RADIO
+    0x40002304 : { mask : 0x005a0397,   offset : 0x48 }    # UART0, UARTE0
+    0x40003304 : { mask : 0x079c47d6,   offset : 0x4c }    # SPIM0, SPIS0, TWIM0, TWI0, SPI0, TWIS0
+    0x40004304 : { mask : 0x079c47d6,   offset : 0x50 }    # SPIM1, SPIS1, TWIM1, TWI1, SPI1, TWIS1
+    0x40005304 : { mask : 0x001c5cff,   offset : 0x54 }    # NFCT
+    0x40006304 : { mask : 0x000000ff,   offset : 0x58 }    # GPIOTE
+    0x40007304 : { mask : 0x003fffff,   offset : 0x5c }    # SAADC
+    0x40008304 : { mask : 0x003f0000,   offset : 0x60 }    # TIMER0
+    0x40009304 : { mask : 0x003f0000,   offset : 0x64 }    # TIMER1
+    0x4000a304 : { mask : 0x003f0000,   offset : 0x68 }    # TIMER2
+    0x4000b304 : { mask : 0x000f0003,   offset : 0x6c }    # RTC0
+    0x4000c304 : { mask : 0x00000001,   offset : 0x70 }    # TEMP
+    0x4000d304 : { mask : 0x00000001,   offset : 0x74 }    # RNG
+    0x4000e304 : { mask : 0x00000003,   offset : 0x78 }    # ECB
+    0x4000f304 : { mask : 0x00000007,   offset : 0x7c }    # CCM, AAR
+    0x40010304 : { mask : 0x00000001,   offset : 0x80 }    # WDT
+    0x40011304 : { mask : 0x000f0003,   offset : 0x84 }    # RTC1
+    0x40012304 : { mask : 0x0000001f,   offset : 0x88 }    # QDEC
+    0x40013304 : { mask : 0x0000000f,   offset : 0x8c }    # LPCOMP, COMP
+    0x40014304 : { mask : 0x0000ffff,   offset : 0x90 }    # SWI0, EGU0
+    0x40015304 : { mask : 0x0000ffff,   offset : 0x94 }    # SWI1, EGU1
+    0x40016304 : { mask : 0x0000ffff,   offset : 0x98 }    # SWI2, EGU2
+    0x40017304 : { mask : 0x0000ffff,   offset : 0x9c }    # SWI3, EGU3
+    0x40018304 : { mask : 0x0000ffff,   offset : 0xa0 }    # SWI4, EGU4
+    0x40019304 : { mask : 0x0000ffff,   offset : 0xa4 }    # SWI5, EGU5
+    0x4001a304 : { mask : 0x003f0000,   offset : 0xa8 }    # TIMER3
+    0x4001b304 : { mask : 0x003f0000,   offset : 0xac }    # TIMER4
+    0x4001c304 : { mask : 0x000000fe,   offset : 0xb0 }    # PWM0
+    0x4001d304 : { mask : 0x00000007,   offset : 0xb4 }    # PDM
+    # 0x4001e000 : { mask : 0x00000000,   offset : 0xb8 }    # NVMC (no hw interrupt)
+    # 0x4001f000 : { mask : 0x00000000,   offset : 0xbc }    # PPI  (no hw interrupt)
+    0x40020304 : { mask : 0x0f0000ff,   offset : 0xc0 }    # MWU
+    0x40021304 : { mask : 0x000000fe,   offset : 0xc4 }    # PWM1
+    0x40022304 : { mask : 0x000000fe,   offset : 0xc8 }    # PWM2
+    0x40023304 : { mask : 0x00080556,   offset : 0xdc }    # SPI2, SPIS2, SPIM2
+    0x40024304 : { mask : 0x000f0003,   offset : 0xd0 }    # RTC2
+    0x40025304 : { mask : 0x00000026,   offset : 0xd4 }    # I2S
+    # 0x40026000 : { mask : 0x00000000,   offset : 0xd8 }    # FPU  [over/underflow] (always enabled)
 
