@@ -1,0 +1,132 @@
+# STM32L151RC Platform Description
+
+# Memory Map
+# See ST DS8890 Section 5 Figure 9
+# note: unicorn access permissions are { read=1, write=2, exec=4 }
+# Also see Cortex-M3 Generic User Guide (https://developer.arm.com/documentation/dui0552/a)
+
+mmap:
+  ### CODE 
+
+  # [0x0, 0x07FFFFFF] maps to flash or system depending on BOOT pins
+
+  flash:
+    address : 0x08000000
+    size    : 0x40000
+    perms   : 0b101
+  codeRAM: # (renamed from System Memory)
+    address : 0x1FF00000
+    size    : 0x2000
+    perms   : 0b101
+
+  ### DATA AND SRAM
+  
+  dataEEPROM:
+    address : 0x08080000
+    size    : 0x2000
+    perms   : 0b011
+  dataRAM: # (renamed from SRAM)
+    address : 0x20000000
+    size    : 0x8000
+    perms   : 0b011
+
+  ### Option Bytes
+
+  optionBytes:
+    address : 0x1FF80000
+    size    : 0x1000 # (actually 0x20, requires page alignment)
+    perms   : 0b011
+
+mmio:
+  ### PERIPHERALS
+  
+  apbPeri:
+    address : 0x40000000
+    size    : 0x27000
+    perms   : 0b011
+
+  ### SYSTEM INTERNAL PERIPHERALS (Private Peripheral Bus)
+  
+  ITM: # Instrumentation Trace Macrocell
+    address : 0xE0000000
+    size    : 0x1000
+    perms   : 0b011
+  DWT: # Data Watchpoint and Trace
+    address : 0xE0001000
+    size    : 0x1000
+    perms   : 0b011
+  FPB: # Flash Patch and Breakpoint
+    address : 0xE0002000
+    size    : 0x1000
+    perms   : 0b011
+  PPB: # Private Peripheral Bus
+    address : 0xE000E000
+    size    : 0x1000
+    perms   : 0b011
+
+# Vector Table/Peripheral Info
+# See ST RM0038 Section 10.1.2 Table 51
+# and ST DS9515 or DS6876 Section 5 Figure 9
+# Map the peripheral base address to IRQn
+peri:
+  0x40000000 : 28   # TIM2
+  0x40000400 : 29   # TIM3
+  0x40000800 : 30   # TIM4
+  # 0x40000C00 :      # reserved
+  0x40001000 : 43   # TIM6
+  0x40001400 : 44   # TIM7
+  # 0x40001C00 :      # reserved
+  0x40002400 : 24   # LCD
+  0x40002800 : 3    # RTC (RTC_WKUP 3, RTC_Alarm 41)
+  0x40002C00 : 0    # WWDG
+  # 0x40003000 :      # IWDG
+  # 0x40003400 :      # reserved 
+  0x40003800 : 36   # SPI2
+  # 0x40003C00 :      # reserved
+  0x40004400 : 38   # USART2
+  0x40004800 : 39   # USART3
+  # 0x40004C00 :      # reserved
+  0x40005400 : 31   # I2C1 (I2C1_EV 31, I2C1_ER 32)
+  0x40005800 : 33   # I2C2 (I2C1_EV 33, I2C1_ER 34)
+  0x40005C00 : 19   # USB Registers  (USB_HP 19, USP_LP 20)
+  # 0x40006000 :      # 512B USB 
+  # 0x40006200 :      # reserved
+  # 0x40007000 :      # PWR
+  0x40007400 : 21   # DAC1, DAC2
+  # 0x40007800 :      # reserved
+  0x40007C00 : 22   # COMP + RI (COMP_CA 22, COMP_ACQ 56)
+
+  # reserved
+
+  # 0x40010000 :      # SYSCFG
+  0x40010400 : 6    # EXTI (0-6, 1-7, 2-8, 3-9, 4-10, 9:5-23, 15:10-40)
+  0x40010800 : 25   # TIM9
+  0x40010C00 : 26   # TIM10
+  0x40011000 : 27   # TIM11
+  # 0x40011400 :      # reserved
+  0x40012400 : 18   # ADC (ADC1)
+  # 0x40012800 :      # reserved
+  0x40013000 : 35   # SPI1
+  # 0x40013400 :      # reserved
+  0x40013800 : 37   # USART1
+  # 0x40013C00 :      # reserved
+  # 0x40020000 :      # Port A
+  # 0x40020400 :      # Port B
+  # 0x40020800 :      # Port C
+  # 0x40020C00 :      # Port D
+  # 0x40021000 :      # reserved
+  # 0x40021400 :      # Port H
+  # 0x40021800 :      # reserved
+  # 0x40023000 :      # CRC
+  # 0x40023400 :      # reserved
+  0x40023800 : 5    # RCC
+  0x40023C00 : 4    # Flash Interface
+  # 0x40024000 :      # reserved
+  0x40026000 : 11    # DMA (DMA1 [ch1-11, ch7-17], DMA2 [ch1-50, ch5-54])
+  # 0x40026400 :      # reserved
+
+
+
+
+# Vector Table Size
+vtsize: 0x124
