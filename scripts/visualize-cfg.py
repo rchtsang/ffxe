@@ -27,7 +27,7 @@ parser.add_argument('--path', type=str, default=f"{PARENT_DIR}/../tests/cfgs",
     help="path to pickled cfg or directory containing pickled cfgs")
 parser.add_argument('--pd', type=str, default=f"{PARENT_DIR}/../mmaps/nrf52832.yml",
     help="path to platform description yaml file")
-parser.add_argument('--fw', type=str, default=f"{PARENT_DIR}/../examples",
+parser.add_argument('--fw', type=str, default=f"{PARENT_DIR}/../examples/unit-tests",
     help="path to corresponding firmware image of directory containing image")
 parser.add_argument('--batch', type=str, default=None,
     help="path to batch job json file")

@@ -1,5 +1,5 @@
 
-blinky.elf:     file format elf32-littlearm
+blinky-o3.elf:     file format elf32-littlearm
 
 
 Disassembly of section .text:
