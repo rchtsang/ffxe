@@ -77,6 +77,7 @@ class FirmwareImage():
 
 
             # construct addr-to-line mapping and disasm dict
+            # useful for pretty printing later
             for lineno, line in enumerate(self.disasm_txt):
                 match = self.RE_PTRN_DISASM.search(line)
                 if match:
@@ -87,6 +88,8 @@ class FirmwareImage():
                         'raw_str': match.group('raw'),
                         'mnemonic': match.group('mnemonic'),
                     }
+                    
+                    # NOTE: specific to nRF52832 elf.
                     # deal with the delay block specially
                     # objdump doesn't treat it as instructions
                     # when disassembling from elf since it's in .data
@@ -184,13 +187,12 @@ class FirmwareImage():
         format_bytes = lambda b: b''.join([c[::-1] for c in chunks(2, b)]).hex(' ', 2)
 
         disasm_txt = []
-        for info in self.cs.disasm_lite(
-                data, offset=0):
+        for (offset, insn_size, mnemonic, opstring) in self.cs.disasm_lite(chunk, offset=0):
             disasm_txt.append("{:>8x}: {:<10} {:<5} {}".format(
-                address + info[0],
-                format_bytes(data[info[0]:info[0]+info[1]]),
-                info[2],
-                info[3]
+                address + offset,
+                format_bytes(chunk[offset:offset+insn_size]),
+                mnemonic,
+                opstring
             ))
 
         return disasm_txt
@@ -249,6 +251,7 @@ class FirmwareImage():
 
         edges = deepcopy(cfg['edges'])
         nodes = deepcopy(cfg['nodes'])
+        base_addr = self.pd['mmap']['flash']['address']
 
         remove = []
         for n in [n for n in nodes if None in n]:
@@ -264,8 +267,8 @@ class FirmwareImage():
 
         for edge in iedges:
 
-            start = min(edge)
-            end = max(edge)
+            start = min(edge) - base_addr
+            end = max(edge) - base_addr
 
             if start not in self.disasm or end not in self.disasm:
                 print(f"invalid edge: ({hex(edge[0])}, {hex(edge[1])})")

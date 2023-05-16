@@ -1,6 +1,7 @@
 import os
 import argparse
 import json
+import re
 from glob import glob
 
 import dill
@@ -8,6 +9,8 @@ import yaml
 
 import models
 from utils import *
+
+FW_NAME_PTRN = re.compile(r"(?P<fwname>[\w-]+)-(?P<engine>\w+)-cfg\.pkl")
 
 PARENT_DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -44,10 +47,11 @@ if __name__ == "__main__":
         with open(args.batch, 'r') as jf:
             batch = json.load(jf)
 
-    elif cond := (os.path.isdir(args.path) and os.path.isdir(args.fw)):
+    elif (os.path.isdir(args.path) and os.path.isdir(args.fw)):
         for path in sorted(glob(f"{args.path}/*.pkl")):
-            (name, ext) = os.path.splitext(os.path.basename(path))
-            fw_name = '-'.join(name.split('-')[:2])
+            name_ptrn_match = FW_NAME_PTRN.search(os.path.basename(path))
+            assert name_ptrn_match, "file name not formatted: {}".format(path)
+            fw_name = name_ptrn_match.group('fwname')
 
             # find firmware image path
             if os.path.exists(elf_fw_path := f"{args.fw}/{fw_name}.elf"):
@@ -60,7 +64,8 @@ if __name__ == "__main__":
                 'fw': fw_path,
             }
     else:
-        assert not cond, "path and fw must be both dir or both files"
+        assert not (os.path.isdir(args.path) or os.path.isdir(args.fw)), \
+            "path and fw must be both dir or both files"
 
         batch[args.path] = {
             'pd': args.pd,
@@ -70,8 +75,11 @@ if __name__ == "__main__":
     for cfg_path, params in batch.items():
         pd_path = params['pd']
         fw_path = params['fw']
-        (name, ext) = os.path.splitext(os.path.basename(cfg_path))
+        fw_filename = os.path.basename(cfg_path)
+        (name, ext) = os.path.splitext(fw_filename)
         print(f"drawing {name}...")
+
+        name_ptrn_match = FW_NAME_PTRN.search(fw_filename)
 
         try:
             assert os.path.exists(cfg_path), \
@@ -81,9 +89,9 @@ if __name__ == "__main__":
 
             assert os.path.splitext(cfg_path)[-1] in ['.pkl', '.pickle'], \
                 "cfg file not a pickle: {}".format(cfg_path)
-            assert len(os.path.basename(cfg_path).split('-')) == 4, (
+            assert name_ptrn_match, (
                 "cfg file name not formatted: {}\n"
-                "expected <fwname>-<opt>-<engine>-cfg.pkl"
+                "expected <fwname>-<engine>-cfg.pkl"
             ).format(cfg_path)
         except AssertionError as e:
             print(e)
@@ -95,7 +103,7 @@ if __name__ == "__main__":
         if 'vtbases' in params:
             vtbases = params['vtbases']
 
-        fw_name = '-'.join(name.split('-')[:2])
+        fw_name = name_ptrn_match.group('fwname')
         fw = models.FirmwareImage(
             fw_path,
             pd=pd,

@@ -1,4 +1,12 @@
 # STM32L151RC Platform Description
+# NOTE: L151RC is Category 3
+
+# Processor Information
+# based on Unicorn and Capstone Python binding constants
+cpu:
+  arch  : "ARM"
+  model : "CORTEX_M3"
+  mode  : [ "THUMB", "MCLASS" ]
 
 # Memory Map
 # See ST DS8890 Section 5 Figure 9
@@ -37,6 +45,11 @@ mmap:
     size    : 0x1000 # (actually 0x20, requires page alignment)
     perms   : 0b011
 
+
+# Memory Mapped IO
+# placeholder values
+# engine will not use them if mmio_map args are provided on init
+
 mmio:
   ### PERIPHERALS
   
@@ -64,69 +77,81 @@ mmio:
     size    : 0x1000
     perms   : 0b011
 
-# Vector Table/Peripheral Info
-# See ST RM0038 Section 10.1.2 Table 51
-# and ST DS9515 or DS6876 Section 5 Figure 9
-# Map the peripheral base address to IRQn
-peri:
-  0x40000000 : 28   # TIM2
-  0x40000400 : 29   # TIM3
-  0x40000800 : 30   # TIM4
-  # 0x40000C00 :      # reserved
-  0x40001000 : 43   # TIM6
-  0x40001400 : 44   # TIM7
-  # 0x40001C00 :      # reserved
-  0x40002400 : 24   # LCD
-  0x40002800 : 3    # RTC (RTC_WKUP 3, RTC_Alarm 41)
-  0x40002C00 : 0    # WWDG
-  # 0x40003000 :      # IWDG
-  # 0x40003400 :      # reserved 
-  0x40003800 : 36   # SPI2
-  # 0x40003C00 :      # reserved
-  0x40004400 : 38   # USART2
-  0x40004800 : 39   # USART3
-  # 0x40004C00 :      # reserved
-  0x40005400 : 31   # I2C1 (I2C1_EV 31, I2C1_ER 32)
-  0x40005800 : 33   # I2C2 (I2C1_EV 33, I2C1_ER 34)
-  0x40005C00 : 19   # USB Registers  (USB_HP 19, USP_LP 20)
-  # 0x40006000 :      # 512B USB 
-  # 0x40006200 :      # reserved
-  # 0x40007000 :      # PWR
-  0x40007400 : 21   # DAC1, DAC2
-  # 0x40007800 :      # reserved
-  0x40007C00 : 22   # COMP + RI (COMP_CA 22, COMP_ACQ 56)
+# Vector Table Info
+vt:
+  size: 0x124
 
-  # reserved
+# Mapping Peripheral Interrupt Enable registers
+# See ST RM0038 Section 10.1.2 Table 50 (Cat.3) and Section 2.3 Table 5
 
-  # 0x40010000 :      # SYSCFG
-  0x40010400 : 6    # EXTI (0-6, 1-7, 2-8, 3-9, 4-10, 9:5-23, 15:10-40)
-  0x40010800 : 25   # TIM9
-  0x40010C00 : 26   # TIM10
-  0x40011000 : 27   # TIM11
-  # 0x40011400 :      # reserved
-  0x40012400 : 18   # ADC (ADC1)
-  # 0x40012800 :      # reserved
-  0x40013000 : 35   # SPI1
-  # 0x40013400 :      # reserved
-  0x40013800 : 37   # USART1
-  # 0x40013C00 :      # reserved
-  # 0x40020000 :      # Port A
-  # 0x40020400 :      # Port B
-  # 0x40020800 :      # Port C
-  # 0x40020C00 :      # Port D
-  # 0x40021000 :      # reserved
-  # 0x40021400 :      # Port H
-  # 0x40021800 :      # reserved
-  # 0x40023000 :      # CRC
-  # 0x40023400 :      # reserved
-  0x40023800 : 5    # RCC
-  0x40023C00 : 4    # Flash Interface
-  # 0x40024000 :      # reserved
-  0x40026000 : 11    # DMA (DMA1 [ch1-11, ch7-17], DMA2 [ch1-50, ch5-54])
-  # 0x40026400 :      # reserved
+intenable:
+  0x40002C00: [ { mask : 0x00000200,   offset : 0x40  } ]  # WWDG
+  0x40002840: # RTC
+              - { mask : 0x00000004,   offset : 0x48  }    # RTC_Tamper [EXTI19]
+              - { mask : 0x00008000,   offset : 0x48  }    # RTC_Timestamp [EXTI19]
+              - { mask : 0x00003000,   offset : 0xe4  }    # RTC_Alarm [EXTI17]
+  0x40002808: [ { mask : 0x00004000,   offset : 0x4c  } ]  # RTC_WKUP [EXTI20]
+  0x40023C00: [ { mask : 0x00030000,   offset : 0x50  } ]  # FLASH
+  0x4002380C: [ { mask : 0x00007f00,   offset : 0x54  } ]  # RCC
+  0x40010400: # EXTI
+              - { mask : 0x00000001,   offset : 0x58  }    # EXTI0
+              - { mask : 0x00000002,   offset : 0x5c  }    # EXTI1
+              - { mask : 0x00000004,   offset : 0x60  }    # EXTI2
+              - { mask : 0x00000008,   offset : 0x64  }    # EXTI3
+              - { mask : 0x00000010,   offset : 0x68  }    # EXTI4
+              - { mask : 0x000003e0,   offset : 0x9c  }    # EXTI9_5
+              - { mask : 0x0000fc00,   offset : 0xe0  }    # EXTI15_10
+              - { mask : 0x00010000,   offset : 0x44  }    # PVD [EXTI16]
+              - { mask : 0x00600000,   offset : 0x98  }    # COMP/CA [EXTI21-22]
+  0x40026000: [ { mask : 0x0000000e,   offset : 0x6c  } ]  # DMA1_Channel1
+  0x40026020: [ { mask : 0x0000000e,   offset : 0x70  } ]  # DMA1_Channel2
+  0x40026040: [ { mask : 0x0000000e,   offset : 0x74  } ]  # DMA1_Channel3
+  0x40026060: [ { mask : 0x0000000e,   offset : 0x78  } ]  # DMA1_Channel4
+  0x40026080: [ { mask : 0x0000000e,   offset : 0x7c  } ]  # DMA1_Channel5
+  0x400260A0: [ { mask : 0x0000000e,   offset : 0x80  } ]  # DMA1_Channel6
+  0x400260C0: [ { mask : 0x0000000e,   offset : 0x84  } ]  # DMA1_Channel7
+  0x40012400: [ { mask : 0x040000e0,   offset : 0x88  } ]  # ADC1
+  0x40005C40: # USB
+              - { mask : 0x0000ef00,   offset : 0x8c  }    # USB_HP (isochronous, doubl-buffer bulk transfer)
+              - { mask : 0x0000ef00,   offset : 0x90  }    # USB_LP (all events) (RM0038 24.3.1)
+              - { mask : 0x00001000,   offset : 0xe8  }    # USB_FS_WKUP [EXIT18]
+  0x40007400: [ { mask : 0x20002000,   offset : 0x94  } ]  # DAC
+  0x40007C00: # COMP
+              - { mask : 0x20000000,   offset : 0x98  }    # COMP/CA (channel acquire)
+              - { mask : 0x20000000,   offset : 0x120 }    # COMP_ACQ
+  0x40002404: [ { mask : 0x0000000a,   offset : 0xa0  } ]  # LCD
+  0x4001080C: [ { mask : 0x00000047,   offset : 0xa4  } ]  # TIM9
+  0x40010C0C: [ { mask : 0x00000003,   offset : 0xa8  } ]  # TIM10
+  0x4001100C: [ { mask : 0x00000003,   offset : 0xac  } ]  # TIM11
+  0x4000000C: [ { mask : 0x00005f5f,   offset : 0xb0  } ]  # TIM2
+  0x4000040C: [ { mask : 0x00005f5f,   offset : 0xb4  } ]  # TIM3
+  0x4000080C: [ { mask : 0x00005f5f,   offset : 0xb8  } ]  # TIM4
+  0x40005404: # I2C1
+              - { mask : 0x00000600,   offset : 0xbc  }    # I2C1_EV
+              - { mask : 0x00000100,   offset : 0xc0  }    # I2C1_ER
+  0x40005804: # I2C2
+              - { mask : 0x00000600,   offset : 0xc4  }    # I2C2_EV
+              - { mask : 0x00000100,   offset : 0xc8  }    # I2C2_ER
+  0x40013004: [ { mask : 0x000000e0,   offset : 0xcc  } ]  # SPI1
+  0x40003804: [ { mask : 0x000000e0,   offset : 0xd0  } ]  # SPI2
+  0x4001380C: [ { mask : 0x000001f0,   offset : 0xd4  } ]  # USART1 (PE, TXE, TCI, RXNE, IDLE)
+  0x40013810: [ { mask : 0x00000040,   offset : 0xd4  } ]  # USART1 (LIN break detection)
+  0x40013814: [ { mask : 0x00000001,   offset : 0xd4  } ]  # USART1 (Error)
+  0x4000440C: [ { mask : 0x000001f0,   offset : 0xd8  } ]  # USART2 (PE, TXE, TCI, RXNE, IDLE)
+  0x40004410: [ { mask : 0x00000040,   offset : 0xd8  } ]  # USART2 (LIN break detection)
+  0x40004414: [ { mask : 0x00000001,   offset : 0xd8  } ]  # USART2 (Error)
+  0x4000480C: [ { mask : 0x000001f0,   offset : 0xdc  } ]  # USART3 (PE, TXE, TCI, RXNE, IDLE)
+  0x40004810: [ { mask : 0x00000040,   offset : 0xdc  } ]  # USART3 (LIN break detection)
+  0x40004814: [ { mask : 0x00000001,   offset : 0xdc  } ]  # USART3 (Error)
+  0x4000100C: [ { mask : 0x00000101,   offset : 0xec  } ]  # TIM6
+  0x4000140C: [ { mask : 0x00000101,   offset : 0xf0  } ]  # TIM7
+  0x40000C0C: [ { mask : 0x00005f5f,   offset : 0xf8  } ]  # TIM5
+  0x40003C04: [ { mask : 0x000000e0,   offset : 0xfc  } ]  # SPI3
+  0x40026408: [ { mask : 0x0000000e,   offset : 0x108 } ]  # DMA2_CH1
+  0x40026428: [ { mask : 0x0000000e,   offset : 0x10c } ]  # DMA2_CH2
+  0x40026448: [ { mask : 0x0000000e,   offset : 0x110 } ]  # DMA2_CH3
+  0x40026468: [ { mask : 0x0000000e,   offset : 0x114 } ]  # DMA2_CH4
+  0x40026488: [ { mask : 0x0000000e,   offset : 0x118 } ]  # DMA2_CH5
+  0x50060000: [ { mask : 0x00000600,   offset : 0x11c } ]  # AES
 
 
-
-
-# Vector Table Size
-vtsize: 0x124

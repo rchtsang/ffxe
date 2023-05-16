@@ -230,11 +230,11 @@ class FFXEngine():
         # load firmware if path provided
         self.fw = None
         if isinstance(path, str):
-            self.load_fw(path)
+            self.load_fw(path, vtbases)
 
 
     def load_fw(self, path, 
-            vtbases : list[int] = [0x0]):
+            vtbases : list[int]):
         """instantiate firmware image and load into unicorn"""
         self.fw = FirmwareImage(path, self.pd, vtbases,
             cs=self.cs)
@@ -386,6 +386,14 @@ class FFXEngine():
             #     if branch == explored_branch:
             #         target_block = self.cfg.bblocks[explored_branch.target & (~1)]
             #         self.cfg.connect_block(target_block, parent=branch.bblock)
+            
+            # check if the branch actually leads to a block.
+            # if not, don't queue it. 
+            # this can happen if a previously explored branch led
+            # to an invalid location.
+            if (branch.target & (~1)) not in self.cfg.bblocks:
+                return
+
             target_block = self.cfg.bblocks[branch.target & (~1)]
             if target_block.contrib:
                 self.unexplored.append(branch)
@@ -411,8 +419,9 @@ class FFXEngine():
 
         # check if block is at a data location
         # check if block is in vector table
-        if (any([insn.address in self.mem_reads for insn in insns.values()])
-                or self.addr_in_vtable(address)):
+        if (any([insn.address in self.mem_reads for insn in insns.values()])):
+            raise UcError(UC_ERR_FETCH_PROT)
+        if (self.addr_in_vtable(address)):
             raise UcError(UC_ERR_FETCH_PROT)
 
         # check if block beyond end of fw
@@ -1001,13 +1010,14 @@ class FFXEngine():
                 # do fxe on that peripheral's isr with current context  
                 # requires mapping of interrupt enable register addrs to 
                 # corresponding vector table entry              
-                if (addr in self.pd['intenable']
-                        and (val & self.pd['intenable'][addr]['mask'])):
-                    vtoffset = self.pd['intenable'][addr]['offset']
-                    self.logger.info("peripheral enabled: IRQn {:x}".format(vtoffset // 4))
+                if addr in self.pd['intenable']:
+                    for intenable in self.pd['intenable'][addr]:
+                        if val & intenable['mask']:
+                            vtoffset = intenable['offset']
+                            self.logger.info("peripheral enabled: IRQn {:x}".format(vtoffset // 4))
 
-                    for vtbase in self.fw.vector_tables.keys():
-                        self._queue_isr(vtbase + vtoffset)
+                            for vtbase in self.fw.vector_tables.keys():
+                                self._queue_isr(vtbase + vtoffset)
 
 
                 if self.context.isr and addr not in self.voladdrs:
