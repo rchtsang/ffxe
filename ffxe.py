@@ -116,7 +116,8 @@ class FFXEngine():
             pd         : Union[str, dict],
             mmio       : dict = None,
             path       : str = None,
-            vtbases  : list[int] = [0x0],
+            base_addr  : int = None,
+            vtbases    : list[int] = [0x0],
             log_dir    : str = 'logs',
             log_name   : str = 'ffxe.log',
             log_stdout : bool = False,
@@ -230,17 +231,20 @@ class FFXEngine():
         # load firmware if path provided
         self.fw = None
         if isinstance(path, str):
-            self.load_fw(path, vtbases)
+            self.load_fw(path, base_addr, vtbases)
 
 
     def load_fw(self, path, 
+            base_addr : int,
             vtbases : list[int]):
         """instantiate firmware image and load into unicorn"""
-        self.fw = FirmwareImage(path, self.pd, vtbases,
+        if base_addr is None:
+            base_addr = self.pd['mmap']['flash']['address']
+        self.fw = FirmwareImage(path, self.pd, base_addr, vtbases,
             cs=self.cs)
 
         # load firmware image to unicorn
-        self.uc.mem_write(self.pd['mmap']['flash']['address'], self.fw.raw)
+        self.uc.mem_write(self.fw.base_addr, self.fw.raw)
 
         # setup stack pointer and program counter
         # currently specific to Cortex M4, generalize later
@@ -425,7 +429,7 @@ class FFXEngine():
             raise UcError(UC_ERR_FETCH_PROT)
 
         # check if block beyond end of fw
-        if (address > self.fw.size + self.pd['mmap']['flash']['address']):
+        if (address > self.fw.size + self.fw.base_addr):
             raise UcError(UC_ERR_INSN_INVALID)
 
         block_kwargs = {}

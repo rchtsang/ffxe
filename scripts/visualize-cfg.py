@@ -58,6 +58,9 @@ if __name__ == "__main__":
                 fw_path = elf_fw_path
             elif os.path.exists(bin_fw_path := f"{args.fw}/{fw_name}.bin"):
                 fw_path = bin_fw_path
+            else:
+                # raise AssertionError("fw path not found: {}".format(path))
+                continue
 
             batch[path] = {
                 'pd': args.pd,

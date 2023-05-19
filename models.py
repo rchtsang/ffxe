@@ -32,7 +32,8 @@ class FirmwareImage():
         r"(?P<mnemonic>.+)"))
 
     def __init__(self, path : str, pd : dict,
-                vtbases : list[int],  # list of known vector table offsets
+                base_addr : int,        # base address
+                vtbases : list[int],    # list of known vector table offsets
                 isa : str = 'armv7e-m', # isa for arm-none-eabi-objdump
                 cs : Type[Cs] = None,   # optionally pass in a capstone instance
             ):
@@ -130,7 +131,7 @@ class FirmwareImage():
 
         self.size = len(self.raw)
 
-        self.base_addr = self.pd['mmap']['flash']['address']
+        self.base_addr = base_addr
         self.vector_tables = {
             base: self.raw[base-self.base_addr:base-self.base_addr+self.pd['vt']['size']] \
             for base in vtbases

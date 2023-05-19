@@ -79,7 +79,14 @@ if __name__ == "__main__":
             fw_path = binfiles[0]
             pd_path = ymlfiles[0]
             fw_name = splitext(basename(fw_path))[0]
+            base_addr = None
             vtbases = [0]
+
+            # check if target has specified base address
+            if exists(base_addr_path := f"{target}/base_addr.txt"):
+                with open(base_addr_path, 'r') as file:
+                    base_addr = int(file.read().strip(), 0)
+                print("specified base address: {}".format(hex(base_addr)))
 
             # check if target has specified vector table offsets
             # should be a file named `vtbases` containing a comma-separated
@@ -90,7 +97,6 @@ if __name__ == "__main__":
             print("vector table offsets: {}".format(
                 ' '.join([hex(base) for base in vtbases])))
 
-
         except AssertionError as e:
             print(e)
             continue
@@ -99,6 +105,7 @@ if __name__ == "__main__":
         ffxe = FFXEngine(
             pd=pd_path,
             path=fw_path,
+            base_addr=base_addr,
             vtbases=vtbases,
             log_dir=f"{PROJ_ROOT}/logs",
             log_name=f"{fw_name}-{make_timestamp()}.log",

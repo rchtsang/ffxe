@@ -59,7 +59,8 @@ if __name__ == "__main__":
         t = perf_counter()
         cfg_fast = proj.analyses.CFGFast(
             function_starts=entry_points,
-            force_complete_scan=False
+            force_complete_scan=False,
+            normalize=True
         )
         fast_elapsed = perf_counter() - t
 
@@ -75,7 +76,8 @@ if __name__ == "__main__":
         try:
             t = perf_counter()
             cfg_emu = proj.analyses.CFGEmulated(
-                starts=entry_points)
+                starts=entry_points,
+                normalize=True)
             emu_elapsed = perf_counter() - t
 
             # save dynamic cfg result
