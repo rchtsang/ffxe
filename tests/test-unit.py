@@ -1,8 +1,9 @@
 import os
-from os.path import basename, splitext
+from os.path import basename, splitext, isdir
 from copy import deepcopy
 from glob import glob
 from time import perf_counter
+from pathlib import Path
 
 import dill
 
@@ -13,10 +14,14 @@ script to run ffxe on all nRF52 unit tests
 """
 PARENT_DIR = os.path.dirname(os.path.realpath(__file__))
 PROJ_ROOT = os.path.realpath(f"{PARENT_DIR}/..")
+OUT_DIR = f"{PROJ_ROOT}/tests/cfgs/unit-tests"
 
 if __name__ == "__main__":
 
     fw_examples = glob(f'{PROJ_ROOT}/examples/unit-tests/*.bin')
+
+    if not isdir(OUT_DIR):
+        Path(OUT_DIR).mkdir(parents=True, exist_ok=True)
 
     ffxe_cfgs = {}
     table = []
@@ -65,5 +70,5 @@ if __name__ == "__main__":
             'edges': set([(max(cfg.bblocks[e[0]].insns.keys()), e[1]) for e in cfg.edges]),
                 # max() is used to get the last address in the bblock
         }
-        with open(f"{PROJ_ROOT}/tests/cfgs/{name}-ffxe-cfg.pkl", 'wb') as pklfile:
+        with open(f"{OUT_DIR}/{name}-ffxe-cfg.pkl", 'wb') as pklfile:
             dill.dump(graph, pklfile)

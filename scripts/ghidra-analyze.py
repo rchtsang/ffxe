@@ -23,6 +23,7 @@ also expects Ghidrathon to be installed
 PARENT_DIR = dirname(realpath(__file__))
 PROJ_DIR = realpath(f"{PARENT_DIR}/..")
 GHIDRA_ROOT = dirname(realpath(shutil.which('ghidraRun')))
+OUT_DIR = f"{PROJ_DIR}/tests/cfgs/unit-tests"
 
 def analyzeHeadless(target : str, processor : str, 
         postscript : str = None,
@@ -86,7 +87,7 @@ def analyzeHeadless(target : str, processor : str,
             analyze_cmd.extend(postargs)
         scriptpaths.append(postscriptdir)
 
-    analyze_cmd.extend(['-scriptPath', f"\"{';'.join(scriptpaths)}\""])
+    analyze_cmd.extend(['-scriptPath', f"{';'.join(scriptpaths)}"])
     analyze_cmd.extend(['-processor', processor])
     analyze_cmd.extend(['-loader', loader])
 
@@ -103,7 +104,7 @@ def analyzeHeadless(target : str, processor : str,
     return result
 
 
-def task(targets, pdfilepath, base):
+def task(targets, outdir, pdfilepath, base):
     # copy all files to be analyzed into a new temporary directory
     with TemporaryDirectory() as td:
         for target in targets:
@@ -113,9 +114,9 @@ def task(targets, pdfilepath, base):
             target=td,
             processor="ARM:LE:32:Cortex",
             prescript=f"{PARENT_DIR}/ghidra-disassemble-entrypoints.py",
-            preargs=[pdfilepath, base],
+            preargs=[outdir, pdfilepath, base],
             postscript=f"{PARENT_DIR}/ghidra-simple-cfg.py",
-            postargs=[pdfilepath, base],
+            postargs=[outdir, pdfilepath, base],
             rm_project=True)
 
 if __name__ == "__main__":
@@ -141,4 +142,4 @@ if __name__ == "__main__":
     # log_stream.close()
     # os.remove("/tmp/ghidra-analyze.log")
 
-    task(targets, pdfilepath, -1)
+    task(targets, OUT_DIR, pdfilepath, " -1")

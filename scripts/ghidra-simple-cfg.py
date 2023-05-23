@@ -51,14 +51,14 @@ def load_pd(path):
         return yaml.load(yf, yaml.Loader)
 
 
-def get_entrypoints(pd=None, vtbases=[0]):
+def get_entrypoints(pd=None, base_addr=None, vtbases=[0]):
     """utility for getting firmware entrypoints from vector table"""
     filepath = currentProgram.getExecutablePath()
-    base_addr = 0   # assume flash base address is 0
+    base = 0        # assume flash base address is 0
     vtsize = 8      # this gets only the entrypoint at offset 0x4
 
     if pd:
-        base_addr = pd['mmap']['flash']['address']
+        base = pd['mmap']['flash']['address'] if not base_addr else base_addr
         vtsize = pd['vt']['size']
 
     vector_tables = []
@@ -168,10 +168,13 @@ def buildConnectedCFG(program, entrypoints):
 
     return cfg
 
-
+OUT_DIR = f"{dirname(realpath(__file__))}/../test/cfgs"
 
 parser = argparse.ArgumentParser(prog="ghidra-simple-cfg.py", description=__doc__)
-parser.add_argument('pd', type=str, default=None)
+parser.add_argument('outdir', type=str, default=OUT_DIR,
+    help="path to output directory")
+parser.add_argument('pd', type=str, default=None,
+    help="path to platform description file")
 parser.add_argument('base_addr', type=lambda v: int(v, 0),
     help="must provide base address. if not known, supply -1")
 parser.add_argument('vtbases', nargs='*', type=lambda v: int(v, 0), default=[0],
@@ -184,20 +187,21 @@ if __name__ == "__main__":
     # log_stream = open("/tmp/ghidra-analyze.log", 'a', encoding='utf-8')
 
     # setup directory for results
-    cfg_dir = Path(dirname(realpath(__file__))) /'..'/'tests'/'cfgs'
+    cfg_dir = Path(args.outdir)
     cfg_dir.mkdir(parents=True, exist_ok=True)
 
     # name cfg
     fw_filename = currentProgram.getName()
     (fw_name, ext) = splitext(fw_filename)
     simple_cfg_name = f"{fw_name}-ghidra_simple-cfg"
-    cnnctd_cfg_name = f"{fw_name}-ghidra_connected-cfg"
+    cnnctd_cfg_name = f"{fw_name}-ghidra_cnnctd-cfg"
 
     print("building cfg for {:<20}".format(fw_filename))
 
     pd = load_pd(args.pd)
     base = pd['mmap']['flash']['address'] if args.base_addr == -1 else args.base_addr
-    entrypoints = get_entrypoints(pd=pd, vtbases=args.vtbases)
+    print("base address: {}".format(hex(base)))
+    entrypoints = get_entrypoints(pd=pd, base_addr=base, vtbases=args.vtbases)
     for entry in entrypoints:
         print(hex(entry))
 

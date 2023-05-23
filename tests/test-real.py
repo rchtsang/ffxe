@@ -8,6 +8,7 @@ from copy import deepcopy
 from glob import glob
 from time import perf_counter
 from datetime import datetime
+from pathlib import Path
 
 import dill
 
@@ -22,6 +23,7 @@ make_timestamp = lambda: datetime.now().strftime('%y%m%d-%H%M%S')
 PARENT_DIR = dirname(realpath(__file__))
 PROJ_ROOT = dirname(PARENT_DIR)
 SAMPLES_DIR = f"{PROJ_ROOT}/samples"
+OUT_DIR = f"{PARENT_DIR}/cfgs/real-world"
 
 def generate_highlighted_disasm_txt(ffxe, graph):
     ffxe.fw.disassemble(graph)
@@ -126,7 +128,10 @@ if __name__ == "__main__":
 
         generated_cfgs[basename(fw_path)] = graph
 
-        with open(f"{PARENT_DIR}/cfgs/{fw_name}-ffxe-cfg.pkl", 'wb') as pklfile:
+
+        if not isdir(OUT_DIR):
+            Path(OUT_DIR).mkdir(parents=True, exist_ok=True)
+        with open(f"{OUT_DIR}/{fw_name}-ffxe-cfg.pkl", 'wb') as pklfile:
             dill.dump(graph, pklfile)
 
 
@@ -153,5 +158,5 @@ if __name__ == "__main__":
         print(result)
         result_table.append(result)
 
-    with open(f'{args.outdir}/real-world-cfg-results-{make_timestamp()}.txt', 'w') as f:
+    with open(f'{args.outdir}/ffxe-real-world-cfg-results-{make_timestamp()}.txt', 'w') as f:
         f.write('\n'.join(result_table))

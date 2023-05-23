@@ -27,12 +27,13 @@ make_timestamp = lambda: datetime.now().strftime('%y%m%d-%H%M%S')
 PARENT_DIR = dirname(realpath(__file__))
 PROJ_ROOT = dirname(PARENT_DIR)
 SAMPLES_DIR = f"{PROJ_ROOT}/examples/real-world"
+OUT_DIR = f"{PROJ_ROOT}/tests/cfgs/real-world"
 
 
 parser = argparse.ArgumentParser(prog="test-real.py", description=__doc__)
 parser.add_argument('--targets', nargs='+', type=str, default=None,
     help="specify folders of target real-world firmware to analyze")
-parser.add_argument('--outdir', type=str, default=f"{PARENT_DIR}",
+parser.add_argument('--outdir', type=str, default=f"{OUT_DIR}",
     help="destination directory for results table")
 
 if __name__ == "__main__":
@@ -94,8 +95,8 @@ if __name__ == "__main__":
             target=fw_path,
             processor=ghidra_config['processor'],
             prescript=f"{PARENT_DIR}/ghidra-disassemble-entrypoints.py",
-            preargs=[pd_path, base_addr] + vtbases,
+            preargs=[args.outdir, pd_path, f" {base_addr}"] + vtbases,
             postscript=f"{PARENT_DIR}/ghidra-simple-cfg.py",
-            postargs=[pd_path, base_addr] + vtbases,
+            postargs=[args.outdir, pd_path, f" {base_addr}"] + vtbases,
             rm_project=True
         )

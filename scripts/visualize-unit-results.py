@@ -56,7 +56,7 @@ def plot_comparison(graphs, other,
     if not title:
         title = f"ffxe-vs-{other}"
 
-    fw_labels = list(graphs.keys())
+    fw_labels = list(sorted(graphs.keys(), reverse=True))
     fw_label_locs = np.arange(len(fw_labels))
     bar_width = 0.2
 
@@ -65,7 +65,7 @@ def plot_comparison(graphs, other,
     ffxe_opts = { k: { o:[] for o in opts } for k in ['nodes', 'edges'] }
     othr_opts = { k: { o:[] for o in opts } for k in ['nodes', 'edges'] }
     ovlp_opts = { k: { o:[] for o in opts } for k in ['nodes', 'edges'] }
-    for fw in graphs.keys():
+    for fw in fw_labels:
         for opt in opts:
             # get graphs to compare
             ffxe_cfg = graphs[fw]['ffxe'][opt]
@@ -172,9 +172,9 @@ def plot_comparison(graphs, other,
                 )
 
             # add edge space
-            space = 50
+            space = 250
             if k == 'edges':
-                space = 100
+                space = 300
             (llim, rlim) = ax.get_xlim()
             ax.set_xlim(left=(llim - space), right=(rlim + space))
 
@@ -205,7 +205,7 @@ def plot_comparison(graphs, other,
                 rotation=45,
                 fontsize=tick_fontsize)
             # add optimization labels
-            sublabels = ['-' + opt for opt in opts for fw in graphs.keys()]
+            sublabels = ['-' + opt for opt in opts for fw in fw_labels]
             ax.set_yticks(sublabel_positions, sublabels, 
                 fontsize=minor_tick_fontsize,
                 minor=True)
@@ -224,7 +224,7 @@ def plot_comparison(graphs, other,
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('-i', default=f"{PROJ_DIR}/tests/cfgs")
+    parser.add_argument('-i', default=f"{PROJ_DIR}/tests/cfgs/unit-tests")
     parser.add_argument('-d', default=f"{PARENT_DIR}/img")
     
     args = parser.parse_args()
@@ -258,6 +258,13 @@ if __name__ == "__main__":
     if not exists(OUT_DIR):
         Path(OUT_DIR).mkdir(parents=True, exist_ok=True)
 
-    for eng in ['fxe', 'angr_emu', 'angr_fast', 'ghidra']:
+    for eng in [
+                # 'fxe', 
+                'angr_emu',
+                'angr_cnnctd', 
+                'angr_fast', 
+                'ghidra_simple',
+                'ghidra_cnnctd',
+            ]:
         plot_comparison(graphs, other=eng, outdir=OUT_DIR)
         
