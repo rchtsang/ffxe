@@ -1233,7 +1233,7 @@ class ThumbLDM(ctypes.Union):
 
     def addresses(self, uc : Type[Uc]):
         Rn = uc.reg_read(UC_REG_MAP[self.enc.n])
-        return [Rn + (i * 4) for i in range(15) if self.enc.regs & (1 << i)]
+        return [Rn + (i * 4) for i in range(self.num_regs)]
 
     @property
     def num_regs(self):
@@ -1279,7 +1279,7 @@ class ThumbLDMDB(ctypes.LittleEndianStructure):
 
     def addresses(self, uc : Type[Uc]):
         Rn = uc.reg_read(UC_REG_MAP[self.Rn])
-        return [Rn + (i * 4) for i in range(15) if self.regs & (1 << i)]
+        return [Rn + (i * 4) for i in range(self.num_regs)]
 
     @property
     def num_regs(self):
@@ -1421,7 +1421,8 @@ class LDRDLit(ctypes.LittleEndianStructure):
 
     def addresses(self, uc : Type[Uc]):
         pc = uc.reg_read(UC_ARM_REG_PC)
-        return pc + (self.imm32 if self.add else -self.imm32)
+        offset_addr = pc + (self.imm32 if self.add else -self.imm32)
+        return [offset_addr, offset_addr + 4]
 
 
 class ThumbLDRD(ctypes.Union):
