@@ -839,8 +839,8 @@ class FFXEngine():
 
                 # specific to cortex m b/c nvic
                 if (self.addr_in_vtable(jump_target) 
-                        or not self.addr_in_region(jump_target, 'flash')
-                        or not self.addr_in_region(jump_target, 'codeRAM')):
+                        or not (self.addr_in_region(jump_target, 'flash')
+                            or self.addr_in_region(jump_target, 'codeRAM'))):
                     # invalid jump target
                     break
 
