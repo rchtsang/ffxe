@@ -14,12 +14,15 @@ import elftools
 import capstone
 from IPython import embed
 
+import unicorn as UC
 from unicorn import *
 from unicorn.arm_const import *
+import capstone as CS
 from capstone import *
 from capstone.arm_const import *
 
 from models import *
+from arch.arm import *
 from arch.armv7e import *
 from mappings import *
 from utils import *
@@ -166,14 +169,14 @@ class FFXEngine():
 
         self.pd = pd
 
-        self.uc_arch = globals()[f"UC_ARCH_{pd['cpu']['arch']}"]
+        self.uc_arch = getattr(UC, f"UC_ARCH_{pd['cpu']['arch']}")
         self.uc_model = globals()[f"UC_CPU_{pd['cpu']['arch']}_{pd['cpu']['model']}"]
 
-        self.cs_arch = globals()[f"CS_ARCH_{pd['cpu']['arch']}"]
+        self.cs_arch = getattr(CS, f"CS_ARCH_{pd['cpu']['arch']}")
         
         self.cpu_mode = 0
         for mode in pd['cpu']['mode']:
-            self.cpu_mode |= globals()[f"UC_MODE_{mode}"]
+            self.cpu_mode |= getattr(UC, f"UC_MODE_{mode}")
         # for whatever reason, capstone and unicorn mode values are shared,
         # but arch values are not, hence, shared mode, but different arch
 
@@ -368,12 +371,12 @@ class FFXEngine():
         #             # this is likely a registered function, write it into mem state
         #             context.mem_state[addr] = val.to_bytes(4, 'little')
         branch_info = {
-            'addr'    : isr * 4,
+            'addr'    : isr,
             'raw'     : b'',
             'target'  : context.pc,
             'bblock'  : None,
             'context' : context,
-            'ret'     : isr * 4,
+            'ret'     : isr,
             'isr'     : isr,
         }
         branch = FBranch(**branch_info)
@@ -559,6 +562,10 @@ class FFXEngine():
     def _hook_code(self, uc, address, size, user_data):
         """callback after every instruction execution"""
         self.cs.mode = uc.ctl_get_mode()
+        if self.cs.mode == CS_MODE_ARM:
+            pcrel = 8
+        else: # expect CS_MODE_THUMB
+            pcrel = 4
         self.context.pc = address
         self.context.pc |= 1 if uc.reg_read(UC_ARM_REG_CPSR) & (1 << 5) else 0
         self.context.apsr.set(uc.reg_read(UC_ARM_REG_APSR))
@@ -602,8 +609,11 @@ class FFXEngine():
             # TODO: should prob also consider stmdb to sp and push insns
             if cs_insn.id == ARM_INS_BL:
                 # calculate branch target manually
-                bl_insn = Thumb32BL(cs_insn.bytes)
-                target = self.context.pc + 4 + bl_insn.imm32
+                if self.cs.mode == CS_MODE_ARM:
+                    bl_insn = ArmBL(cs_insn)
+                else:
+                    bl_insn = Thumb32BL(cs_insn.bytes)
+                target = self.context.pc + pcrel + bl_insn.imm32
 
                 # little hack: if target is in mem_reads for some reason, remove it
                 while target & (~1) in self.mem_reads:
@@ -624,7 +634,7 @@ class FFXEngine():
                 # need to account for case where indirect block reached, but
                 # state is invalid and so not getting marked properly
 
-                # limiting the backwarrd reachability might be causing 
+                # limiting the backward reachability might be causing 
                 # cases where quotas not getting incremented and legit
                 # memory states are being ignored.
                 if (target not in self.ibtargets[address]
@@ -670,10 +680,14 @@ class FFXEngine():
 
         elif cs_insn.id == ARM_INS_B:
             # handle forking of context on conditional branches
-            b_insn = ThumbBranch(cs_insn.bytes)
+            if self.cs.mode == CS_MODE_ARM:
+                b_insn = ArmBranch(cs_insn)
+            else: # expect Thumb mode
+                b_insn = ThumbBranch(cs_insn.bytes)
+
             context = self.backup()
             cs_cond = ARM_CC_AL
-            if ((b_insn.enc in ['T1', 'T3'])
+            if ((b_insn.enc in ['T1', 'T3', 'A1'])
                     and (ARM_CC_INVALID < cs_insn.cc < ARM_CC_AL)):
                 # check if conditional code flag set
                 cs_cond = cs_insn.cc
@@ -689,7 +703,7 @@ class FFXEngine():
                     context.pc = self.context.pc + size
                 else:
                     # branch not taken, backup context for jump target
-                    context.pc = address + 4 + b_insn.imm32
+                    context.pc = address + pcrel + b_insn.imm32
 
                     # protect edge from accidental removal
                     self.protected_edges.add((self.context.bblock.addr, address + size))
@@ -704,10 +718,10 @@ class FFXEngine():
             
             # always protect the direct target edge
             self.protected_edges.add(
-                (self.context.bblock.addr, (address + 4 + b_insn.imm32) & (~1)))
+                (self.context.bblock.addr, (address + pcrel + b_insn.imm32) & (~1)))
 
             # keep track of the explicit target to prevent over-pruning of edges
-            self.context.bblock.direct_target = (address + 4 + b_insn.imm32) & (~1)
+            self.context.bblock.direct_target = (address + pcrel + b_insn.imm32) & (~1)
 
 
         elif cs_insn.id == ARM_INS_BX:
@@ -750,6 +764,7 @@ class FFXEngine():
         elif (cs_insn.id == ARM_INS_CBNZ 
                 or cs_insn.id == ARM_INS_CBZ):
             # also a conditional branch
+            # only has Thumb encodings
             cb_insn = Thumb16CompareBranch(cs_insn.bytes)
             cmp_reg = cs_insn.op_find(ARM_OP_REG, 1)
             cmp_val = uc.reg_read(cmp_reg.reg)
@@ -759,13 +774,13 @@ class FFXEngine():
                 context.pc = self.context.pc + size
             else:
                 # branch not taken, backup context for jump target
-                context.pc = address + 4 + cb_insn.imm32
+                context.pc = address + pcrel + cb_insn.imm32
 
                 # protect edge from accidental removal
                 self.protected_edges.add((self.context.bblock.addr, address + size))
 
             # keep track of the explicit target to prevent over-pruning of edges
-            self.context.bblock.direct_target = (address + 4 + cb_insn.imm32) & (~1)
+            self.context.bblock.direct_target = (address + pcrel + cb_insn.imm32) & (~1)
 
             branch = FBranch(
                 addr=address,
@@ -779,6 +794,7 @@ class FFXEngine():
         elif (cs_insn.id == ARM_INS_TBB
                 or cs_insn.id == ARM_INS_TBH):
             # TODO: also needs to be handled like an indirect branch block
+            # only has thumb encodings
 
             # essentially a jump table instruction. 
             # handle by adding all valid addresses in table to job list
@@ -803,7 +819,8 @@ class FFXEngine():
             # set an upper limit on the offset size as maximum size of flash region
             # also skip duplicate targets
             jump_targets = set()
-            for i in range(0, self.pd['mmap']['flash']['size'] - address, read_size):
+            upper_flash_limit = self.pd['mmap']['flash']['address'] + self.pd['mmap']['flash']['size']
+            for i in range(0, upper_flash_limit - address, read_size):
                 # if i == tbl_offset:
                 #     continue
                 # breakpoint()
@@ -820,9 +837,10 @@ class FFXEngine():
                 if mem_loc in jump_targets:
                     break
 
-                # specific to cortex m4
+                # specific to cortex m b/c nvic
                 if (self.addr_in_vtable(jump_target) 
-                        or (jump_target > self.pd['mmap']['flash']['size'])):
+                        or not self.addr_in_region(jump_target, 'flash')
+                        or not self.addr_in_region(jump_target, 'codeRAM')):
                     # invalid jump target
                     break
 
@@ -897,24 +915,42 @@ class FFXEngine():
 
         ## LOAD INSTRUCTIONS
         # because Unicorn doesn't hook LDR instructions correctly
+        # also need to add indirect branch support for ldr instructions
         elif (cs_insn.id in [
                 ARM_INS_LDR, ARM_INS_LDRH, ARM_INS_LDRB,
                 ARM_INS_LDRT, ARM_INS_LDRHT, ARM_INS_LDRBT,
                 ARM_INS_LDRD, ARM_INS_LDM, ARM_INS_LDMDB]):
             load_size = 4
-            if cs_insn.id == ARM_INS_LDM:
-                ldm_insn = ThumbLDM(cs_insn.bytes)
-                addrs = ldm_insn.addresses(uc)
-            elif cs_insn.id == ARM_INS_LDMDB:
-                ldmdb_insn = ThumbLDMDB(cs_insn.bytes)
-                addrs = ldmdb_insn.addresses(uc)
-            elif cs_insn.id == ARM_INS_LDRD:
-                ldrd_insn = ThumbLDRD(cs_insn.bytes)
-                addrs = ldrd_insn.addresses(uc)
+            if self.cs.mode & CS_MODE_THUMB:
+                match cs_insn.id:
+                    case CS.arm_const.ARM_INS_LDM:
+                        ldm_insn = ThumbLDM(cs_insn.bytes) 
+                        addrs = ldm_insn.addresses(uc)
+                    case CS.arm_const.ARM_INS_LDMDB:
+                        ldmdb_insn = ThumbLDMDB(cs_insn.bytes)
+                        addrs = ldmdb_insn.addresses(uc)
+                    case CS.arm_const.ARM_INS_LDRD:
+                        ldrd_insn = ThumbLDRD(cs_insn.bytes)
+                        addrs = ldrd_insn.addresses(uc)
+                    case _ :
+                        ld_insn = ThumbLDR(cs_insn.bytes)
+                        addrs = [ld_insn.address(uc)]
+                        load_size = ld_insn.load_size
             else:
-                ld_insn = ThumbLDR(cs_insn.bytes)
-                addrs = [ld_insn.address(uc)]
-                load_size = ld_insn.load_size
+                match cs_insn.id:
+                    case CS.arm_const.ARM_INS_LDM:
+                        ldm_insn = ArmLDM(cs_insn.bytes) 
+                        addrs = ldm_insn.addresses(uc)
+                    case CS.arm_const.ARM_INS_LDMDB:
+                        ldmdb_insn = ArmLDMDB(cs_insn.bytes)
+                        addrs = ldmdb_insn.addresses(uc)
+                    case CS.arm_const.ARM_INS_LDRD:
+                        ldrd_insn = ArmLDRD(cs_insn.bytes)
+                        addrs = ldrd_insn.addresses(uc)
+                    case _ :
+                        ld_insn = ArmLDR(cs_insn.bytes)
+                        addrs = [ld_insn.address(uc)]
+                        load_size = ld_insn.load_size
 
             for read_addr in addrs:
                 self.mem_reads.append(read_addr)
@@ -980,16 +1016,30 @@ class FFXEngine():
                 ARM_INS_STRD, ARM_INS_STM]:
             # get addresses written by insn
             size = 4
-            if cs_insn.id == ARM_INS_STM:
-                stm_insn = ThumbSTM(cs_insn.bytes)
-                accesses = stm_insn.accesses(uc)
-            elif cs_insn.id == ARM_INS_STRD:
-                strd_insn = ThumbSTRD(cs_insn.bytes)
-                accesses = strd_insn.accesses(uc)
+            if self.cs.mode & CS_MODE_THUMB:
+                match cs_insn.id:
+                    case CS.arm_const.ARM_INS_STM:
+                        stm_insn = ThumbSTM(cs_insn.bytes)
+                        accesses = stm_insn.accesses(uc)
+                    case CS.arm_const.ARM_INS_STRD:
+                        strd_insn = ThumbSTRD(cs_insn.bytes)
+                        accesses = strd_insn.accesses(uc)
+                    case _ :
+                        st_insn = ThumbSTR(cs_insn.bytes)
+                        accesses = st_insn.access(uc)
+                        size = st_insn.size 
             else:
-                st_insn = ThumbSTR(cs_insn.bytes)
-                accesses = st_insn.access(uc)
-                size = st_insn.size 
+                match cs_insn.id:
+                    case CS.arm_const.ARM_INS_STM:
+                        stm_insn = ArmSTM(cs_insn.bytes)
+                        accesses = stm_insn.accesses(uc)
+                    case CS.arm_const.ARM_INS_STRD:
+                        strd_insn = ArmSTRD(cs_insn.bytes)
+                        accesses = strd_insn.accesses(uc)
+                    case _ :
+                        st_insn = ArmSTR(cs_insn.bytes)
+                        accesses = st_insn.access(uc)
+                        size = st_insn.size 
 
             # iterate over write addresses
             for addr, val in accesses.items():
@@ -1239,7 +1289,7 @@ class FFXEngine():
                 'bblock'    : None,
                 'context'   : context,
                 'ret'       : vtbase + 0x4,
-                'isr'       : 0x4,
+                'isr'       : vtbase + 0x4,
             }
 
             self.unexplored.append(FBranch(**branch_info))
@@ -1268,7 +1318,7 @@ class FFXEngine():
                         'bblock'  : None,
                         'context' : context,
                         'ret'     : vtbase + table_offset,
-                        'isr'     : table_offset,   # based on IRQn
+                        'isr'     : vtbase + table_offset,
                     }
 
                     # indicate context is isr, not main thread

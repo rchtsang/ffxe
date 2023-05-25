@@ -55,13 +55,13 @@ def get_main_entry(fw_path):
         f.seek(0x4),
         return int.from_bytes(f.read(4), 'little')
 
-def get_entrypoints(fw_path, pd=None, base_addr=None, vtbases=[0]):
+def get_entrypoints(fw_path, pd=None, base_addr=None, vtbases=[0], vt_has_addrs=True):
     """utility for getting firmware entrypoints from vector table"""
     base = 0        # assume flash base address is 0
     vtsize = 8      # this gets only the entrypoint at offset 0x4
 
     if pd:
-        base = pd['mmap']['flash']['address'] if not base_addr else base_addr
+        base = pd['mmap']['flash']['address'] if base_addr is None else base_addr
         vtsize = pd['vt']['size']
 
     vector_tables = []
@@ -71,11 +71,14 @@ def get_entrypoints(fw_path, pd=None, base_addr=None, vtbases=[0]):
             vector_tables.append(f.read(vtsize))
 
     entrypoints = []
-    for vector_table_bytes in vector_tables:
-        for chunk in chunks(4, vector_table_bytes[4:]):
-            word = int.from_bytes(chunk, 'little')
-            if word:
-                entrypoints.append(word)
+    if vt_has_addrs:
+        for vector_table_bytes in vector_tables:
+            for chunk in chunks(4, vector_table_bytes[4:]):
+                word = int.from_bytes(chunk, 'little')
+                if word:
+                    entrypoints.append(word)
+    else:
+        entrypoints = range(base, base + vtsize + 1, 4)
 
     return list(set(entrypoints))
 
