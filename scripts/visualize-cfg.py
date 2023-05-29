@@ -3,6 +3,7 @@ import argparse
 import json
 import re
 from glob import glob
+from pathlib import Path
 
 import dill
 import yaml
@@ -26,7 +27,7 @@ def load_pd(path : str):
 
 parser = argparse.ArgumentParser(prog="visualize-cfg.py",
     description="generate a text-based visualization of a cfg")
-parser.add_argument('--path', type=str, default=f"{PARENT_DIR}/../tests/cfgs",
+parser.add_argument('--path', type=str, default=f"{PARENT_DIR}/../tests/cfgs/unit-tests",
     help="path to pickled cfg or directory containing pickled cfgs")
 parser.add_argument('--pd', type=str, default=f"{PARENT_DIR}/../mmaps/nrf52832.yml",
     help="path to platform description yaml file")
@@ -34,7 +35,7 @@ parser.add_argument('--fw', type=str, default=f"{PARENT_DIR}/../examples/unit-te
     help="path to corresponding firmware image of directory containing image")
 parser.add_argument('--batch', type=str, default=None,
     help="path to batch job json file")
-parser.add_argument('--out', type=str, default=f"{PARENT_DIR}/cfgs",
+parser.add_argument('--out', type=str, default=f"{PARENT_DIR}/cfgs/unit-tests",
     help="path to output directory")
 
 if __name__ == "__main__":
@@ -109,11 +110,13 @@ if __name__ == "__main__":
         fw_name = name_ptrn_match.group('fwname')
         fw = models.FirmwareImage(
             fw_path,
+            base_addr=pd['mmap']['flash']['address'],
             pd=pd,
             vtbases=vtbases,
         )
 
         annotated_disasm = fw.annotated_disasm(cfg)
+        Path(args.out).mkdir(parents=True, exist_ok=True)
         with open(f"{args.out}/{name}.txt", 'w') as f:
             f.write("{:d} blocks {:d} edges\n".format(len(cfg['nodes']), len(cfg['edges'])))
             f.write('\n'.join(annotated_disasm))
