@@ -1,0 +1,58 @@
+# BCM20702A1 Platform Description
+# not enough documentation available, so best guess based on datasheet
+# and static disassembly
+# https://pdf1.alldatasheet.com/datasheet-pdf/view/902265/CYPRESS/BCM20702A1KWFBG.html
+
+# Processor Information
+# based on Unicorn and Capstone Python binding constants
+cpu:
+    arch    : "ARM"
+    model   : ""
+    mode    : [ "ARM" ]
+
+# Memory Map
+# see product spec Section 8.3 Figure 5
+# note: unicorn access permissions are { read=1, write=2, exec=4 }
+
+mmap:
+    ### CODE [0x00000000, 0x1FFFFFFF]
+    flash: 
+        address : 0x0
+        size    : 0x100000
+        perms   : 0b101
+    
+    # ### SRAM [0x20000000, 0x3FFFFFFF]
+    # dataRAM: 
+    #     address : 0x20000000
+    #     size    : 0x10000
+    #     perms   : 0b011
+
+    ### EXTERNAL RAM [0x60000000, 0x9FFFFFFF]
+
+    ### EXTERNAL DEVICE [0xA0000000, 0xDFFFFFFF]
+
+    ### SYSTEM [0xE0100000, 0xFFFFFFFF]
+    system:
+        address : 0xFFFFF000
+        size    : 0x1000
+        perms   : 0b011
+
+# Memory Mapped IO
+# these are placeholder values
+# the engine will not use them if mmio_map args are provided on init
+mmio:
+    ### UNKNOWN
+    unknown: 
+        address : 0xFC000000
+        size    : 0x1000
+        perms   : 0b011
+
+# Vector Table Info
+# default ARM vector table size
+vt:
+    size: 0x20
+
+# Mapping Peripheral Interrupt Enable registers 
+# to vector table entries
+# unknown
+intenable: {}
