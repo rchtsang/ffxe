@@ -22,7 +22,7 @@ make_timestamp = lambda: datetime.now().strftime('%y%m%d-%H%M%S')
 
 PARENT_DIR = dirname(realpath(__file__))
 PROJ_ROOT = dirname(PARENT_DIR)
-SAMPLES_DIR = f"{PROJ_ROOT}/samples"
+SAMPLES_DIR = f"{PROJ_ROOT}/examples/real-world"
 OUT_DIR = f"{PARENT_DIR}/cfgs/real-world"
 
 def generate_highlighted_disasm_txt(ffxe, graph):
@@ -62,7 +62,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if not args.targets:
-        args.targets = [relpath(path) for path in glob(f"{SAMPLES_DIR}/*/")]
+        args.targets = sorted([relpath(path) for path in glob(f"{SAMPLES_DIR}/*/")])
 
     generated_cfgs = {}
     result_table = []
@@ -121,8 +121,8 @@ if __name__ == "__main__":
         elapsed = perf_counter() - t
 
         graph = {
-            'nodes': set([(b.addr, b.size) for b in ffxe.cfg.bblocks.values()]),
-            'edges': set([(max(ffxe.cfg.bblocks[e[0]].insns.keys()), e[1]) for e in ffxe.cfg.edges]),
+            'nodes': set([(b.addr, b.size) for b in ffxe.cfg.bblocks.values() if b.size]),
+            'edges': set([(max(ffxe.cfg.bblocks[e[0]].insns.keys()), e[1]) for e in ffxe.cfg.edges if ffxe.cfg.bblocks[e[0]].insns]),
                 # max() is used to get the last address in the bblock
         }
 
@@ -143,8 +143,8 @@ if __name__ == "__main__":
                     ffxe.uc.mem_read(block.addr, block.size), block.size):
                 total_insns += 1
 
-        result = "{:<25} {:>4d} blocks {:>4d} edges    elapsed (s): {}".format(
-            basename(fw_path),
+        result = "{:<35}: {{ \"blocks\": {:>5d}, \"edges\": {:>5d},  \"elapsed\": \"{} s\" }}".format(
+            f'"{basename(fw_path)}"',
             len(ffxe.cfg.bblocks),
             len(ffxe.cfg.edges),
             elapsed
@@ -158,5 +158,8 @@ if __name__ == "__main__":
         print(result)
         result_table.append(result)
 
-    with open(f'{args.outdir}/ffxe-real-world-cfg-results-{make_timestamp()}.txt', 'w') as f:
-        f.write('\n'.join(result_table))
+    print()
+    print('\n'.join(result_table))
+
+    with open(f'{args.outdir}/ffxe-real-world-cfg-results-{make_timestamp()}.json', 'w') as f:
+        f.write('{\n' + ',\n  '.join(result_table) + '\n}')

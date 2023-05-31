@@ -55,7 +55,7 @@ def get_main_entry(fw_path):
         f.seek(0x4),
         return int.from_bytes(f.read(4), 'little')
 
-def get_entrypoints(fw_path, pd=None, base_addr=None, vtbases=[0], vt_has_addrs=True):
+def get_entrypoints(fw_path, pd=None, base_addr=None, vtbases=[0]):
     """utility for getting firmware entrypoints from vector table"""
     base = 0        # assume flash base address is 0
     vtsize = 8      # this gets only the entrypoint at offset 0x4
@@ -64,20 +64,20 @@ def get_entrypoints(fw_path, pd=None, base_addr=None, vtbases=[0], vt_has_addrs=
         base = pd['mmap']['flash']['address'] if base_addr is None else base_addr
         vtsize = pd['vt']['size']
 
-    vector_tables = []
-    with open(fw_path, 'rb') as f:
-        for vtbase in sorted(vtbases):
-            f.seek(vtbase - base_addr)
-            vector_tables.append(f.read(vtsize))
+    if 'MCLASS' in pd['cpu']['mode']:
+        vector_tables = []
+        with open(fw_path, 'rb') as f:
+            for vtbase in sorted(vtbases):
+                f.seek(vtbase - base_addr)
+                vector_tables.append(f.read(vtsize))
 
-    entrypoints = []
-    if vt_has_addrs:
+        entrypoints = []
         for vector_table_bytes in vector_tables:
             for chunk in chunks(4, vector_table_bytes[4:]):
                 word = int.from_bytes(chunk, 'little')
                 if word:
                     entrypoints.append(word)
-    else:
+    else: # assume ARM entrypoints
         entrypoints = range(base, base + vtsize + 1, 4)
 
     return list(set(entrypoints))
@@ -161,7 +161,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if not args.targets:
-        args.targets = glob(f"{SAMPLES_DIR}/*/")
+        args.targets = sorted(glob(f"{SAMPLES_DIR}/*/"))
     else:
         args.targets = [realpath(path) for path in args.targets]
 
@@ -190,7 +190,7 @@ if __name__ == "__main__":
             pd_path = ymlfiles[0]
             fw_name = splitext(basename(fw_path))[0]
             base_addr = 0
-            vtbases = [0]
+            vtbases = ['0x0']
 
             # check if target has specified base address
             if exists(base_addr_path := f"{target}/base_addr.txt"):
@@ -283,17 +283,18 @@ if __name__ == "__main__":
             dill.dump(emu_graph, pklfile)
 
         results = (
-            "{:<25} fast {:>4d} blocks {:>4d} edges   elapsed: {} s\n".format(
-                basename(fw_path), 
+            "  \"{}\": {{\n".format(basename(fw_path)) +
+            "{:<35} \"fast\" : {{ \"blocks\": {:>5d}, \"edges\": {:>5d}, \"elapsed\": \"{} s\" }},\n".format(
+                '', 
                 len(fast_graph['nodes']), 
                 len(fast_graph['edges']), 
                 fast_elapsed) + 
-            "{:<25} cnxd {:>4d} blocks {:>4d} edges   elapsed: {} s\n".format(
+            "{:<35} \"cnxd\" : {{ \"blocks\": {:>5d}, \"edges\": {:>5d}, \"elapsed\": \"{} s\" }},\n".format(
                 '', 
                 len(connected_graph['nodes']), 
                 len(connected_graph['edges']), 
                 'n/a') + 
-            "{:<25} emu  {:>4d} blocks {:>4d} edges   elapsed: {} s".format(
+            "{:<35} \"emu\"  : {{ \"blocks\": {:>5d}, \"edges\": {:>5d}, \"elapsed\": \"{} s\" }}\n  }}".format(
                 '',
                 len(emu_graph['nodes']),
                 len(emu_graph['edges']),

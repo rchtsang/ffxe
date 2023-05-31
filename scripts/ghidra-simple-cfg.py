@@ -61,18 +61,21 @@ def get_entrypoints(pd=None, base_addr=None, vtbases=[0]):
         base = pd['mmap']['flash']['address'] if not base_addr else base_addr
         vtsize = pd['vt']['size']
 
-    vector_tables = []
-    with open(filepath, 'rb') as f:
-        for vtbase in sorted(vtbases):
-            f.seek(vtbase - base_addr)
-            vector_tables.append(f.read(vtsize))
+    if 'MCLASS' in pd['cpu']['mode']:
+        vector_tables = []
+        with open(filepath, 'rb') as f:
+            for vtbase in sorted(vtbases):
+                f.seek(vtbase - base_addr)
+                vector_tables.append(f.read(vtsize))
 
-    entrypoints = []
-    for vector_table_bytes in vector_tables:
-        for chunk in chunks(4, vector_table_bytes[4:]):
-            word = int.from_bytes(chunk, 'little')
-            if word:
-                entrypoints.append(word)
+        entrypoints = []
+        for vector_table_bytes in vector_tables:
+            for chunk in chunks(4, vector_table_bytes[4:]):
+                word = int.from_bytes(chunk, 'little')
+                if word:
+                    entrypoints.append(word)
+    else: # assume ARM
+        entrypoints = [base + offset for offset in range(0, 0x1c+1, 4)]
 
     return list(set(entrypoints))
 

@@ -527,6 +527,10 @@ class CFG():
         # breakpoint()
         while queue:
             current = queue.pop(0)
+
+            if current in visited:
+                continue
+
             # print(current)
             if ib:
                 current.contrib = 1
@@ -537,7 +541,9 @@ class CFG():
             current.quota += 1
             visited.append(current)
             for parent in current.parents:
-                if parent.fn_addr == fn_addr and parent not in visited:
+                if (parent.fn_addr == fn_addr 
+                        and parent not in queue
+                        and parent not in visited):
                     queue.append(parent)
 
     def forward_reachability(self, bblock : Type[BBlock]):

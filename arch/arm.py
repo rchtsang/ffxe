@@ -223,8 +223,8 @@ class ArmSTR():
         mem_op = self.cs_insn.op_find(ARM_OP_MEM, 1)
         if mem_op.mem.index:
             # register-based offset
-            assert mem_op.shift.type == 2, \
-                "shift type is not lsl"
+            # assert mem_op.shift.type == 2, \
+            #     "shift type is not lsl: {}".format(mem_op)
             abs_offset = uc.reg_read(mem_op.mem.index) << mem_op.shift.value
             offset = -abs_offset if mem_op.subtracted else abs_offset
         else:

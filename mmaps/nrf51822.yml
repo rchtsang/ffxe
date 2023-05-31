@@ -1,0 +1,134 @@
+# nRF51822 Platform Description
+
+# Processor Information
+# based on Unicorn and Capstone Python binding constants
+cpu:
+    arch    : "ARM"
+    model   : "CORTEX_M0"
+    mode    : [ "THUMB", "MCLASS" ]
+
+# Memory Map
+# see product spec Section 8.3 Figure 5
+# note: unicorn access permissions are { read=1, write=2, exec=4 }
+
+mmap:
+    ### CODE [0x00000000, 0x1FFFFFFF]
+    flash:
+        address : 0x0
+        size    : 0x40000
+        perms   : 0b101
+    FICR: 
+        address : 0x10000000 
+        size    : 0x1000
+        perms   : 0b001
+    UICR: 
+        address : 0x10001000
+        size    : 0x1000
+        perms   : 0b011
+
+    ### SRAM [0x20000000, 0x3FFFFFFF]
+    dataRAM: 
+        address : 0x20000000
+        size    : 0x8000
+        perms   : 0b011
+
+    ### EXTERNAL RAM [0x60000000, 0x9FFFFFFF]
+
+    ### EXTERNAL DEVICE [0xA0000000, 0xDFFFFFFF]
+
+    ### SYSTEM [0xE0100000, 0xFFFFFFFF]
+    system: 
+        address : 0xF0000000
+        size    : 0x10000
+        perms   : 0b011
+
+# Memory Mapped IO
+# these are placeholder values
+# the engine will not use them if mmio_map args are provided on init
+mmio:
+    ### PERIPHERAL [0x40000000, 0x5FFFFFFF]
+    apbPeri: 
+        address : 0x40000000
+        size    : 0x20000
+        perms   : 0b011
+    ahbPeri: 
+        address : 0x50000000
+        size    : 0x1000
+        perms   : 0b011
+
+    ### PRIVATE PERIPHERAL - INTERNAL [0xE0000000, 0xE003FFFF]
+    ITM: 
+        address : 0xE0000000
+        size    : 0x1000
+        perms   : 0b011
+    DWT: 
+        address : 0xE0001000
+        size    : 0x1000
+        perms   : 0b011
+    FPB: 
+        address : 0xE0002000
+        size    : 0x1000
+        perms   : 0b011
+    SCS: 
+        address : 0xE000E000
+        size    : 0x1000
+        perms   : 0b011
+
+    ### PRIVATE PERIPHERAL - EXTERNAL [0xE0040000, 0xE00FFFFF]
+    TPIU: 
+        address : 0xE0040000
+        size    : 0x1000
+        perms   : 0b011
+    ETM: 
+        address : 0xE0041000
+        size    : 0x1000
+        perms   : 0b011
+    romtable: 
+        address : 0xE00F0000
+        size    : 0x10000
+        perms   : 0b011
+
+# Vector Table Info
+vt:
+    size: 0xc0
+
+# Mapping Peripheral Interrupt Enable registers 
+# to vector table entries
+
+intenable:
+    0x40000304 : [{ mask : 0x0000001f,   offset : 0x40 }]     # CLOCK, POWER, MPU
+    0x40001304 : [{ mask : 0x000004ff,   offset : 0x44 }]    # RADIO
+    0x40002304 : [{ mask : 0x00020287,   offset : 0x48 }]    # UART0
+    0x40003304 : [{ mask : 0x00004286,   offset : 0x4c }]    # SPI0, TWI0
+    0x40004304 : [{ mask : 0x00004686,   offset : 0x50 }]    # SPI1, SPIS1, TWI1
+    #0x40005304 : [{ mask : 0x001c5cff,   offset : 0x54 }]    # UNUSED
+    0x40006304 : [{ mask : 0x8000000f,   offset : 0x58 }]    # GPIOTE
+    0x40007304 : [{ mask : 0x00000001,   offset : 0x5c }]    # ADC
+    0x40008304 : [{ mask : 0x000f0000,   offset : 0x60 }]    # TIMER0
+    0x40009304 : [{ mask : 0x000f0000,   offset : 0x64 }]    # TIMER1
+    0x4000a304 : [{ mask : 0x000f0000,   offset : 0x68 }]    # TIMER2
+    0x4000b304 : [{ mask : 0x000f0003,   offset : 0x6c }]    # RTC0
+    0x4000c304 : [{ mask : 0x00000001,   offset : 0x70 }]    # TEMP
+    0x4000d304 : [{ mask : 0x00000001,   offset : 0x74 }]    # RNG
+    0x4000e304 : [{ mask : 0x00000003,   offset : 0x78 }]    # ECB
+    0x4000f304 : [{ mask : 0x00000007,   offset : 0x7c }]    # CCM, AAR
+    0x40010304 : [{ mask : 0x00000001,   offset : 0x80 }]    # WDT
+    0x40011304 : [{ mask : 0x000f0003,   offset : 0x84 }]    # RTC1
+    0x40012304 : [{ mask : 0x00000007,   offset : 0x88 }]    # QDEC
+    0x40013304 : [{ mask : 0x0000000f,   offset : 0x8c }]    # LPCOMP
+    0x40014000 : [{ mask : 0x0000ffff,   offset : 0x90 }]    # SWI0
+    0x40015000 : [{ mask : 0x0000ffff,   offset : 0x94 }]    # SWI1
+    0x40016000 : [{ mask : 0x0000ffff,   offset : 0x98 }]    # SWI2
+    0x40017000 : [{ mask : 0x0000ffff,   offset : 0x9c }]    # SWI3
+    0x40018000 : [{ mask : 0x0000ffff,   offset : 0xa0 }]    # SWI4
+    0x40019000 : [{ mask : 0x0000ffff,   offset : 0xa4 }]    # SWI5
+    # 0x4001a000 : [{ mask : 0x00000000,   offset : 0xa8 }]    # UNUSED
+    # 0x4001b000 : [{ mask : 0x00000000,   offset : 0xac }]    # UNUSED
+    # 0x4001c000 : [{ mask : 0x00000000,   offset : 0xb0 }]    # UNUSED
+    # 0x4001d000 : [{ mask : 0x00000000,   offset : 0xb4 }]    # UNUSED
+    # 0x4001e000 : [{ mask : 0x00000000,   offset : 0xb8 }]    # NVMC (no hw interrupt)
+    # 0x4001f000 : [{ mask : 0x00000000,   offset : 0xbc }]    # PPI  (no hw interrupt)
+   
+   
+
+    

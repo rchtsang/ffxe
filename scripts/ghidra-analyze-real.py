@@ -40,7 +40,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if not args.targets:
-        args.targets = glob(f"{SAMPLES_DIR}/*/")
+        args.targets = sorted(glob(f"{SAMPLES_DIR}/*/"))
     else:
         args.targets = [realpath(path) for path in args.targets]
 
@@ -65,7 +65,7 @@ if __name__ == "__main__":
             pd_path = ymlfiles[0]
             fw_name = splitext(basename(fw_path))[0]
             base_addr = -1
-            vtbases = [0]
+            vtbases = ['0x0']
 
             # check if target has specified base address
             if exists(base_addr_path := f"{target}/base_addr.txt"):
@@ -100,3 +100,6 @@ if __name__ == "__main__":
             postargs=[args.outdir, pd_path, f" {base_addr}"] + vtbases,
             rm_project=True
         )
+
+        # simple_cfg_name = f"{fw_name}-ghidra_simple-cfg"
+        # cnnctd_cfg_name = f"{fw_name}-ghidra_cnnctd-cfg"

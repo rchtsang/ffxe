@@ -7,6 +7,7 @@ from os.path import splitext
 from typing import Union, Type
 from copy import copy, deepcopy
 from collections import namedtuple
+from time import perf_counter_ns
 
 import yaml
 import unicorn
@@ -21,6 +22,7 @@ import capstone as CS
 from capstone import *
 from capstone.arm_const import *
 
+import mappings
 from models import *
 from arch.arm import *
 from arch.armv7e import *
@@ -125,8 +127,13 @@ class FFXEngine():
             log_name   : str = 'ffxe.log',
             log_stdout : bool = False,
             log_insn   : bool = False,
-            log_time   : bool = True):
+            log_time   : bool = True,
+            timeout    : int = 100):
         
+        # set timeout (set timeout to 0 for no timeout)
+        # saved in nanoseconds
+        self.timeout = timeout * (1_000_000)
+
         # setup logging
         self.logger = logging.getLogger('ffxe.eng')
         self.logger.setLevel(logging.DEBUG)
@@ -419,8 +426,16 @@ class FFXEngine():
 
     def _hook_block(self, uc, address, size, user_data):
         """callback at beginning of new basic block"""
-        # this should construct the block and connect it to the CFG as needed
+        # check for timeout
+        self.process_time = perf_counter_ns() / 1000 - self.process_start
+        if self.timeout and self.process_time >= self.timeout:
+            self.uc.emu_stop()
 
+        # this should construct the block and connect it to the CFG as needed
+        # self.cs.mode = uc.ctl_get_mode()
+        self.cs.mode = CS_MODE_THUMB if self.context.pc & 1 else CS_MODE_ARM
+        if 'MCLASS' in self.pd['cpu']['mode']:
+            self.cs.mode |= CS_MODE_MCLASS
         try:
             # # check if valid instruction
             # next(self.cs.disasm(uc.mem_read(address, size), offset=address))
@@ -570,20 +585,24 @@ class FFXEngine():
 
     def _hook_code(self, uc, address, size, user_data):
         """callback after every instruction execution"""
-        self.cs.mode = uc.ctl_get_mode()
+        self.context.pc = address
+        self.context.pc |= 1 if uc.reg_read(UC_ARM_REG_CPSR) & (1 << 5) else 0
+        self.context.apsr.set(uc.reg_read(UC_ARM_REG_APSR))
+        self.cs.mode = CS_MODE_THUMB if self.context.pc & 1 else CS_MODE_ARM
+        # for whatever reason, uc.ctl_get_mode() doesn't work for the BCM firmware
+        if 'MCLASS' in self.pd['cpu']['mode']:
+            self.cs.mode |= CS_MODE_MCLASS
         if self.cs.mode == CS_MODE_ARM:
             pcrel = 8
         else: # expect CS_MODE_THUMB
             pcrel = 4
-        self.context.pc = address
-        self.context.pc |= 1 if uc.reg_read(UC_ARM_REG_CPSR) & (1 << 5) else 0
-        self.context.apsr.set(uc.reg_read(UC_ARM_REG_APSR))
         try:
             cs_insn = next(self.cs.disasm(uc.mem_read(address, size), offset=address))
         except StopIteration as e:
             # if hit a bad instruction, the block isn't valid
             self.context.bblock.delete = True
             self.cfg.remove_block(self.context.bblock)
+            self.logger.error(f"CS MODE: {self.cs.mode}\nPC: {hex(self.context.pc)}")
             raise UcError(UC_ERR_INSN_INVALID)
 
         # if address not in self.fw.disasm:
@@ -907,7 +926,7 @@ class FFXEngine():
                 branch_info['context'] = self.backup()
                 branch_info['context'].pc = branch_info['target']
                 branch_info['context'].isr = isr
-                self.unexplored.append(FBranch(**branch_info))
+                self._queue_branch(FBranch(**branch_info))
 
             # treat wfi/wfe as end of basic block
             context = self.backup()
@@ -918,9 +937,37 @@ class FFXEngine():
                 target=context.pc,
                 bblock=self.context.bblock,
                 context=context)
-            if branch not in self.unexplored:
-                self.unexplored.append(branch)
+            self._queue_branch(branch)
+            # if branch not in self.unexplored:
+            #     self.unexplored.append(branch)
 
+        ## SVC
+        # because Unicorn crashes on svc instructions
+        # only deal with this on Cortex M for now
+        elif cs_insn.id == ARM_INS_SVC and self.cs.mode & CS_MODE_MCLASS:
+            # svc jumps to svc handler, but skip the instruction because bad.
+            self.logger.info("encountered svc instruction, loading svc handler and skipping")
+            for vtbase in self.fw.vector_tables.keys():
+                isr = vtbase + 0x2c
+                branch_info = self.isr_entries[isr]
+                branch_info['context'] = self.backup()
+                branch_info['context'].pc = branch_info['target']
+                branch_info['context'].isr = isr
+                self._queue_branch(FBranch(**branch_info))
+
+            # svc is end of basic block
+            context = self.backup()
+            context.pc = self.context.pc + size
+            branch = FBranch(
+                addr=address,
+                raw=cs_insn.bytes,
+                target=context.pc,
+                bblock=self.context.bblock,
+                context=context)
+            self._queue_branch(branch)
+            # if branch not in self.unexplored:
+            #     self.unexplored.append(branch)
+            uc.emu_stop()
 
         ## LOAD INSTRUCTIONS
         # because Unicorn doesn't hook LDR instructions correctly
@@ -1152,6 +1199,21 @@ class FFXEngine():
         #             self.cfg.remove_block(self.context.bblock)
         #             self.uc.emu_stop()
 
+    def _hook_intr(self, uc, intno, user_data):
+        # handle everything in hook code
+        match intno:
+            case mappings.EXCP_SWI: # SVC
+                self.logger.info("EXCEPTION ENCOUNTERED: EXCP_SWI\tskipping...")
+                return
+            case mappings.EXCP_BKPT: 
+                self.logger.info("EXCEPTION ENCOUNTERED: EXCP_BKPT\tskipping...")
+                return
+            case _:  
+                self.logger.info("EXCEPTION ENCOUNTERED: {}".format(intno))
+                self.log_regs()
+                self.uc.emu_stop()
+        return
+
 
     # def _hook_mem(self, uc, access, address, size, value, user_data):
     #     """callback after every memory access"""
@@ -1241,6 +1303,15 @@ class FFXEngine():
         self.uc.hook_add(
             UC_HOOK_CODE,
             self._hook_code,
+            begin=self.pd['mmap']['flash']['address'],
+            end=self.pd['mmap']['flash']['address'] + self.pd['mmap']['flash']['size'],
+            user_data={},
+        )
+
+        # setup intr hooks
+        self.uc.hook_add(
+            UC_HOOK_INTR,
+            self._hook_intr,
             begin=self.pd['mmap']['flash']['address'],
             end=self.pd['mmap']['flash']['address'] + self.pd['mmap']['flash']['size'],
             user_data={},
@@ -1375,9 +1446,18 @@ class FFXEngine():
                     self.unexplored.append(
                         FBranch(**branch_info))
 
+        self.process_time = 0
+        self.process_start = perf_counter_ns() / 1000
+
         while self.unexplored:
             branch = self.unexplored.pop(-1)
             self.explored.append(branch)
+
+            # check for timeout
+            self.process_time = perf_counter_ns() / 1000 - self.process_start
+            if self.timeout and self.process_time >= self.timeout:
+                self.logger.error("ffxe timed out! {:f}".format(self.process_time / (10**6)))
+                break
 
             # reset quotas after all isrs
             if (branch.target == self.entry):
@@ -1393,7 +1473,8 @@ class FFXEngine():
             try:
                 self.logger.info(f"unexplored branches: {len(self.unexplored)}")
                 self.uc.emu_start(self.context.pc, 
-                    self.pd['mmap']['flash']['address'] + self.pd['mmap']['flash']['size'])
+                    self.pd['mmap']['flash']['address'] + self.pd['mmap']['flash']['size'],
+                    timeout=self.timeout)
             except UcError as e:
                 regs = {name: self.uc.reg_read(reg) \
                     for reg, name in REGS.items()}
@@ -1421,6 +1502,7 @@ class FFXEngine():
                 #     self.cfg.backward_reachability(self.context.bblock)
 
             except Exception as e:
+                self.print_regs()
                 self.logger.error("{}\n{}\n".format(
                     str(e),
                     traceback.format_exc()))
@@ -1437,6 +1519,17 @@ class FFXEngine():
         regs = {name: self.uc.reg_read(reg) for reg, name in REGS.items()}
         for name, val in regs.items():
             print("{:<4} : {}".format(name, hex(val)))
+
+    def log_regs(self):
+        """
+        write current registers to logger
+        """
+        regs = {name: self.uc.reg_read(reg) for reg, name in REGS.items()}
+        self.logger.debug("PC @ 0x{:x}\n{}".format(
+            self.context.pc,
+            '\n'.join(['{:<4} = {}'.format(name, hex(val)) for name, val in regs.items()])
+        ))
+
 
     def print_mem(self, address, size):
         """
