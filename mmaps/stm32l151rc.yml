@@ -85,13 +85,13 @@ vt:
 # See ST RM0038 Section 10.1.2 Table 50 (Cat.3) and Section 2.3 Table 5
 
 intenable:
-  0x40002C00: [ { mask : 0x00000200,   offset : 0x40  } ]  # WWDG
-  0x40002840: # RTC
-              - { mask : 0x00000004,   offset : 0x48  }    # RTC_Tamper [EXTI19]
+  0x40002C04: [ { mask : 0x00000200,   offset : 0x40  } ]  # WWDG
+  0x40002808: # RTC
+              - { mask : 0x00004000,   offset : 0x4c  }    # RTC_WKUP [EXTI20]
               - { mask : 0x00008000,   offset : 0x48  }    # RTC_Timestamp [EXTI19]
               - { mask : 0x00003000,   offset : 0xe4  }    # RTC_Alarm [EXTI17]
-  0x40002808: [ { mask : 0x00004000,   offset : 0x4c  } ]  # RTC_WKUP [EXTI20]
-  0x40023C00: [ { mask : 0x00030000,   offset : 0x50  } ]  # FLASH
+  0x40002840: [ { mask : 0x00000004,   offset : 0x48  } ]  # RTC_Tamper [EXTI19]  
+  0x40023C10: [ { mask : 0x00030000,   offset : 0x50  } ]  # FLASH
   0x4002380C: [ { mask : 0x00007f00,   offset : 0x54  } ]  # RCC
   0x40010400: # EXTI
               - { mask : 0x00000001,   offset : 0x58  }    # EXTI0

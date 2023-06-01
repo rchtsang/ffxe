@@ -166,25 +166,28 @@ if __name__ == "__main__":
         with open(f"{OUT_DIR}/{name}-angr_emu-cfg.pkl", 'wb') as pklfile:
             dill.dump(emu_graph, pklfile)
 
-        table.append(
-            "{:<25} fast {:>4d} blocks {:>4d} edges   elapsed: {} s\n".format(
-                basename(fw_path), 
+        results = (
+            "  \"{}\": {{\n".format(basename(fw_path)) +
+            "{:<35} \"fast\" : {{ \"blocks\": {:>5d}, \"edges\": {:>5d}, \"elapsed\": \"{:>15.9f} s\" }},\n".format(
+                '', 
                 len(fast_graph['nodes']), 
                 len(fast_graph['edges']), 
                 fast_elapsed) + 
-            "{:<25} cnxd {:>4d} blocks {:>4d} edges   elapsed: {} s\n".format(
+            "{:<35} \"cnxd\" : {{ \"blocks\": {:>5d}, \"edges\": {:>5d}, \"elapsed\": \"{} s\" }},\n".format(
                 '', 
                 len(connected_graph['nodes']), 
                 len(connected_graph['edges']), 
                 'n/a') + 
-            "{:<25} emu  {:>4d} blocks {:>4d} edges   elapsed: {} s".format(
+            "{:<35} \"emu\"  : {{ \"blocks\": {:>5d}, \"edges\": {:>5d}, \"elapsed\": \"{:>15.9f} s\" }}\n  }}".format(
                 '',
                 len(emu_graph['nodes']),
                 len(emu_graph['edges']),
-                emu_elapsed))
+                emu_elapsed)
+        )
+        table.append(results)
 
     print('\n'.join(table))
     with open(f'{PARENT_DIR}/angr-cfg-results.txt', 'w') as f:
-        f.write('\n'.join(table))
+        f.write('{\n' + '\n'.join(table) + '\n}')
 
 

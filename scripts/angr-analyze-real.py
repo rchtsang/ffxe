@@ -284,7 +284,7 @@ if __name__ == "__main__":
 
         results = (
             "  \"{}\": {{\n".format(basename(fw_path)) +
-            "{:<35} \"fast\" : {{ \"blocks\": {:>5d}, \"edges\": {:>5d}, \"elapsed\": \"{} s\" }},\n".format(
+            "{:<35} \"fast\" : {{ \"blocks\": {:>5d}, \"edges\": {:>5d}, \"elapsed\": \"{:>15.9f} s\" }},\n".format(
                 '', 
                 len(fast_graph['nodes']), 
                 len(fast_graph['edges']), 
@@ -294,7 +294,7 @@ if __name__ == "__main__":
                 len(connected_graph['nodes']), 
                 len(connected_graph['edges']), 
                 'n/a') + 
-            "{:<35} \"emu\"  : {{ \"blocks\": {:>5d}, \"edges\": {:>5d}, \"elapsed\": \"{} s\" }}\n  }}".format(
+            "{:<35} \"emu\"  : {{ \"blocks\": {:>5d}, \"edges\": {:>5d}, \"elapsed\": \"{:>15.9f} s\" }}\n  }}".format(
                 '',
                 len(emu_graph['nodes']),
                 len(emu_graph['edges']),
@@ -308,7 +308,7 @@ if __name__ == "__main__":
 
     print("\n\n")
     print('\n'.join(result_table))
-    # with open(f'{PARENT_DIR}/angr-real-world-cfg-results.txt', 'w') as f:
-    #     f.write('\n'.join(table))
+    with open(f'{PARENT_DIR}/angr-real-cfg-results.json', 'w') as f:
+        f.write('{\n' + '\n'.join(result_table) + '\n}')
 
 

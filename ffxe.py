@@ -823,6 +823,7 @@ class FFXEngine():
                 or cs_insn.id == ARM_INS_TBH):
             # TODO: also needs to be handled like an indirect branch block
             # only has thumb encodings
+            self.logger.debug("TABLE BRANCH DETECTED!")
 
             # essentially a jump table instruction. 
             # handle by adding all valid addresses in table to job list
@@ -895,6 +896,7 @@ class FFXEngine():
                         target=context.pc,
                         bblock=self.context.bblock,
                         context=context))
+                self.logger.debug("added table branch target: 0x{:08x}".format(jump_target))
 
             # can also be last instruction in IT block, so need to handle
             # IT condition code if this is the case
@@ -1507,6 +1509,9 @@ class FFXEngine():
                     str(e),
                     traceback.format_exc()))
                 raise e
+
+        self.logger.info("blocks {:d} edges {:d} (unresolved)".format(
+            len(self.cfg.bblocks), len(self.cfg.edges)))
 
         self.logger.info("resolving overlapping blocks...")
         self.cfg.resolve_blocks()

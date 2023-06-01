@@ -48,8 +48,8 @@ if __name__ == "__main__":
                     ffxe.uc.mem_read(block.addr, block.size), block.size):
                 total_insns += 1
 
-        result = "{:<25} {:>4d} blocks {:>4d} edges    elapsed (s): {}".format(
-            basename(fw_path),
+        result = "{:<25} : {{ \"blocks\": {:>4d}, \"edges\": {:>4d},  \"elapsed\": \"{:>15.9f} s\" }}".format(
+            f'"{basename(fw_path)}"',
             len(ffxe.cfg.bblocks),
             len(ffxe.cfg.edges),
             elapsed
@@ -60,8 +60,8 @@ if __name__ == "__main__":
 
         ffxe_cfgs[basename(fw_path)] = ffxe.cfg
 
-    with open('tests/ffxe-cfg-results.txt', 'w') as f:
-        f.write('\n'.join(table))
+    with open('tests/ffxe-cfg-results.json', 'w') as f:
+        f.write('{\n  ' + ',\n  '.join(table) + '\n}')
 
     for fn, cfg in ffxe_cfgs.items():
         (name, ext) = splitext(fn)

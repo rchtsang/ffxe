@@ -143,7 +143,7 @@ if __name__ == "__main__":
                     ffxe.uc.mem_read(block.addr, block.size), block.size):
                 total_insns += 1
 
-        result = "{:<35}: {{ \"blocks\": {:>5d}, \"edges\": {:>5d},  \"elapsed\": \"{} s\" }}".format(
+        result = "{:<35}: {{ \"blocks\": {:>5d}, \"edges\": {:>5d},  \"elapsed\": \"{:>15.9f} s\" }}".format(
             f'"{basename(fw_path)}"',
             len(ffxe.cfg.bblocks),
             len(ffxe.cfg.edges),
@@ -161,5 +161,5 @@ if __name__ == "__main__":
     print()
     print('\n'.join(result_table))
 
-    with open(f'{args.outdir}/ffxe-real-world-cfg-results-{make_timestamp()}.json', 'w') as f:
-        f.write('{\n' + ',\n  '.join(result_table) + '\n}')
+    with open(f'{args.outdir}/ffxe-real-cfg-results-{make_timestamp()}.json', 'w') as f:
+        f.write('{\n  ' + ',\n  '.join(result_table) + '\n}')
