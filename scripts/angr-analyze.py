@@ -187,7 +187,7 @@ if __name__ == "__main__":
         table.append(results)
 
     print('\n'.join(table))
-    with open(f'{PARENT_DIR}/angr-cfg-results.txt', 'w') as f:
+    with open(f'{PARENT_DIR}/angr-cfg-results.json', 'w') as f:
         f.write('{\n' + '\n'.join(table) + '\n}')
 
 
