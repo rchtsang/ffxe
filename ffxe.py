@@ -71,6 +71,9 @@ class FContext():
                 setattr(result, k, copy(v))
         return result
 
+    def get_reg_values(self):
+        return tuple([self.uc_context.reg_read(reg) for reg in UC_REG_MAP])
+
     def __eq__(self, other):
         return (isinstance(other, self.__class__)
             and self.pc == other.pc
@@ -82,6 +85,8 @@ class FContext():
             and self.mem_state == other.mem_state
             and bytes(self.uc_context) == bytes(other.uc_context))
 
+    def __hash__(self):
+        return hash((self.pc, self.bblock, self.isr, self.get_reg_values()))
 
 class FBranch():
     """
@@ -128,7 +133,7 @@ class FFXEngine():
             log_stdout : bool = False,
             log_insn   : bool = False,
             log_time   : bool = True,
-            timeout    : int = 100):
+            timeout    : int = 60):
         
         # set timeout (set timeout to 0 for no timeout)
         # saved in nanoseconds
@@ -420,9 +425,11 @@ class FFXEngine():
             target_block = self.cfg.bblocks[branch.target & (~1)]
             if target_block.contrib:
                 self.unexplored.append(branch)
+                self.logger.info("queuing branch from 0x{:x}".format(branch.addr))
 
         elif branch not in self.unexplored:
             self.unexplored.append(branch)
+            self.logger.info("queuing branch from 0x{:x}".format(branch.addr))
 
     def _hook_block(self, uc, address, size, user_data):
         """callback at beginning of new basic block"""
@@ -816,8 +823,7 @@ class FFXEngine():
                 target=context.pc,
                 bblock=self.context.bblock,
                 context=context)
-            if branch not in self.unexplored:
-                self.unexplored.append(branch)
+            self._queue_branch(branch)
 
         elif (cs_insn.id == ARM_INS_TBB
                 or cs_insn.id == ARM_INS_TBH):
@@ -889,7 +895,7 @@ class FFXEngine():
                 # create backup context for valid jump target
                 context = self.backup()
                 context.pc = jump_target
-                self.unexplored.append(
+                self._queue_branch(
                     FBranch(
                         addr=address, 
                         raw=cs_insn.bytes, 
@@ -910,7 +916,7 @@ class FFXEngine():
                 else:
                     # branch not taken, backup context for jump target
                     context.pc = target
-                self.unexplored.append(
+                self._queue_branch(
                     FBranch(
                         addr=address, 
                         raw=cs_insn.bytes, 
@@ -1030,7 +1036,8 @@ class FFXEngine():
                 if read_info not in self.context.bblock.mem_log:
                     self.context.bblock.mem_log.append(read_info)
                 self.logger.info("pc @ 0x{:>08X} : {} 0x{:>08X} @ 0x{:>08X}".format(
-                    *self.context.bblock.mem_log[-1]))
+                    *read_info))
+                    # *self.context.bblock.mem_log[-1]))
 
                 # if in isr, mark memory location as volatile
                 if self.context.isr:
@@ -1042,6 +1049,7 @@ class FFXEngine():
                         if read_addr in self.mem_writes:
                             # if written to before, set up forks with all the known values
                             for wval in self.mem_writes[read_addr]:
+                                self.logger.debug("explore previous write value: 0x{:x}".format(wval))
                                 resume_context = self.backup()
                                 resume_context.mem_state[read_addr] = wval.to_bytes(4, 'little')
                                 resume_context.newblock = False
@@ -1056,12 +1064,12 @@ class FFXEngine():
                                     'ret'     : address,
                                     'isr'     : resume_context.isr,
                                 }
-                                self.unexplored.append(FBranch(**branch_info))
+                                self._queue_branch(FBranch(**branch_info))
 
                     if (val, address) not in self.voladdrs[read_addr]['r']:
-                        self.voladdrs[read_addr]['r'][(val, address)] = []
+                        self.voladdrs[read_addr]['r'][(val, address)] = set()
 
-                    self.voladdrs[read_addr]['r'][(val, address)].append(self.backup())
+                    self.voladdrs[read_addr]['r'][(val, address)].add(self.backup())
 
                     # if encountering for first time and there are already logged reads,
                     # need to resume with those memory contexts.
@@ -1102,19 +1110,24 @@ class FFXEngine():
             # iterate over write addresses
             for addr, val in accesses.items():
                 if not self.addr_valid(addr):
+                    # if invalid write, do backward reachability to prevent 
+                    # unnecessary punishment and allow for future writes
                     self.cfg.backward_reachability(self.context.bblock, ib=False)
-                    uc.emu_stop()
-                    return
+                    raise UcError(UC_ERR_WRITE_UNMAPPED)
+                    # uc.emu_stop()
+                    # return
                 info = (
                     uc.reg_read(UC_ARM_REG_PC), # instruction address
                     'w',                        # access type
                     val,                        # written value
                     addr,                       # write location
                 )
-                self.context.bblock.mem_log.append(info)
+                if info not in self.context.bblock.mem_log:
+                    self.context.bblock.mem_log.append(info)
                 if addr not in self.mem_writes:
                     self.mem_writes[addr] = []
-                self.mem_writes[addr].append(val)
+                if val not in self.mem_writes[addr]:
+                    self.mem_writes[addr].append(val)
                 self.logger.info("pc @ 0x{:>08X} : {} 0x{:>08x} @ {:>08X}".format(*info))
                 self.context.mem_state[addr] = val.to_bytes(size, 'little')
 
@@ -1139,8 +1152,8 @@ class FFXEngine():
                 if addr in self.voladdrs:
                     # log write to volatile addrs
                     if (val, address) not in self.voladdrs[addr]['w']:
-                        self.voladdrs[addr]['w'][(val, address)] = []
-                    self.voladdrs[addr]['w'][(val, address)].append(self.backup())
+                        self.voladdrs[addr]['w'][(val, address)] = set()
+                    self.voladdrs[addr]['w'][(val, address)].add(self.backup())
 
                         # try not allowing overwrite
                         # self.voladdrs[addr]['w'][(val, address)] = copy(self.context)
@@ -1182,7 +1195,8 @@ class FFXEngine():
                                         'ret'     : addr,
                                         'isr'     : resume_context.isr,
                                     }
-                                    self.unexplored.append(FBranch(**branch_info))
+                                    self._queue_branch(FBranch(**branch_info))
+                                    # self.unexplored.append(FBranch(**branch_info))
 
 
         # ## STACK STUFF
@@ -1468,6 +1482,7 @@ class FFXEngine():
 
             # restore from unexplored branch
             branch.unexplored = False
+            self.logger.info("restoring from branch queued @ 0x{:x}".format(branch.addr))
             self.restore(branch.context)
             if branch.bblock:
                 # restore correct current block so edges aren't screwed up

@@ -15,7 +15,7 @@ mmap:
     ### CODE [0x00000000, 0x1FFFFFFF]
     flash: 
         address : 0x0
-        size    : 0x80000
+        size    : 0x100000
         perms   : 0b101
     codeRAM: 
         address : 0x800000
@@ -33,7 +33,7 @@ mmap:
     ### SRAM [0x20000000, 0x3FFFFFFF]
     dataRAM: 
         address : 0x20000000
-        size    : 0x10000
+        size    : 0x40000
         perms   : 0b011
 
     ### EXTERNAL RAM [0x60000000, 0x9FFFFFFF]
