@@ -1150,14 +1150,6 @@ class FFXEngine():
                     self.voladdrs[addr] = { 'r':{}, 'w':{}, 'm': set() }
 
                 if addr in self.voladdrs:
-                    # log write to volatile addrs
-                    if (val, address) not in self.voladdrs[addr]['w']:
-                        self.voladdrs[addr]['w'][(val, address)] = set()
-                    self.voladdrs[addr]['w'][(val, address)].add(self.backup())
-
-                        # try not allowing overwrite
-                        # self.voladdrs[addr]['w'][(val, address)] = copy(self.context)
-
                     # resume from any points that rely on this block 
                     # only if this block isn't in isr and the resume point is or vice versa
                     # (will only happen if the resume point is a contributing block)
@@ -1173,7 +1165,8 @@ class FFXEngine():
                     # could try adding arg reg state to hash
 
                     if (not any([val == v for (v, i) in self.voladdrs[addr]['r'].keys()])
-                            and mem_hash not in self.voladdrs[addr]['m']):
+                            # and mem_hash not in self.voladdrs[addr]['m']
+                            and val not in self.voladdrs[addr]['w'].keys()):
                         self.voladdrs[addr]['m'].add(mem_hash)
 
                         for (rval, inst), rcontexts in self.voladdrs[addr]['r'].items():
@@ -1197,6 +1190,12 @@ class FFXEngine():
                                     }
                                     self._queue_branch(FBranch(**branch_info))
                                     # self.unexplored.append(FBranch(**branch_info))
+
+                    # log write to volatile addrs
+                    if (val, address) not in self.voladdrs[addr]['w']:
+                        self.voladdrs[addr]['w'][val] = set()
+                    self.voladdrs[addr]['w'][val].add(self.backup())
+
 
 
         # ## STACK STUFF
@@ -1248,9 +1247,17 @@ class FFXEngine():
         """
         used to update context and stop emulation on function call
         """
-        cs_insn = next(self.cs.disasm(uc.mem_read(address, size), offset=address))
+        try:
+            cs_insn = next(self.cs.disasm(uc.mem_read(address, size), offset=address))
+        except Exception:
+            self.logger.error("why is this happening???")
+            self.uc.emu_stop()
+            raise Exception()
         if cs_insn.group(ARM_GRP_CALL):
             self.uc.emu_stop()
+
+        if self.log_insn:
+            self.logger.info(str(cs_insn))
 
         ## STORE INSTRUCTIONS
         # because Unicorn also doesn't hook some STR instructions
@@ -1297,7 +1304,10 @@ class FFXEngine():
         try:
             self.uc.emu_start(
                 self.entry,
-                self.pd['mmap']['flash']['address'] + self.pd['mmap']['flash']['size'])
+                self.pd['mmap']['flash']['address'] + self.pd['mmap']['flash']['size'],
+                timeout=10_000_000
+                # count=10000
+                )
             # should have stopped before calling next function
             # deregister stop hook
         except UcError as e:

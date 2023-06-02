@@ -57,6 +57,8 @@ parser.add_argument('--log-insns', dest='log_insn', action='store_true',
     help="turn on instruction logging")
 parser.add_argument('--log-stdout', dest='log_stdout', action='store_true',
     help="print log to stdout in real time")
+parser.add_argument('--timeout', type=int, default=60,
+    help="timeout in seconds (counts processor time only)")
 
 if __name__ == "__main__":
     args = parser.parse_args()
@@ -114,6 +116,7 @@ if __name__ == "__main__":
             log_stdout=args.log_stdout,
             log_insn=args.log_insn,
             log_time=True,
+            timeout=args.timeout,
         )
 
         t = perf_counter()

@@ -1,0 +1,344 @@
+# STM32F429ZE Platform Description
+# NOTE: L151RC is Category 3
+
+# Processor Information
+# based on Unicorn and Capstone Python binding constants
+cpu:
+  arch  : "ARM"
+  model : "CORTEX_M4"
+  mode  : [ "THUMB", "MCLASS" ]
+
+# Memory Map
+# See ST DS9405 Section 5 Figure 19
+# note: unicorn access permissions are { read=1, write=2, exec=4 }
+
+mmap:
+  ### CODE 
+
+  # [0x0, 0x07FFFFFF] maps to flash or SRAM depending on BOOT pins
+
+  flash:
+    address : 0x08000000
+    size    : 0x200000
+    perms   : 0b101
+
+  ### DATA AND SRAM
+
+  ccmRAM:
+    address : 0x10000000
+    size    : 0x10000
+    perms   : 0b011
+
+  systemMem:
+    address : 0x1FFF0000
+    size    : 0x8000
+    perms   : 0b011
+  
+  dataRAM:
+    address : 0x20000000
+    size    : 0x30000
+    perms   : 0b111
+
+  ### Option Bytes
+
+  optionBytes:
+    address : 0x1FF80000
+    size    : 0x1000 # (actually 0x20, requires page alignment)
+    perms   : 0b011
+
+
+# Memory Mapped IO
+# placeholder values
+# engine will not use them if mmio_map args are provided on init
+
+mmio:
+  ### PERIPHERALS
+  
+  apbPeri1:
+    address : 0x40000000
+    size    : 0x8000
+    perms   : 0b011
+
+  apbPeri1:
+    address : 0x40010000
+    size    : 0x7000
+    perms   : 0b011
+
+  # ahbPeri1:
+  #   address : 0x50000000
+  #   size    : 0x60000
+  #   perms   : 0b011
+
+  ahbPeri1-1:
+    address : 0x40020000
+    size    : 0xC000
+    perms   : 0b011
+
+  ahbPeri1-2:
+    address : 0x40040000
+    size    : 0x40000
+    perms   : 0b011
+
+  # ahbPeri2:
+  #   address : 0x50000000
+  #   size    : 0x70000
+  #   perms   : 0b011
+
+  ahbPeri2-1:
+    address : 0x50000000
+    size    : 0x40000
+    perms   : 0b011
+
+  ahbPeri2-2:
+    address : 0x50050000
+    size    : 0x1000
+    perms   : 0b011
+
+  ahbPeri2-3:
+    address : 0x50060000
+    size    : 0x1000
+    perms   : 0b011
+
+
+  ### SYSTEM INTERNAL PERIPHERALS (Private Peripheral Bus)
+  
+  ITM: # Instrumentation Trace Macrocell
+    address : 0xE0000000
+    size    : 0x1000
+    perms   : 0b011
+  DWT: # Data Watchpoint and Trace
+    address : 0xE0001000
+    size    : 0x1000
+    perms   : 0b011
+  FPB: # Flash Patch and Breakpoint
+    address : 0xE0002000
+    size    : 0x1000
+    perms   : 0b011
+  PPB: # Private Peripheral Bus
+    address : 0xE000E000
+    size    : 0x1000
+    perms   : 0b011
+
+# Vector Table Info
+vt:
+  size: 0x1ac
+
+# Mapping Peripheral Interrupt Enable registers
+# See ST RM0038 Section 10.1.2 Table 50 (Cat.3) and Section 2.3 Table 5
+
+intenable:
+  0x40002C04: [ { mask : 0x00000200,   offset : 0x40  } ]  # WWDG
+              
+  0x40002808: # RTC
+              - { mask : 0x00008000,   offset : 0x48  }    # RTC_Timestamp [EXTI19]
+              - { mask : 0x00004000,   offset : 0x4c  }    # RTC_WKUP [EXTI20]
+              - { mask : 0x00003000,   offset : 0xe4  }    # RTC_Alarm [EXTI17]
+  0x40002840: [ { mask : 0x00000004,   offset : 0x48  } ]  # RTC_Tamper [EXTI19]
+
+  0x40023C10: [ { mask : 0x00030000,   offset : 0x50  } ]  # FLASH
+  0x4002380C: [ { mask : 0x00003f00,   offset : 0x54  } ]  # RCC
+  0x40013800: # EXTI
+              - { mask : 0x00000001,   offset : 0x58  }    # EXTI0
+              - { mask : 0x00000002,   offset : 0x5c  }    # EXTI1
+              - { mask : 0x00000004,   offset : 0x60  }    # EXTI2
+              - { mask : 0x00000008,   offset : 0x64  }    # EXTI3
+              - { mask : 0x00000010,   offset : 0x68  }    # EXTI4
+              - { mask : 0x000003e0,   offset : 0x9c  }    # EXTI9_5
+              - { mask : 0x0000fc00,   offset : 0xe0  }    # EXTI15_10
+              # EXTI16-22 mapped to other peripherals
+              - { mask : 0x00010000,   offset : 0x44  }    # [EXTI16] PVD 
+              - { mask : 0x00020000,   offset : 0x44  }    # [EXTI17] RTC Alarm
+              - { mask : 0x00040000,   offset : 0x44  }    # [EXTI18] USB OTG FS WKUP
+              - { mask : 0x00080000,   offset : 0x44  }    # [EXTI19] ETH WKUP
+              - { mask : 0x00100000,   offset : 0x44  }    # [EXTI20] USB OTG HS WKUP
+              - { mask : 0x00200000,   offset : 0x44  }    # [EXTI21] RTC Tamper/Stamp
+              - { mask : 0x00400000,   offset : 0x44  }    # [EXTI22] RTC WKUP
+
+  0x40026010: [ { mask : 0x0000001e,   offset : 0x6c  } ]  # DMA1 Stream0
+  0x40026028: [ { mask : 0x0000001e,   offset : 0x70  } ]  # DMA1 Stream1
+  0x40026040: [ { mask : 0x0000001e,   offset : 0x74  } ]  # DMA1 Stream2
+  0x40026058: [ { mask : 0x0000001e,   offset : 0x78  } ]  # DMA1 Stream3
+  0x40026070: [ { mask : 0x0000001e,   offset : 0x7c  } ]  # DMA1 Stream4
+  0x40026088: [ { mask : 0x0000001e,   offset : 0x80  } ]  # DMA1 Stream5
+  0x400260A0: [ { mask : 0x0000001e,   offset : 0x84  } ]  # DMA1 Stream6
+  0x400260B8: [ { mask : 0x0000001e,   offset : 0xfc  } ]  # DMA1 Stream7
+
+  0x40026410: [ { mask : 0x0000001e,   offset : 0x120 } ]  # DMA2 Stream0
+  0x40026428: [ { mask : 0x0000001e,   offset : 0x124 } ]  # DMA2 Stream1
+  0x40026440: [ { mask : 0x0000001e,   offset : 0x128 } ]  # DMA2 Stream2
+  0x40026458: [ { mask : 0x0000001e,   offset : 0x12c } ]  # DMA2 Stream3
+  0x40026470: [ { mask : 0x0000001e,   offset : 0x130 } ]  # DMA2 Stream4
+  0x40026488: [ { mask : 0x0000001e,   offset : 0x150 } ]  # DMA2 Stream5
+  0x400264A0: [ { mask : 0x0000001e,   offset : 0x154 } ]  # DMA2 Stream6
+  0x400264B8: [ { mask : 0x0000001e,   offset : 0x158 } ]  # DMA2 Stream7
+
+  0x4002B000: [ { mask : 0x00003f00,   offset : 0x1a8 } ]  # DMA2D Global
+
+  0x40012004: [ { mask : 0x040000e0,   offset : 0x88  } ]  # ADC1
+  0x40012104: [ { mask : 0x040000e0,   offset : 0x88  } ]  # ADC2
+  0x40012204: [ { mask : 0x040000e0,   offset : 0x88  } ]  # ADC3
+
+  0x40006414: # CAN1
+              - { mask : 0x00000001,   offset : 0x8c  }    # CAN1 TX
+              - { mask : 0x0000000e,   offset : 0x90  }    # CAN1 RX0
+              - { mask : 0x00000070,   offset : 0x94  }    # CAN1 RX1
+              - { mask : 0x00038f00,   offset : 0x98  }    # CAN1 SCE
+
+  0x40006814: # CAN2
+              - { mask : 0x00000001,   offset : 0x13c }    # CAN2 TX
+              - { mask : 0x0000000e,   offset : 0x140 }    # CAN2 RX0
+              - { mask : 0x00000070,   offset : 0x144 }    # CAN2 RX1
+              - { mask : 0x00038f00,   offset : 0x148 }    # CAN2 SCE
+
+  0x4001000C: # TIM1
+              - { mask : 0x00000080,   offset : 0xa0  }    # TIM1 Break
+              - { mask : 0x00000001,   offset : 0xa4  }    # TIM1 Update
+              - { mask : 0x00000040,   offset : 0xa8  }    # TIM1 Trigger
+              - { mask : 0x0000003e,   offset : 0xac  }    # TIM1 Capture Compare
+  0x4001040C: # TIM8
+              - { mask : 0x00000080,   offset : 0xec  }    # TIM8 Break
+              - { mask : 0x00000001,   offset : 0xf0  }    # TIM8 Update
+              - { mask : 0x00000040,   offset : 0xf4  }    # TIM8 Trigger
+              - { mask : 0x0000003e,   offset : 0xf8  }    # TIM8 Capture Compare
+
+  0x4000000C: [ { mask : 0x00005f5f,   offset : 0xb0  } ]  # TIM2
+  0x4000040C: [ { mask : 0x00005f5f,   offset : 0xb4  } ]  # TIM3
+  0x4000080C: [ { mask : 0x00005f5f,   offset : 0xb8  } ]  # TIM4
+  0x40000C0C: [ { mask : 0x00005f5f,   offset : 0x108 } ]  # TIM5
+  
+  0x4000100C: [ { mask : 0x00000101,   offset : 0x118 } ]  # TIM6
+  0x4000140C: [ { mask : 0x00000101,   offset : 0x11c } ]  # TIM7
+
+  0x4001400C: [ { mask : 0x00000047,   offset : 0xa0  } ]  # TIM9 Global
+  0x4001440C: [ { mask : 0x00000003,   offset : 0xa4  } ]  # TIM10 Global
+  0x4001480C: [ { mask : 0x00000003,   offset : 0xa8  } ]  # TIM11 Global
+  0x4000180C: [ { mask : 0x00000047,   offset : 0xec  } ]  # TIM12 Global
+  0x40001C0C: [ { mask : 0x00000003,   offset : 0xf0  } ]  # TIM13 Global
+  0x4000200C: [ { mask : 0x00000003,   offset : 0xf4  } ]  # TIM14 Global
+
+  0x40005404: # I2C1
+              - { mask : 0x00000600,   offset : 0xbc  }    # I2C1_EV
+              - { mask : 0x00000100,   offset : 0xc0  }    # I2C1_ER
+  0x40005804: # I2C2
+              - { mask : 0x00000600,   offset : 0xc4  }    # I2C2_EV
+              - { mask : 0x00000100,   offset : 0xc8  }    # I2C2_ER
+  0x40005C04: # I2C3
+              - { mask : 0x00000600,   offset : 0x160 }    # I2C3_EV
+              - { mask : 0x00000100,   offset : 0x164 }    # I2C3_ER
+
+  0x40013004: [ { mask : 0x000000e0,   offset : 0xcc  } ]  # SPI1
+  0x40003804: [ { mask : 0x000000e0,   offset : 0xd0  } ]  # SPI2
+  0x40003C04: [ { mask : 0x000000e0,   offset : 0x10c } ]  # SPI3
+  0x40013404: [ { mask : 0x000000e0,   offset : 0x190 } ]  # SPI4
+  0x40015004: [ { mask : 0x000000e0,   offset : 0x194 } ]  # SPI5
+  0x40015404: [ { mask : 0x000000e0,   offset : 0x198 } ]  # SPI6
+
+  0x4001380C: [ { mask : 0x000001f0,   offset : 0xd4  } ]  # USART1 (PE, TXE, TCI, RXNE, IDLE)
+  0x40013810: [ { mask : 0x00000040,   offset : 0xd4  } ]  # USART1 (LIN break detection)
+  0x40013814: [ { mask : 0x00000001,   offset : 0xd4  } ]  # USART1 (Error)
+  0x4000440C: [ { mask : 0x000001f0,   offset : 0xd8  } ]  # USART2 (PE, TXE, TCI, RXNE, IDLE)
+  0x40004410: [ { mask : 0x00000040,   offset : 0xd8  } ]  # USART2 (LIN break detection)
+  0x40004414: [ { mask : 0x00000001,   offset : 0xd8  } ]  # USART2 (Error)
+  0x4000480C: [ { mask : 0x000001f0,   offset : 0xdc  } ]  # USART3 (PE, TXE, TCI, RXNE, IDLE)
+  0x40004810: [ { mask : 0x00000040,   offset : 0xdc  } ]  # USART3 (LIN break detection)
+  0x40004814: [ { mask : 0x00000001,   offset : 0xdc  } ]  # USART3 (Error)
+  
+  0x40004C0C: [ { mask : 0x000001f0,   offset : 0x110 } ]  # UART4 (PE, TXE, TCI, RXNE, IDLE)
+  0x40004C10: [ { mask : 0x00000040,   offset : 0x110 } ]  # UART4 (LIN break detection)
+  0x40004C14: [ { mask : 0x00000001,   offset : 0x110 } ]  # UART4 (Error)
+  0x4000500C: [ { mask : 0x000001f0,   offset : 0x114 } ]  # UART5 (PE, TXE, TCI, RXNE, IDLE)
+  0x40005010: [ { mask : 0x00000040,   offset : 0x114 } ]  # UART5 (LIN break detection)
+  0x40005014: [ { mask : 0x00000001,   offset : 0x114 } ]  # UART5 (Error)
+
+  0x4001140C: [ { mask : 0x000001f0,   offset : 0x15c } ]  # USART6 (PE, TXE, TCI, RXNE, IDLE)
+  0x40011410: [ { mask : 0x00000040,   offset : 0x15c } ]  # USART6 (LIN break detection)
+  0x40011414: [ { mask : 0x00000001,   offset : 0x15c } ]  # USART6 (Error)
+  0x4000780C: [ { mask : 0x000001f0,   offset : 0x188 } ]  # USART7 (PE, TXE, TCI, RXNE, IDLE)
+  0x40007810: [ { mask : 0x00000040,   offset : 0x188 } ]  # USART7 (LIN break detection)
+  0x40007814: [ { mask : 0x00000001,   offset : 0x188 } ]  # USART7 (Error)
+  0x40007C0C: [ { mask : 0x000001f0,   offset : 0x18c } ]  # USART8 (PE, TXE, TCI, RXNE, IDLE)
+  0x40007C10: [ { mask : 0x00000040,   offset : 0x18c } ]  # USART8 (LIN break detection)
+  0x40007C14: [ { mask : 0x00000001,   offset : 0x18c } ]  # USART8 (Error)
+
+  0xA0000154: [ { mask : 0x00004000,   offset : 0x100 } ]  # FSMC
+
+  0x40012C3C: [ { mask : 0x00ffffff,   offset : 0x104 } ]  # SDIO
+
+  0x40007400: [ { mask : 0x20002000,   offset : 0x118 } ]  # DAC1/DAC2 Underrun Err
+  
+  0x4002901C: [ { mask : 0x0001e7ff,   offset : 0x134 } ]  # ETH Global
+  0x40028700: [ { mase : 0x00000010,   offset : 0x134 } ]  # ETH Global (Timestamp)
+
+  0x50000018: [ { mask : 0xf73cfcf7,   offset : 0x14c } ]  # USB OTG FS Global Core
+  0x50000418: [ { mask : 0x000007bb,   offset : 0x14c } ]  # USB OTG FS Global Host All
+  0x5000050C: [ { mask : 0x000007bb,   offset : 0x14c } ]  # USB OTG FS Global Host Channel 0
+  0x5000052C: [ { mask : 0x000007bb,   offset : 0x14c } ]  # USB OTG FS Global Host Channel 1
+  0x5000054C: [ { mask : 0x000007bb,   offset : 0x14c } ]  # USB OTG FS Global Host Channel 2
+  0x5000056C: [ { mask : 0x000007bb,   offset : 0x14c } ]  # USB OTG FS Global Host Channel 3
+  0x5000058C: [ { mask : 0x000007bb,   offset : 0x14c } ]  # USB OTG FS Global Host Channel 4
+  0x500005aC: [ { mask : 0x000007bb,   offset : 0x14c } ]  # USB OTG FS Global Host Channel 5
+  0x500005cC: [ { mask : 0x000007bb,   offset : 0x14c } ]  # USB OTG FS Global Host Channel 6
+  0x500005eC: [ { mask : 0x000007bb,   offset : 0x14c } ]  # USB OTG FS Global Host Channel 7
+  0x5000060C: [ { mask : 0x000007bb,   offset : 0x14c } ]  # USB OTG FS Global Host Channel 8
+  0x5000062C: [ { mask : 0x000007bb,   offset : 0x14c } ]  # USB OTG FS Global Host Channel 9
+  0x5000064C: [ { mask : 0x000007bb,   offset : 0x14c } ]  # USB OTG FS Global Host Channel 10
+  0x5000066C: [ { mask : 0x000007bb,   offset : 0x14c } ]  # USB OTG FS Global Host Channel 11
+  0x50000810: [ { mask : 0x0000207b,   offset : 0x14c } ]  # USB OTG FS Global Device IN Endpoint
+  0x50000814: [ { mask : 0x0000313b,   offset : 0x14c } ]  # USB OTG FS Global Device OUT Endpoint
+  0x50000834: [ { mask : 0x0000ffff,   offset : 0x14c } ]  # USB OTG FS Global Device Empty
+  0x50000908: [ { mask : 0x000028fb,   offset : 0x14c } ]  # USB OTG FS Global Device IN Endpoint 0
+  0x50000928: [ { mask : 0x000028fb,   offset : 0x14c } ]  # USB OTG FS Global Device IN Endpoint 1
+  0x50000948: [ { mask : 0x000028fb,   offset : 0x14c } ]  # USB OTG FS Global Device IN Endpoint 2
+  0x50000968: [ { mask : 0x000028fb,   offset : 0x14c } ]  # USB OTG FS Global Device IN Endpoint 3
+  0x50000B08: [ { mask : 0x0000313b,   offset : 0x14c } ]  # USB OTG FS Global Device OUT Endpoint 0
+  0x50000B28: [ { mask : 0x0000313b,   offset : 0x14c } ]  # USB OTG FS Global Device OUT Endpoint 1
+  0x50000B48: [ { mask : 0x0000313b,   offset : 0x14c } ]  # USB OTG FS Global Device OUT Endpoint 2
+  0x50000B68: [ { mask : 0x0000313b,   offset : 0x14c } ]  # USB OTG FS Global Device OUT Endpoint 3
+
+  0x40040018: # USB OTG HS Core Global
+              - { mask : 0x00080000,   offset : 0x168 }    # USB OTG HS Endpoint 1 Out
+              - { mask : 0x00040000,   offset : 0x16c }    # USB OTG HS Endpoint 1 In
+              - { mask : 0x80000000,   offset : 0x170 }    # USB OTG HS WKUP [EXTI?]
+              - { mask : 0x7770fcfe,   offset : 0x174 }    # USB OTG HS Global
+  0x40040418: [ { mask : 0x0000ffff,   offset : 0x174 } ]  # USB OTG HS Host All Channels
+  0x4004050C: [ { mask : 0x000007ff,   offset : 0x174 } ]  # USB OTG HS Host Channel 0
+  0x4004052C: [ { mask : 0x000007ff,   offset : 0x174 } ]  # USB OTG HS Host Channel 1
+  0x4004054C: [ { mask : 0x000007ff,   offset : 0x174 } ]  # USB OTG HS Host Channel 2
+  0x4004056C: [ { mask : 0x000007ff,   offset : 0x174 } ]  # USB OTG HS Host Channel 3
+  0x4004058C: [ { mask : 0x000007ff,   offset : 0x174 } ]  # USB OTG HS Host Channel 4
+  0x400405aC: [ { mask : 0x000007ff,   offset : 0x174 } ]  # USB OTG HS Host Channel 5
+  0x400405cC: [ { mask : 0x000007ff,   offset : 0x174 } ]  # USB OTG HS Host Channel 6
+  0x400405eC: [ { mask : 0x000007ff,   offset : 0x174 } ]  # USB OTG HS Host Channel 7
+  0x4004060C: [ { mask : 0x000007ff,   offset : 0x174 } ]  # USB OTG HS Host Channel 8
+  0x4004062C: [ { mask : 0x000007ff,   offset : 0x174 } ]  # USB OTG HS Host Channel 9
+  0x4004064C: [ { mask : 0x000007ff,   offset : 0x174 } ]  # USB OTG HS Host Channel 10
+  0x4004066C: [ { mask : 0x000007ff,   offset : 0x174 } ]  # USB OTG HS Host Channel 11
+  0x40040810: [ { mask : 0x0000217f,   offset : 0x16c } ]  # USB OTG HS Endpoints In
+  0x40040814: [ { mask : 0x0000717f,   offset : 0x168 } ]  # USB OTG HS Endpoints Out
+  0x4004081C: # USB OTG HS All Endpoints
+              - { mask : 0xffff0000,   offset : 0x168 }    # USB OTG HS OUT Endpoints
+              - { mask : 0x0000ffff,   offset : 0x16c }    # USB OTG HS IN Endpoints
+  0x40040834: [ { mask : 0x0000ffff,   offset : 0x16c } ]  # USB OTG HS Endpoints In
+  0x4004083C: # USB OTG HS All Endpoints
+              - { mask : 0x00020000,   offset : 0x168 }    # USB OTG HS OUT Endpoints
+              - { mask : 0x00000002,   offset : 0x16c }    # USB OTG HS IN Endpoints
+  0x40040844: [ { mask : 0x0000237f,   offset : 0x16c } ]  # USB OTG HS IN Endpoint 1
+  0x40040884: [ { mask : 0x0000737f,   offset : 0x16c } ]  # USB OTG HS OUT Endpoint 1
+
+  0x5005000C: [ { mask : 0x0000001f,   offset : 0x178 } ]  # DCMI
+
+  0x50060014: [ { mask : 0x00000003,   offset : 0x17c } ]  # CRYP
+
+  # 0x50060420: [ { mask : 0x00000003,   offset : 0x180 } ]  # HASH (not present on 29ze)
+
+  0x50060800: [ { mask : 0x00000008,   offset : 0x180 } ]  # RNG
+
+  # : [ { mask : ,   offset : 0x184 } ]  # FPU (always enabled)
+
+  0x40015814: [ { mask : 0x0000007f,   offset : 0x19c } ]  # SAI1
+
+  0x40016834: # LTDC
+              - { mask : 0x00000009,   offset : 0x1a0 }    # LTDC Global
+              - { mask : 0x00000006,   offset : 0x1a4 }    # LTDC Global Error
+
+
