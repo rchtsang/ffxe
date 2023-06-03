@@ -440,7 +440,7 @@ class FFXEngine():
 
         # this should construct the block and connect it to the CFG as needed
         # self.cs.mode = uc.ctl_get_mode()
-        self.cs.mode = CS_MODE_THUMB if self.context.pc & 1 else CS_MODE_ARM
+        self.cs.mode = CS_MODE_THUMB if uc.reg_read(UC_ARM_REG_CPSR) & (1 << 5) else CS_MODE_ARM
         if 'MCLASS' in self.pd['cpu']['mode']:
             self.cs.mode |= CS_MODE_MCLASS
         try:
