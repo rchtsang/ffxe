@@ -208,7 +208,10 @@ class FXEngine():
 
 
     def load_fw(self, path):
-        self.fw = FirmwareImage(path)
+        self.fw = FirmwareImage(path, 
+            pd=self.pd, 
+            base_addr=0,
+            vtbases=[0])
 
         # load firmware image to unicorn
         self.uc.mem_write(self.pd['mmap']['flash']['address'], self.fw.raw)
@@ -246,14 +249,14 @@ class FXEngine():
 
         try:
             # check if all block instructions valid
-            insn_addrs = [ins.address for ins in self.cs.disasm(
+            insns = [ins for ins in self.cs.disasm(
                 uc.mem_read(address, size), offset=address)]
         except StopIteration as e:
             raise UcError(UC_ERR_INSN_INVALID)
 
         # check if block is at a data location
         # check if block is in vector table
-        if (any([iaddr in self.mem_reads for iaddr in insn_addrs])
+        if (any([insn.address in self.mem_reads for insn in insns])
                 or (address < 0x200)):
             raise UcError(UC_ERR_FETCH_PROT)
 
@@ -270,7 +273,7 @@ class FXEngine():
             bblock = BBlock(
                 address=address, 
                 size=size, 
-                insn_addrs=insn_addrs,
+                insns=insns,
                 fn_addr=self.context.callstack[-1][0], 
                 bytedata=self.uc.mem_read(address, size),
                 parent=NullBlock)
@@ -290,7 +293,7 @@ class FXEngine():
                 bblock = BBlock(
                     address=address,
                     size=size,
-                    insn_addrs=insn_addrs,
+                    insns=insns,
                     fn_addr=self.context.callstack[-1][0],
                     bytedata=self.uc.mem_read(address, size),
                     **block_kwargs)

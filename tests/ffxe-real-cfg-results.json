@@ -1,0 +1,12 @@
+{
+  "chargehr_18_128.bin"              : { "blocks":  1640, "edges":  2817,  "elapsed": "   11.115415333 s" },
+  "chargehr_18_32.bin"               : { "blocks":  2574, "edges":  4512,  "elapsed": "    2.090176250 s" },
+  "flex_7_64_flash.bin"              : { "blocks":  4698, "edges":  8400,  "elapsed": "    4.904446417 s" },
+  "flex_7_81_flash.bin"              : { "blocks":  4712, "edges":  8429,  "elapsed": "    5.420655500 s" },
+  "flex_7_88_flash.bin"              : { "blocks":  4698, "edges":  8400,  "elapsed": "    6.062052625 s" },
+  "BCM20702A1.bin"                   : { "blocks": 13454, "edges": 24894,  "elapsed": "   29.803174875 s" },
+  "switchmate_bright_1_46.bin"       : { "blocks":  6803, "edges": 12652,  "elapsed": "   14.618801375 s" },
+  "switchmate_bright_2_9_11.bin"     : { "blocks":  6761, "edges": 12516,  "elapsed": "   14.706779250 s" },
+  "switchmate_light_2_21.bin"        : { "blocks":  1299, "edges":  2338,  "elapsed": "    2.415094834 s" },
+  "switchmate_light_2_99_16.bin"     : { "blocks":  4129, "edges":  7525,  "elapsed": "    7.506756333 s" }
+}

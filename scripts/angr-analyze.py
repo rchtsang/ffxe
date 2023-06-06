@@ -146,7 +146,9 @@ if __name__ == "__main__":
             t = perf_counter()
             cfg_emu = proj.analyses.CFGEmulated(
                 starts=entry_points,
-                normalize=True)
+                normalize=True,
+                context_sensitivity_level=1
+            )
             emu_elapsed = perf_counter() - t
 
             angr_cfgs[name]['angr_emu'] = cfg_emu
@@ -188,6 +190,6 @@ if __name__ == "__main__":
 
     print('\n'.join(table))
     with open(f'{PARENT_DIR}/angr-cfg-results.json', 'w') as f:
-        f.write('{\n' + '\n'.join(table) + '\n}')
+        f.write('{\n' + ',\n'.join(table) + '\n}')
 
 

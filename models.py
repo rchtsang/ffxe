@@ -94,6 +94,7 @@ class FirmwareImage():
                     # deal with the delay block specially
                     # objdump doesn't treat it as instructions
                     # when disassembling from elf since it's in .data
+                    # only relevant for unit testing purposes (not using elf for real-world)
                     if (("3803 d8fd" in match.group('raw')
                             and "4770 0000" in match.group('mnemonic'))
                             or "d8fd3803 00004770" in match.group('raw')):

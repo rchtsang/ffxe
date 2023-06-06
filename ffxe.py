@@ -457,13 +457,18 @@ class FFXEngine():
 
         # check if block is at a data location
         # check if block is in vector table
+        # check if block is at 0 or 0x4 if MCLASS (always boot addresses)
         if (any([insn.address in self.mem_reads for insn in insns.values()])):
             raise UcError(UC_ERR_FETCH_PROT)
-        if (self.addr_in_vtable(address) and "MCLASS" in self.pd['cpu']['mode']):
+        if ("MCLASS" in self.pd['cpu']['mode']
+                and (self.addr_in_vtable(address)
+                    or 0 <= address < 0x8)):
             raise UcError(UC_ERR_FETCH_PROT)
 
-        # check if block beyond end of fw
-        if (address > self.fw.size + self.fw.base_addr):
+
+        # check if block beyond end of fw or below base address
+        if (address > self.fw.size + self.fw.base_addr
+                or address < self.fw.base_addr):
             raise UcError(UC_ERR_INSN_INVALID)
 
         block_kwargs = {}
@@ -628,7 +633,12 @@ class FFXEngine():
         #         self.fw.disasm[address]['mnemonic']))
 
         if self.log_insn:
-            self.logger.info(str(self.context.bblock.insns[address]))
+            try:
+                self.logger.info(str(self.context.bblock.insns[address]))
+            except KeyError as e:
+                self.logger.error("KEY ERROR! instruction address not found in block\n"
+                    "something weird is going on here...")
+                raise UcError(UC_ERR_INSN_INVALID)
 
         if (address & (~1)) in self.breakpoints or self.break_on_inst:
             breakpoint()
@@ -1066,10 +1076,13 @@ class FFXEngine():
                                 }
                                 self._queue_branch(FBranch(**branch_info))
 
+                    # track store the read context for later restore
+                    # originally keyed by (val, address) with multiple
+                    # possible restore states.
                     if (val, address) not in self.voladdrs[read_addr]['r']:
                         self.voladdrs[read_addr]['r'][(val, address)] = set()
 
-                    self.voladdrs[read_addr]['r'][(val, address)].add(self.backup())
+                        self.voladdrs[read_addr]['r'][(val, address)].add(self.backup())
 
                     # if encountering for first time and there are already logged reads,
                     # need to resume with those memory contexts.

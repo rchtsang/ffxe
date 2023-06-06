@@ -14,7 +14,7 @@ test script that runs fxe tests on all firmware examples
 
 if __name__ == "__main__":
 
-    fw_examples = glob('examples/*.bin')
+    fw_examples = glob('examples/unit-tests/*.bin')
 
     fxe_cfgs = {}
     table = []
@@ -40,26 +40,31 @@ if __name__ == "__main__":
                     fxe.uc.mem_read(block.addr, block.size), block.size):
                 total_insns += 1
 
-        result = "{:<25} {:>4d} blocks {:>4d} edges    elapsed (s): {}".format(
-            basename(fw_path),
+        result = "{:<25} : {{ \"blocks\": {:>4d}, \"edges\": {:>4d},  \"elapsed\": \"{:>15.9f} s\" }}".format(
+            f'"{basename(fw_path)}"',
             len(fxe.cfg.bblocks),
             len(fxe.cfg.edges),
             elapsed
         )
 
-        print(result)
+        print("{:<25} {:>4d} blocks {:>4d} edges    elapsed (s): {:>15.9f}".format(
+            basename(fw_path),
+            len(fxe.cfg.bblocks),
+            len(fxe.cfg.edges),
+            elapsed
+        ))
         table.append(result)
 
         fxe_cfgs[basename(fw_path)] = fxe.cfg
 
-    with open('tests/fxe-cfg-results.txt', 'w') as f:
-        f.write('\n'.join(table))
+    with open('tests/fxe-cfg-results.json', 'w') as f:
+        f.write('{\n  ' + ',\n  '.join(table) + '\n}')
 
     for fn, cfg in fxe_cfgs.items():
         (name, ext) = splitext(fn)
         graph = {
             'nodes': set([(b.addr, b.size) for b in cfg.bblocks.values()]),
-            'edges': set([(cfg.bblocks[e[0]].insn_addrs[-1], e[1]) for e in cfg.edges]),
+            'edges': set([(cfg.bblocks[e[0]].insns[-1].address, e[1]) for e in cfg.edges]),
         }
-        with open(f"tests/cfgs/{name}-fxe-cfg.pkl", 'wb') as pklfile:
+        with open(f"tests/cfgs/unit-tests/{name}-fxe-cfg.pkl", 'wb') as pklfile:
             dill.dump(graph, pklfile)

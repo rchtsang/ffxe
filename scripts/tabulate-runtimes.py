@@ -7,20 +7,17 @@ from os.path import basename
 
 PARENT_DIR = os.path.dirname(os.path.realpath(__file__))
 PROJ_DIR = os.path.realpath(f"{PARENT_DIR}/..")
-RE_RESULTFILE_PTRN = re.compile(r"(?P<eng>.+)-cfg-results\.txt")
-RE_LOG_PTRN = re.compile(
-    r"(?P<fw>(?P<name>\w+)(?P<opt>-o[0-3])\.bin)?\s+(?P<eng>[a-zA-Z]+)?(:?\s+)?"
-    r"(?P<nblocks>\d+) blocks\s+"
-    r"(?P<nedges>\d+) edges\s+"
-    r"elapsed(?::| \(s\):) (?P<runtime>[\d\.]+)(:? s)?"
+RE_RESULTFILE_PTRN = re.compile(r"(?P<eng>.+)-cfg-results\.json")
+FW_PTRN = re.compile(
+    r"(?P<fw>(?P<name>\w+)(?P<opt>-o[0-3])\.bin)?"
 )
 
 if __name__ == "__main__":
     parser = ArgumentParser('tabulate-runtimes.py')
     parser.add_argument('--inputs', nargs='+', default=[
-            f"{PROJ_DIR}/tests/ffxe-cfg-results.txt",
-            f"{PROJ_DIR}/tests/fxe-cfg-results.txt",
-            f"{PROJ_DIR}/scripts/angr-cfg-results.txt"],
+            f"{PROJ_DIR}/tests/ffxe-cfg-results.json",
+            f"{PROJ_DIR}/tests/fxe-cfg-results.json",
+            f"{PROJ_DIR}/scripts/angr-cfg-results.json"],
         help="path to pickled cfg folder")
     parser.add_argument('-o', default=f"{PARENT_DIR}/tbl",
         help="output folder for tables")
@@ -33,33 +30,39 @@ if __name__ == "__main__":
     runtimes = {}
     engs = set()
     fws = set()
+
+    def populate_runtimes(eng, fw, opt, data):
+        if eng not in runtimes:
+            runtimes[eng] = {}
+            engs.add(eng)
+        if fw not in runtimes[eng]:
+            runtimes[eng][fw] = {}
+            fws.add(fw)
+        runtimes[eng][fw][opt] = float(data['elapsed'].strip(' s'))
+
     for filename in args.inputs:
         # only process files that match the expected format
         match = RE_RESULTFILE_PTRN.search(basename(filename))
         if match:
             base_eng = match.group('eng')
 
-            with open(filename, 'r') as resultfile:
-                table_text = resultfile.read()
-
-            # process file
-            prev_fw_name = ('', '')
-            for match in RE_LOG_PTRN.finditer(table_text):
-                groups = match.groupdict()
-                eng = base_eng
-                if groups['fw']:
-                    prev_fw_name = (groups['name'], groups['opt'])
-                    fws.add(groups['name'])
-                if groups['eng']:
-                    if groups['eng'] == 'fast':
-                        continue
-                    eng = f"{eng}_{groups['eng']}"
-                if eng not in runtimes:
-                    runtimes[eng] = {}
-                    engs.add(eng)
-                if prev_fw_name[0] not in runtimes[eng]:
-                    runtimes[eng][prev_fw_name[0]] = {}
-                runtimes[eng][prev_fw_name[0]][prev_fw_name[1]] = float(groups['runtime'])
+            with open(filename, 'r') as jsonfile:
+                results = json.load(jsonfile)
+            
+            for fwname, data in results.items():
+                match = FW_PTRN.search(fwname)
+                if not match:
+                    continue
+                fw = match.group('name')
+                opt = match.group('opt')
+                if base_eng == 'angr':
+                    for eng_type, d in data.items():
+                        if eng_type == 'cnxd':
+                            continue
+                        eng = f"{base_eng}_{eng_type}"
+                        populate_runtimes(eng, fw, opt, d)
+                else:
+                    populate_runtimes(base_eng, fw, opt, data)
 
     engs = list(sorted(engs))
     fws = list(sorted(fws))
