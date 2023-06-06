@@ -1,0 +1,52 @@
+{
+  "chargehr_18_128.bin": {
+                                    "fast" : { "blocks": 23763, "edges": 44102, "elapsed": "   14.160637834 s" },
+                                    "cnxd" : { "blocks": 20778, "edges": 33377, "elapsed": "n/a s" },
+                                    "emu"  : { "blocks":  6479, "edges": 12260, "elapsed": "  158.000528708 s" }
+  }
+  "chargehr_18_32.bin": {
+                                    "fast" : { "blocks": 23140, "edges": 43202, "elapsed": "   22.189915625 s" },
+                                    "cnxd" : { "blocks": 20040, "edges": 31240, "elapsed": "n/a s" },
+                                    "emu"  : { "blocks":  6454, "edges": 11869, "elapsed": "  141.866899709 s" }
+  }
+  "flex_7_64_flash.bin": {
+                                    "fast" : { "blocks": 18881, "edges": 31230, "elapsed": "   18.937367833 s" },
+                                    "cnxd" : { "blocks": 13061, "edges": 20538, "elapsed": "n/a s" },
+                                    "emu"  : { "blocks":  4656, "edges":  8542, "elapsed": "   96.639418083 s" }
+  }
+  "flex_7_81_flash.bin": {
+                                    "fast" : { "blocks": 19755, "edges": 32418, "elapsed": "   15.872389333 s" },
+                                    "cnxd" : { "blocks": 13286, "edges": 20900, "elapsed": "n/a s" },
+                                    "emu"  : { "blocks":  4666, "edges":  8562, "elapsed": "   99.732642167 s" }
+  }
+  "flex_7_88_flash.bin": {
+                                    "fast" : { "blocks": 18881, "edges": 31230, "elapsed": "   14.409215041 s" },
+                                    "cnxd" : { "blocks": 13061, "edges": 20538, "elapsed": "n/a s" },
+                                    "emu"  : { "blocks":  4656, "edges":  8542, "elapsed": "   97.524682042 s" }
+  }
+  "BCM20702A1.bin": {
+                                    "fast" : { "blocks": 44932, "edges": 79441, "elapsed": "   25.219818833 s" },
+                                    "cnxd" : { "blocks": 32805, "edges": 51397, "elapsed": "n/a s" },
+                                    "emu"  : { "blocks":     0, "edges":     0, "elapsed": "   66.205799375 s" }
+  }
+  "switchmate_bright_1_46.bin": {
+                                    "fast" : { "blocks":  7792, "edges": 14521, "elapsed": "    3.258201584 s" },
+                                    "cnxd" : { "blocks":  6679, "edges": 11328, "elapsed": "n/a s" },
+                                    "emu"  : { "blocks":     0, "edges":     0, "elapsed": "   70.767469416 s" }
+  }
+  "switchmate_bright_2_9_11.bin": {
+                                    "fast" : { "blocks":  7756, "edges": 14703, "elapsed": "    3.026154708 s" },
+                                    "cnxd" : { "blocks":  6610, "edges": 11264, "elapsed": "n/a s" },
+                                    "emu"  : { "blocks":     0, "edges":     0, "elapsed": "   71.006441334 s" }
+  }
+  "switchmate_light_2_21.bin": {
+                                    "fast" : { "blocks":  1857, "edges":  3201, "elapsed": "    1.158807500 s" },
+                                    "cnxd" : { "blocks":  1254, "edges":  1930, "elapsed": "n/a s" },
+                                    "emu"  : { "blocks":  1072, "edges":  1793, "elapsed": "   13.952681792 s" }
+  }
+  "switchmate_light_2_99_16.bin": {
+                                    "fast" : { "blocks":  5206, "edges":  9077, "elapsed": "    2.120104291 s" },
+                                    "cnxd" : { "blocks":  3823, "edges":  5751, "elapsed": "n/a s" },
+                                    "emu"  : { "blocks":  2459, "edges":  4349, "elapsed": "   50.674625166 s" }
+  }
+}

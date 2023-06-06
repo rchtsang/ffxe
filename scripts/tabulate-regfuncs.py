@@ -14,7 +14,7 @@ CFG_FN_PTRN = re.compile(r"(?P<fw>\w+)-(?P<opt>o[0123])-(?P<engine>\w+)-cfg\.pkl
 
 if __name__ == "__main__":
     parser = ArgumentParser('cmp-results.py')
-    parser.add_argument('-d', default=f'{PARENT_DIR}/../tests/cfgs',
+    parser.add_argument('-d', default=f'{PARENT_DIR}/../tests/cfgs/unit-tests',
         help="path to pickled cfg folder")
     parser.add_argument('-o', default=f"{PARENT_DIR}/tbl",
         help="output folder for tables")
@@ -68,6 +68,7 @@ if __name__ == "__main__":
     ))
 
     opts = ['o0', 'o1', 'o2', 'o3']
+    engines = ['angr_emu', 'angr_fast', 'ffxe', 'fxe', 'ghidra_simple']
 
     for fw in sorted(graphs.keys()):
         if any([opt not in registered_functions[fw] for opt in opts]):
@@ -75,7 +76,7 @@ if __name__ == "__main__":
         table.append(f"\\multirow{{4}}{{*}}{{{fw}}}".replace('_', '\\_'))
         for opt in opts:
             row = f"    & -{opt.upper()}"
-            for eng in sorted(engs):
+            for eng in sorted(engines):
                 found_rf_edges = set()
                 found_rf_blocks = set()
                 total_rf = 0

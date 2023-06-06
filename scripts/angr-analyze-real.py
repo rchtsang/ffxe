@@ -156,6 +156,8 @@ parser.add_argument('--targets', nargs='+', type=str, default=None,
     help="specify folders of target real-world firmware to analyze")
 parser.add_argument('--outdir', type=str, default=f"{PARENT_DIR}",
     help="destination directory for results table")
+parser.add_argument('--call-depth', type=int, dest='call_depth', default=1,
+    help="the context sensitivity parameter for angr's CFGEmulated (default: 1)")
 
 if __name__ == "__main__":
     args = parser.parse_args()
@@ -172,7 +174,7 @@ if __name__ == "__main__":
         Path(OUT_DIR).mkdir(parents=True, exist_ok=True)
 
     for target in args.targets:
-        generated_cfgs[target] = {} 
+        generated_cfgs[basename(target)] = {} 
         print(f"analyzing target: {target}")
         try:
             assert isdir(target), \
@@ -235,7 +237,7 @@ if __name__ == "__main__":
             normalize=True
         )
         fast_elapsed = perf_counter() - t
-        generated_cfgs[target]['fast'] = cfg_fast
+        generated_cfgs[basename(target)]['fast'] = cfg_fast
 
         # format and save static cfg result
         fast_graph = {
@@ -247,6 +249,7 @@ if __name__ == "__main__":
             dill.dump(fast_graph, pklfile)
 
         connected_graph = make_connected_cfg(cfg_fast, entrypoints)
+        generated_cfgs[basename(target)]['cnxd'] = connected_graph
 
         with open(f"{OUT_DIR}/{fw_name}-angr_cnnctd-cfg.pkl", 'wb') as pklfile:
             dill.dump(connected_graph, pklfile)
@@ -258,10 +261,11 @@ if __name__ == "__main__":
             t = perf_counter()
             cfg_emu = proj.analyses.CFGEmulated(
                 starts = entrypoints,
-                normalize=True
+                normalize=True,
+                context_sensitivity_level=args.call_depth,
             )
             emu_elapsed = perf_counter() - t
-            generated_cfgs[target]['emu'] = cfg_emu
+            generated_cfgs[basename(target)]['emu'] = cfg_emu
 
             # format dynamic cfg result
             emu_graph = {
