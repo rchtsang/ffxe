@@ -14,12 +14,12 @@ After activating the environment, the engine must be installed via pip in develo
 
 ## Duplicating FFXE Experiments
 
-FFXE can be invoked on all samples in our test set by invoking the command
+FFXE can be invoked on all samples in our unit test set by invoking the command
 
 ```console
-$ python tests/test-all.py
+$ python tests/test-unit.py
 ```
-This will generate CFGs for all firmware images with a `.bin` extension in the `examples` folder.
+This will generate basic CFGs in python pickled format for all firmware images with a `.bin` extension in the `examples/unit-tests` folder.
 
 The results can be visualized using another script `visual_cfg.py`, which is meant for correctness checking and therefore maps the generated cfgs onto the unstripped elf firmware binary.
 
@@ -28,19 +28,32 @@ $ python scripts/visual_cfg.py
 ```
 This will write rough CFGs in the form of annotated disassembly to the folder `scripts/cfgs`. 
 
+### Testing Real World Samples
+
+FFXE can be invoked on our real-world test set by invoking the command
+
+```console
+$ python tests/test-real.py
+```
+This will generate basic CFGs in python pickled format for each real-world sample directory in the `examples/real-world` folder.
+
+The resulting CFG cannot be visualized directly using the `visual_cfg.py` script due to lack of ELF files for baseline disassembly accuracy; however, we have included scripts that allow for high-level visualization of coverage and coverage comparison in the `scripts` directory.
+
 ### Testing Other Recovery Methods
 
 Our version of FXE can be invoked with the command
 ```console
 $ python tests/fxe-all.py
 ```
-This has the same behavior as `test-all.py` except that it invokes FXE instead.
+This has the same behavior as `test-unit.py` except that it invokes FXE instead.
 
 Running the other recovery methods is somewhat more involved as additional dependencies must be installed for our provided scripts to work. Moreover, other dependencies must be installed in different environments to avoid package conflicts. (There is a known conflict between the version of Unicorn we use, and the version that angr uses)
 
-The script `scripts/angr-all.py` will run angr's static and emulated recovery methods on all `.bin` images in the examples folder, but must be run from an environment that has angr installed.
+The script `scripts/angr-analyze.py` will run angr's static and emulated recovery methods on all `.bin` images in the `examples/unit-tests` folder, but must be run from an environment that has angr installed.
 
-The scripts `script/ghidra-all.py` requires a working installation of ghidrathon to work, for which we do not yet have a quick install method. We will try to upload a Dockerfile that contains a working version if time permits.
+The scripts `script/ghidra-analyze.py` requires a working installation of [Ghidrathon](https://github.com/mandiant/Ghidrathon) to work, for which we do not yet have a quick install method. We will try to upload a Dockerfile that contains a working version if time permits.
+
+Scripts `scripts/angr-analyze-real.py` and `scripts/ghidra-analyze-real.py` can be used for analyzing the real-world set but have the same requirements as already stipulated.
 
 ## Other Scripts
 
