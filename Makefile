@@ -1,4 +1,5 @@
 
+SHELL:=/bin/bash
 CLEANUP?=false # cleanup flag for ssh
 OPEN=          # command for opening application
 ifeq ($(uname), "Darwin")
@@ -26,17 +27,22 @@ start-docker:                ## start docker if not running
 # .PHONY: socat
 # socat:                       ## start socat (for ghidra gui)
 
+.PHONY: container
+container:                   ## start container if not yet running
+	@[ ! $(docker ps -q -f name=workspace) ]	\
+		&& docker run 								\
+			-t -d									\
+			--init 									\
+			--name=workspace 						\
+			--rm=$(CLEANUP) 						\
+			--entrypoint=bash 						\
+			-e DISPLAY=$(ipconfig getifaddr en0):0 	\
+			-v `pwd`:/home/ffxe 					\
+			ffxe/workspace:dev;
+
 .PHONY: ssh
-ssh:                         ## ssh into docker image
-	@docker run \
-		--init \
-		-it \
-		--name=workspace \
-		--rm=$(CLEANUP) \
-		--entrypoint=bash \
-		-e DISPLAY=$(ipconfig getifaddr en0):0 \
-		-v `pwd`:/home/ffxe \
-		ffxe/workspace:dev
+ssh: container               ## ssh into docker image
+	@docker exec -it workspace /bin/bash
 
 .PHONY: stop
 stop:                        ## kill running container
