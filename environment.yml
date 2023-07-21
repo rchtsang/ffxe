@@ -1,4 +1,4 @@
-name: mbem
+name: ffxe
 channels:
   - conda-forge
 dependencies:
@@ -61,4 +61,3 @@ dependencies:
     - pyelftools==0.29
     - pyyaml==6.0
     - unicorn==2.0.1
-prefix: /opt/homebrew/Caskroom/miniforge/base/envs/mbem

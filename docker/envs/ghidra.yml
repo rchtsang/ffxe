@@ -1,0 +1,26 @@
+name: ghidra
+channels:
+  - conda-forge
+dependencies:
+  - bzip2=1.0.8
+  - ca-certificates=2022.12.7
+  - libffi=3.4.2
+  - libsqlite=3.40.0
+  - libzlib=1.2.13
+  - ncurses=6.3
+  - openssl=3.0.7
+  - pip=22.3.1
+  - python=3.10.8
+  - readline=8.1.2
+  - setuptools=66.1.1
+  - tk=8.6.12
+  - tzdata=2022g
+  - wheel=0.38.4
+  - xz=5.2.6
+  - pip:
+      - capstone==4.0.2
+      - dill==0.3.6
+      - jep==4.1.1
+      - networkx==3.1
+      - pyyaml==6.0
+      - unicorn==2.0.1.post1
