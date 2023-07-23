@@ -205,6 +205,8 @@ RUN set -eux \
 		libxrender1 \
 		libxtst6 \
 		libxi6 \
+		xorg \
+		xvfb \
 		# wget \
 		# unzip \
 		# python3-requests \
@@ -216,10 +218,20 @@ RUN set -eux \
     && chmod +x \
     	${GHIDRA_HOME}/ghidraRun \
     	${GHIDRA_HOME}/support/analyzeHeadless \
-    	${GHIDRA_HOME}/support/buildNatives \
-    && echo "ghidra install complete."
+    	${GHIDRA_HOME}/support/buildNatives 
+    # && xhost +local:
 
 RUN ${GHIDRA_HOME}/support/buildNatives
+
+# add ghidra binaries to path
+ENV PATH=${GHIDRA_HOME}:${GHIDRA_HOME}/support:$PATH
+
+# ghidra broken without a DISPLAY variables
+# need to use Xvfb to provide a virtual X11 server
+RUN Xvfb :99 &
+ENV DISPLAY=:99
+
+RUN echo "ghidra install complete."
 
 # create ghidra python environment
 COPY envs/ghidra.yml ./envs/ghidra.yml
@@ -257,9 +269,11 @@ SHELL ["/bin/bash", "--login", "-c"]
 
 COPY envs/ffxe.yml ./envs/ffxe.yml
 COPY envs/plot.yml ./envs/plot.yml
+COPY envs/angr.yml ./envs/angr.yml
 RUN set -eux \
 	&& mamba env create -f envs/ffxe.yml \
-	&& mamba env create -f envs/plot.yml 
+	&& mamba env create -f envs/plot.yml \
+	&& mamba env create -f envs/angr.yml 
 
 
 ##################################################
@@ -292,17 +306,17 @@ RUN set -eux \
 RUN echo "===> Clear conda cache..." \
 	&& mamba clean -t -y
 
-RUN echo "===> Clean up unnecessary files..." \
-    && apt-get purge -y --auto-remove unzip curl \
-    && apt-get clean \
-    && rm -rf \
-    	/var/lib/apt/lists/* \
-    	/var/cache/apt/archives \
-    	/tmp/* \
-    	/var/tmp/* \
-    	${GHIDRA_HOME}/docs \
-    	${GHIDRA_HOME}/Extensions/Eclipse \
-    	${GHIDRA_HOME}/licenses
+# RUN echo "===> Clean up unnecessary files..." \
+#     && apt-get purge -y --auto-remove unzip curl \
+#     && apt-get clean \
+#     && rm -rf \
+#     	# /var/lib/apt/lists/* \
+#     	#/var/cache/apt/archives \
+#     	/tmp/* \
+#     	/var/tmp/* \
+#     	${GHIDRA_HOME}/docs \
+#     	${GHIDRA_HOME}/Extensions/Eclipse \
+#     	${GHIDRA_HOME}/licenses
 
 WORKDIR /home
 

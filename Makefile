@@ -13,6 +13,10 @@ endif
 
 all: build
 
+.PHONY: install
+install:                     ## install ffxe in current pip environment
+	@pip install -e .
+
 build: start-docker          ## build docker image
 	docker build -t ffxe/workspace:dev docker
 

@@ -1,0 +1,12 @@
+name: angr
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - ipykernel
+  - pip:
+      - angr==9.2.25
+      - dill==0.3.6
+      - pyelftools==0.29
+      - pyyaml==6.0
