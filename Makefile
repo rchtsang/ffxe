@@ -5,8 +5,10 @@ CLEANUP?=false 			# cleanup flag for ssh
 OPEN=          			# command for opening application
 ifeq ($(uname), "Darwin")
 	OPEN?=open -a
+	DISPLAY=$(ipconfig getifaddr en0):0
 else ifeq ($(uname), "Linux")
 	OPEN?=xdg-open
+	DISPLAY=$$(DISPLAY)
 endif
 
 
@@ -34,26 +36,26 @@ start-docker:                ## start docker if not running
 
 .PHONY: container
 container: start-docker        ## start container if not yet running
-	@if [ ! $$(docker ps -q -f name=/workspace) ]; then \
-		docker run 								\
+	@if [ ! $$(docker ps -q -f name=/ffxe-workspace) ]; then \
+		docker run 									\
 			-t -d									\
 			--privileged							\
 			--init 									\
-			--name=workspace 						\
+			--name=ffxe-workspace 					\
 			--rm=$(CLEANUP) 						\
 			--entrypoint=bash 						\
-			-e DISPLAY=$(ipconfig getifaddr en0):0 	\
+			-e DISPLAY=$(DISPLAY)				 	\
 			-v `pwd`:$(WORKDIR) 					\
 			ffxe/workspace:dev;						\
 	fi
 
 .PHONY: ssh
 ssh: container               ## ssh into docker image
-	@docker exec -w $(WORKDIR) -it workspace /bin/bash
+	@docker exec -w $(WORKDIR) -it ffxe-workspace /bin/bash
 
 .PHONY: stop
 stop:                        ## kill running container
-	@docker rm -f workspace
+	@docker rm -f ffxe-workspace
 
 clean: stop                  ## kill running container and clean the image
 	docker rmi ffxe/workspace:dev || true

@@ -1490,6 +1490,9 @@ class FFXEngine():
 
         while self.unexplored:
             branch = self.unexplored.pop(-1)
+            # try to cut down on memory usage
+            if self.explored:
+                del self.explored[-1].context
             self.explored.append(branch)
 
             # check for timeout

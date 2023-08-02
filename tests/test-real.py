@@ -59,6 +59,8 @@ parser.add_argument('--log-stdout', dest='log_stdout', action='store_true',
     help="print log to stdout in real time")
 parser.add_argument('--timeout', type=int, default=60,
     help="timeout in seconds (counts processor time only)")
+parser.add_argument('--keep-cfgs', dest='keep_cfgs', action='store_true',
+    help="persist generated cfgs in memory")
 
 if __name__ == "__main__":
     args = parser.parse_args()
@@ -66,7 +68,9 @@ if __name__ == "__main__":
     if not args.targets:
         args.targets = sorted([relpath(path) for path in glob(f"{SAMPLES_DIR}/*/")])
 
-    generated_cfgs = {}
+    if args.keep_cfgs:
+        print("will keep generated cfgs")
+        generated_cfgs = {}
     result_table = []
 
     for target in args.targets:
@@ -129,7 +133,8 @@ if __name__ == "__main__":
                 # max() is used to get the last address in the bblock
         }
 
-        generated_cfgs[basename(fw_path)] = graph
+        if args.keep_cfgs:
+            generated_cfgs[basename(fw_path)] = graph
 
 
         if not isdir(OUT_DIR):
