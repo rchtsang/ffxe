@@ -21,6 +21,8 @@ if __name__ == "__main__":
         help="path to pickled cfg folder")
     parser.add_argument('-o', default=f"{PARENT_DIR}/tbl",
         help="output folder for tables")
+    parser.add_argument('--horizontal', action='store_true',
+        help="tabulate horizontally")
     parser.add_argument('--json-path', dest='jsonpath', default=f"{PARENT_DIR}/../tests/registered-functions.json")
 
     args = parser.parse_args()
@@ -67,36 +69,76 @@ if __name__ == "__main__":
     engs = list(sorted(engs))
     fws = list(sorted(fws))
 
-    # tabulate runtimes
-    table = []
-    table.append("\\begin{tabular}{@{}ll" + 'r' * len(engs) + "@{}}")
-    table.append("\\toprule")
+    if args.horizontal:
+        table = []
+        table.append("\\begin{tabular}{@{}l|l" + 'c' * (len(fws)) + "@{}}")
+        table.append("\\toprule")
 
-    table.append((
-        "\\multicolumn{2}{l}{\\textbf{Firmware}} & "
-        + " & ".join([eng.replace('_', '\\_') if eng != "ffxe" else "\\textbf{ffxe}" \
-            for eng in engs])
-        + " \\\\ \\midrule"
-    ))
+        # top rows
+        table.append(
+            "{:<20} & {:<2} & ".format("\\textbf{Engine}", "\\textbf{Firmware}")
+            # + " & ".join([f"\\multicolumn{{4}}{{c}}{{{fw}}}" for fw in fws])
+            + " & ".join([fw.replace('_', '\\_') for fw in fws])
+            + " \\\\"
+        )
+        # table.append(
+        #     "{:<25} & ".format('')
+        #     + " & ".join(["-O0 & -O1 & -O2 & -O3" for fw in fws])
+        #     + " \\\\ \\midrule"
+        # )
 
-    opts = ['-o0', '-o1', '-o2', '-o3']
+        opts = ['-o0', '-o1', '-o2', '-o3']
 
-    for fw in fws:
-        table.append(f"\\multirow{{4}}{{*}}{{{fw}}}".replace('_', '\\_'))
-        for opt in opts:
-            row = "    & {} & {} \\\\".format(
-                opt.upper(),
-                " & ".join(
-                    ["{:>8.04f}".format(round(runtimes[eng][fw][opt], 4)) \
-                        if eng != "ffxe" else "\\textbf{{{:>8.04f}}}".format(round(runtimes[eng][fw][opt], 4)) \
-                        for eng in engs])
-            )
-            table.append(row)
-        table[-1] = table[-1] + " \\midrule"
-    table[-1] = table[-1].replace("\\midrule", "\\bottomrule")
-    table.append("\\end{tabular}")
+        for eng in engs:
+            table.append(f"\\multirow{{4}}{{*}}{{{eng}}}".replace('_', '\\_'))
+            for opt in opts:
+                engine = eng.replace('_', '\\_')
+                table.append(
+                    "    & {} & {} \\\\".format(
+                        opt.upper(),
+                        " & ".join([
+                                "\\textbf{{{:>8.04f}}}".format(round(runtimes[eng][fw][opt], 4)) \
+                                    if eng == "ffxe" else "{:>8.04f}".format(round(runtimes[eng][fw][opt], 4)) \
+                                    for fw in fws])
+                    )
+                )
+            table[-1] = table[-1] + " \\midrule"
+        table[-1] = table[-1] + " \\bottomrule"
+        table.append("\\end{tabular}")
 
-    tabletxt = '\n'.join(table)
+        tabletxt = '\n'.join(table)
+
+    else:
+        # tabulate runtimes
+        table = []
+        table.append("\\begin{tabular}{@{}ll" + 'r' * len(engs) + "@{}}")
+        table.append("\\toprule")
+
+        table.append((
+            "\\multicolumn{2}{l}{\\textbf{Firmware}} & "
+            + " & ".join([eng.replace('_', '\\_') if eng != "ffxe" else "\\textbf{ffxe}" \
+                for eng in engs])
+            + " \\\\ \\midrule"
+        ))
+
+        opts = ['-o0', '-o1', '-o2', '-o3']
+
+        for fw in fws:
+            table.append(f"\\multirow{{4}}{{*}}{{{fw}}}".replace('_', '\\_'))
+            for opt in opts:
+                row = "    & {} & {} \\\\".format(
+                    opt.upper(),
+                    " & ".join(
+                        ["{:>8.04f}".format(round(runtimes[eng][fw][opt], 4)) \
+                            if eng != "ffxe" else "\\textbf{{{:>8.04f}}}".format(round(runtimes[eng][fw][opt], 4)) \
+                            for eng in engs])
+                )
+                table.append(row)
+            table[-1] = table[-1] + " \\midrule"
+        table[-1] = table[-1].replace("\\midrule", "\\bottomrule")
+        table.append("\\end{tabular}")
+
+        tabletxt = '\n'.join(table)
 
     with open(f"{outdir}/runtimes.tex", 'w') as texfile:
         texfile.write(tabletxt)

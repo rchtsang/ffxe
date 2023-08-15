@@ -172,7 +172,7 @@ def make_ovlp_subplot(ax, ovlp_data, getsublabels=False):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('-i', default=f"{PROJ_DIR}/tests/cfgs")
+    parser.add_argument('-i', default=f"{PROJ_DIR}/tests/cfgs/unit-tests")
     parser.add_argument('-d', default=f"{PARENT_DIR}/img")
     
     args = parser.parse_args()
@@ -183,7 +183,7 @@ if __name__ == "__main__":
     pklpaths = glob(f"{SRC_DIR}/*.pkl")
 
     graphs = {}
-    engs = []
+    engs = set()
     # load all the generated graphs
     for path in pklpaths:
         # should always match the filename
@@ -192,7 +192,7 @@ if __name__ == "__main__":
         fw  = match.group('fw')
         opt = match.group('opt')
         eng = match.group('engine')
-        engs.append(eng)
+        engs.add(eng)
 
         with open(path, 'rb') as pklfile:
             graph = dill.load(pklfile)
@@ -206,13 +206,15 @@ if __name__ == "__main__":
     if not exists(OUT_DIR):
         Path(OUT_DIR).mkdir(parents=True, exist_ok=True)
 
+    engs = ['fxe', 'angr_emu', 'angr_fast', 'angr_cnnctd', 'ghidra_simple', 'ghidra_cnnctd']
+
     fw_labels = list(sorted(graphs.keys(), reverse=True))
     fw_label_locs = np.arange(len(fw_labels))
     bar_width = 0.2
 
     fig, (nodes_ax, edges_ax) = plt.subplots(
         nrows=2, 
-        ncols=4, 
+        ncols=len(engs), 
         sharey=True,
         figsize=(24,16),
         gridspec_kw={
@@ -223,7 +225,6 @@ if __name__ == "__main__":
 
     # don't align bars with y axis
     fig.gca().use_sticky_edges = False
-    engs = ['fxe', 'angr_emu', 'angr_fast', 'ghidra']
 
     for settype, axs in zip(['nodes', 'edges'], (nodes_ax, edges_ax)):
         for eng, ax in zip(engs, axs):
@@ -233,7 +234,7 @@ if __name__ == "__main__":
             
             if settype == 'nodes':
                 ax.set_title(eng,
-                    fontsize=32)
+                    fontsize=28)
             
             # hide plot borders
             ax.spines['top'].set_visible(False)
