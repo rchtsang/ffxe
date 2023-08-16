@@ -1,0 +1,3095 @@
+blinky-o0: 20 | 44
+	(     738,        4)	
+		--------------------
+		       730:   2301          movs   r3, #1
+		       732:   e008          b.n    746 <nrf52_errata_16+0x56>
+		       734:   2300          movs   r3, #0
+		       736:   e006          b.n    746 <nrf52_errata_16+0x56>
+		->     738:   2300          movs   r3, #0
+		       73a:   e004          b.n    746 <nrf52_errata_16+0x56>
+		       73c:   2300          movs   r3, #0
+		       73e:   e002          b.n    746 <nrf52_errata_16+0x56>
+		       740:   2300          movs   r3, #0
+		--------------------
+	(     73c,        4)	
+		--------------------
+		       734:   2300          movs   r3, #0
+		       736:   e006          b.n    746 <nrf52_errata_16+0x56>
+		       738:   2300          movs   r3, #0
+		       73a:   e004          b.n    746 <nrf52_errata_16+0x56>
+		->     73c:   2300          movs   r3, #0
+		       73e:   e002          b.n    746 <nrf52_errata_16+0x56>
+		       740:   2300          movs   r3, #0
+		       742:   e000          b.n    746 <nrf52_errata_16+0x56>
+		       744:   2300          movs   r3, #0
+		--------------------
+	(     7c0,        4)	
+		--------------------
+		       7b8:   2301          movs   r3, #1
+		       7ba:   e006          b.n    7ca <nrf52_errata_31+0x6e>
+		       7bc:   2301          movs   r3, #1
+		       7be:   e004          b.n    7ca <nrf52_errata_31+0x6e>
+		->     7c0:   2301          movs   r3, #1
+		       7c2:   e002          b.n    7ca <nrf52_errata_31+0x6e>
+		       7c4:   2301          movs   r3, #1
+		       7c6:   e000          b.n    7ca <nrf52_errata_31+0x6e>
+		       7c8:   2300          movs   r3, #0
+		--------------------
+	(     82c,        4)	
+		--------------------
+		       820:   00000831  .word   0x00000831
+		       824:   00000835  .word   0x00000835
+		       828:   2301          movs   r3, #1
+		       82a:   e008          b.n    83e <nrf52_errata_32+0x56>
+		->     82c:   2300          movs   r3, #0
+		       82e:   e006          b.n    83e <nrf52_errata_32+0x56>
+		       830:   2300          movs   r3, #0
+		       832:   e004          b.n    83e <nrf52_errata_32+0x56>
+		       834:   2300          movs   r3, #0
+		--------------------
+	(     830,        4)	
+		--------------------
+		       828:   2301          movs   r3, #1
+		       82a:   e008          b.n    83e <nrf52_errata_32+0x56>
+		       82c:   2300          movs   r3, #0
+		       82e:   e006          b.n    83e <nrf52_errata_32+0x56>
+		->     830:   2300          movs   r3, #0
+		       832:   e004          b.n    83e <nrf52_errata_32+0x56>
+		       834:   2300          movs   r3, #0
+		       836:   e002          b.n    83e <nrf52_errata_32+0x56>
+		       838:   2300          movs   r3, #0
+		--------------------
+	(     834,        4)	
+		--------------------
+		       82c:   2300          movs   r3, #0
+		       82e:   e006          b.n    83e <nrf52_errata_32+0x56>
+		       830:   2300          movs   r3, #0
+		       832:   e004          b.n    83e <nrf52_errata_32+0x56>
+		->     834:   2300          movs   r3, #0
+		       836:   e002          b.n    83e <nrf52_errata_32+0x56>
+		       838:   2300          movs   r3, #0
+		       83a:   e000          b.n    83e <nrf52_errata_32+0x56>
+		       83c:   2300          movs   r3, #0
+		--------------------
+	(     8b4,        4)	
+		--------------------
+		       8ac:   2301          movs   r3, #1
+		       8ae:   e008          b.n    8c2 <nrf52_errata_36+0x6e>
+		       8b0:   2301          movs   r3, #1
+		       8b2:   e006          b.n    8c2 <nrf52_errata_36+0x6e>
+		->     8b4:   2301          movs   r3, #1
+		       8b6:   e004          b.n    8c2 <nrf52_errata_36+0x6e>
+		       8b8:   2301          movs   r3, #1
+		       8ba:   e002          b.n    8c2 <nrf52_errata_36+0x6e>
+		       8bc:   2301          movs   r3, #1
+		--------------------
+	(     920,        4)	
+		--------------------
+		       910:   00000921  .word   0x00000921
+		       914:   00000925  .word   0x00000925
+		       918:   00000929  .word   0x00000929
+		       91c:   0000092d  .word   0x0000092d
+		->     920:   2301          movs   r3, #1
+		       922:   e008          b.n    936 <nrf52_errata_37+0x56>
+		       924:   2300          movs   r3, #0
+		       926:   e006          b.n    936 <nrf52_errata_37+0x56>
+		       928:   2300          movs   r3, #0
+		--------------------
+	(     928,        4)	
+		--------------------
+		       920:   2301          movs   r3, #1
+		       922:   e008          b.n    936 <nrf52_errata_37+0x56>
+		       924:   2300          movs   r3, #0
+		       926:   e006          b.n    936 <nrf52_errata_37+0x56>
+		->     928:   2300          movs   r3, #0
+		       92a:   e004          b.n    936 <nrf52_errata_37+0x56>
+		       92c:   2300          movs   r3, #0
+		       92e:   e002          b.n    936 <nrf52_errata_37+0x56>
+		       930:   2300          movs   r3, #0
+		--------------------
+	(     98c,        4)	
+		--------------------
+		       97c:   0000098d  .word   0x0000098d
+		       980:   00000991  .word   0x00000991
+		       984:   00000995  .word   0x00000995
+		       988:   00000999  .word   0x00000999
+		->     98c:   2301          movs   r3, #1
+		       98e:   e008          b.n    9a2 <nrf52_errata_57+0x56>
+		       990:   2300          movs   r3, #0
+		       992:   e006          b.n    9a2 <nrf52_errata_57+0x56>
+		       994:   2300          movs   r3, #0
+		--------------------
+	(     994,        4)	
+		--------------------
+		       98c:   2301          movs   r3, #1
+		       98e:   e008          b.n    9a2 <nrf52_errata_57+0x56>
+		       990:   2300          movs   r3, #0
+		       992:   e006          b.n    9a2 <nrf52_errata_57+0x56>
+		->     994:   2300          movs   r3, #0
+		       996:   e004          b.n    9a2 <nrf52_errata_57+0x56>
+		       998:   2300          movs   r3, #0
+		       99a:   e002          b.n    9a2 <nrf52_errata_57+0x56>
+		       99c:   2300          movs   r3, #0
+		--------------------
+	(     a10,        4)	
+		--------------------
+		       a00:   00000a11  .word   0x00000a11
+		       a04:   00000a15  .word   0x00000a15
+		       a08:   00000a19  .word   0x00000a19
+		       a0c:   00000a1d  .word   0x00000a1d
+		->     a10:   2300          movs   r3, #0
+		       a12:   e008          b.n    a26 <nrf52_errata_66+0x6e>
+		       a14:   2300          movs   r3, #0
+		       a16:   e006          b.n    a26 <nrf52_errata_66+0x6e>
+		       a18:   2301          movs   r3, #1
+		--------------------
+	(     a14,        4)	
+		--------------------
+		       a08:   00000a19  .word   0x00000a19
+		       a0c:   00000a1d  .word   0x00000a1d
+		       a10:   2300          movs   r3, #0
+		       a12:   e008          b.n    a26 <nrf52_errata_66+0x6e>
+		->     a14:   2300          movs   r3, #0
+		       a16:   e006          b.n    a26 <nrf52_errata_66+0x6e>
+		       a18:   2301          movs   r3, #1
+		       a1a:   e004          b.n    a26 <nrf52_errata_66+0x6e>
+		       a1c:   2301          movs   r3, #1
+		--------------------
+	(     a18,        4)	
+		--------------------
+		       a10:   2300          movs   r3, #0
+		       a12:   e008          b.n    a26 <nrf52_errata_66+0x6e>
+		       a14:   2300          movs   r3, #0
+		       a16:   e006          b.n    a26 <nrf52_errata_66+0x6e>
+		->     a18:   2301          movs   r3, #1
+		       a1a:   e004          b.n    a26 <nrf52_errata_66+0x6e>
+		       a1c:   2301          movs   r3, #1
+		       a1e:   e002          b.n    a26 <nrf52_errata_66+0x6e>
+		       a20:   2301          movs   r3, #1
+		--------------------
+	(     aa0,        4)	
+		--------------------
+		       a94:   00000aa5  .word   0x00000aa5
+		       a98:   00000aa9  .word   0x00000aa9
+		       a9c:   2301          movs   r3, #1
+		       a9e:   e008          b.n    ab2 <nrf52_errata_108+0x6e>
+		->     aa0:   2301          movs   r3, #1
+		       aa2:   e006          b.n    ab2 <nrf52_errata_108+0x6e>
+		       aa4:   2301          movs   r3, #1
+		       aa6:   e004          b.n    ab2 <nrf52_errata_108+0x6e>
+		       aa8:   2301          movs   r3, #1
+		--------------------
+	(     aa4,        4)	
+		--------------------
+		       a9c:   2301          movs   r3, #1
+		       a9e:   e008          b.n    ab2 <nrf52_errata_108+0x6e>
+		       aa0:   2301          movs   r3, #1
+		       aa2:   e006          b.n    ab2 <nrf52_errata_108+0x6e>
+		->     aa4:   2301          movs   r3, #1
+		       aa6:   e004          b.n    ab2 <nrf52_errata_108+0x6e>
+		       aa8:   2301          movs   r3, #1
+		       aaa:   e002          b.n    ab2 <nrf52_errata_108+0x6e>
+		       aac:   2301          movs   r3, #1
+		--------------------
+	(     aa8,        4)	
+		--------------------
+		       aa0:   2301          movs   r3, #1
+		       aa2:   e006          b.n    ab2 <nrf52_errata_108+0x6e>
+		       aa4:   2301          movs   r3, #1
+		       aa6:   e004          b.n    ab2 <nrf52_errata_108+0x6e>
+		->     aa8:   2301          movs   r3, #1
+		       aaa:   e002          b.n    ab2 <nrf52_errata_108+0x6e>
+		       aac:   2301          movs   r3, #1
+		       aae:   e000          b.n    ab2 <nrf52_errata_108+0x6e>
+		       ab0:   2300          movs   r3, #0
+		--------------------
+	(     b28,        4)	
+		--------------------
+		       b18:   00000b29  .word   0x00000b29
+		       b1c:   00000b2d  .word   0x00000b2d
+		       b20:   00000b31  .word   0x00000b31
+		       b24:   00000b35  .word   0x00000b35
+		->     b28:   2301          movs   r3, #1
+		       b2a:   e008          b.n    b3e <nrf52_errata_136+0x6e>
+		       b2c:   2301          movs   r3, #1
+		       b2e:   e006          b.n    b3e <nrf52_errata_136+0x6e>
+		       b30:   2301          movs   r3, #1
+		--------------------
+	(     b34,        4)	
+		--------------------
+		       b2c:   2301          movs   r3, #1
+		       b2e:   e006          b.n    b3e <nrf52_errata_136+0x6e>
+		       b30:   2301          movs   r3, #1
+		       b32:   e004          b.n    b3e <nrf52_errata_136+0x6e>
+		->     b34:   2301          movs   r3, #1
+		       b36:   e002          b.n    b3e <nrf52_errata_136+0x6e>
+		       b38:   2301          movs   r3, #1
+		       b3a:   e000          b.n    b3e <nrf52_errata_136+0x6e>
+		       b3c:   2300          movs   r3, #0
+		--------------------
+	(     b9c,        4)	
+		--------------------
+		       b94:   2300          movs   r3, #0
+		       b96:   e008          b.n    baa <nrf52_errata_182+0x4e>
+		       b98:   2300          movs   r3, #0
+		       b9a:   e006          b.n    baa <nrf52_errata_182+0x4e>
+		->     b9c:   2300          movs   r3, #0
+		       b9e:   e004          b.n    baa <nrf52_errata_182+0x4e>
+		       ba0:   2301          movs   r3, #1
+		       ba2:   e002          b.n    baa <nrf52_errata_182+0x4e>
+		       ba4:   2301          movs   r3, #1
+		--------------------
+
+blinky-o1: 1 | 1
+	(     970,        4)	
+		--------------------
+		  0000096c <m_board_led_list>:
+		   96c:   1211 1413                                   ....
+		  
+		  00000970 <delay_machine_code.0>:
+		-> 970:   3803 d8fd 4770 0000                         .8..pG..
+		  
+		  00000978 <__EH_FRAME_BEGIN__>:
+		   978:   0000 0000                                   ....
+		  
+		--------------------
+
+blinky-o2: 1 | 1
+	(     990,        4)	
+		--------------------
+		  00000980 <m_board_led_list>:
+		   980:   1211 1413 0000 0000 0000 0000 0000 0000     ................
+		  
+		  00000990 <delay_machine_code.0>:
+		-> 990:   3803 d8fd 4770 0000                         .8..pG..
+		  
+		  00000998 <CSWTCH.15>:
+		   998:   0000 0101                                   ....
+		  
+		--------------------
+
+blinky-o3: 1 | 1
+	(     970,        4)	
+		--------------------
+		  0000096c <m_board_led_list>:
+		   96c:   1211 1413                                   ....
+		  
+		  00000970 <delay_machine_code.0>:
+		-> 970:   3803 d8fd 4770 0000                         .8..pG..
+		  
+		  00000978 <CSWTCH.15>:
+		   978:   0000 0101                                   ....
+		  
+		--------------------
+
+gpiote-o0: 20 | 45
+	(    1a14,        4)	
+		--------------------
+		      1a04:   00001a15  .word   0x00001a15
+		      1a08:   00001a19  .word   0x00001a19
+		      1a0c:   00001a1d  .word   0x00001a1d
+		      1a10:   00001a21  .word   0x00001a21
+		->    1a14:   2301          movs   r3, #1
+		      1a16:   e008          b.n    1a2a <nrf52_errata_12+0x6e>
+		      1a18:   2301          movs   r3, #1
+		      1a1a:   e006          b.n    1a2a <nrf52_errata_12+0x6e>
+		      1a1c:   2301          movs   r3, #1
+		--------------------
+	(    1a88,        4)	
+		--------------------
+		      1a78:   00001a89  .word   0x00001a89
+		      1a7c:   00001a8d  .word   0x00001a8d
+		      1a80:   00001a91  .word   0x00001a91
+		      1a84:   00001a95  .word   0x00001a95
+		->    1a88:   2301          movs   r3, #1
+		      1a8a:   e008          b.n    1a9e <nrf52_errata_16+0x56>
+		      1a8c:   2300          movs   r3, #0
+		      1a8e:   e006          b.n    1a9e <nrf52_errata_16+0x56>
+		      1a90:   2300          movs   r3, #0
+		--------------------
+	(    1a8c,        4)	
+		--------------------
+		      1a80:   00001a91  .word   0x00001a91
+		      1a84:   00001a95  .word   0x00001a95
+		      1a88:   2301          movs   r3, #1
+		      1a8a:   e008          b.n    1a9e <nrf52_errata_16+0x56>
+		->    1a8c:   2300          movs   r3, #0
+		      1a8e:   e006          b.n    1a9e <nrf52_errata_16+0x56>
+		      1a90:   2300          movs   r3, #0
+		      1a92:   e004          b.n    1a9e <nrf52_errata_16+0x56>
+		      1a94:   2300          movs   r3, #0
+		--------------------
+	(    1b10,        4)	
+		--------------------
+		      1b04:   00001b15  .word   0x00001b15
+		      1b08:   00001b19  .word   0x00001b19
+		      1b0c:   2301          movs   r3, #1
+		      1b0e:   e008          b.n    1b22 <nrf52_errata_31+0x6e>
+		->    1b10:   2301          movs   r3, #1
+		      1b12:   e006          b.n    1b22 <nrf52_errata_31+0x6e>
+		      1b14:   2301          movs   r3, #1
+		      1b16:   e004          b.n    1b22 <nrf52_errata_31+0x6e>
+		      1b18:   2301          movs   r3, #1
+		--------------------
+	(    1b18,        4)	
+		--------------------
+		      1b10:   2301          movs   r3, #1
+		      1b12:   e006          b.n    1b22 <nrf52_errata_31+0x6e>
+		      1b14:   2301          movs   r3, #1
+		      1b16:   e004          b.n    1b22 <nrf52_errata_31+0x6e>
+		->    1b18:   2301          movs   r3, #1
+		      1b1a:   e002          b.n    1b22 <nrf52_errata_31+0x6e>
+		      1b1c:   2301          movs   r3, #1
+		      1b1e:   e000          b.n    1b22 <nrf52_errata_31+0x6e>
+		      1b20:   2300          movs   r3, #0
+		--------------------
+	(    1c04,        4)	
+		--------------------
+		      1bf4:   00001c05  .word   0x00001c05
+		      1bf8:   00001c09  .word   0x00001c09
+		      1bfc:   00001c0d  .word   0x00001c0d
+		      1c00:   00001c11  .word   0x00001c11
+		->    1c04:   2301          movs   r3, #1
+		      1c06:   e008          b.n    1c1a <nrf52_errata_36+0x6e>
+		      1c08:   2301          movs   r3, #1
+		      1c0a:   e006          b.n    1c1a <nrf52_errata_36+0x6e>
+		      1c0c:   2301          movs   r3, #1
+		--------------------
+	(    1c08,        4)	
+		--------------------
+		      1bfc:   00001c0d  .word   0x00001c0d
+		      1c00:   00001c11  .word   0x00001c11
+		      1c04:   2301          movs   r3, #1
+		      1c06:   e008          b.n    1c1a <nrf52_errata_36+0x6e>
+		->    1c08:   2301          movs   r3, #1
+		      1c0a:   e006          b.n    1c1a <nrf52_errata_36+0x6e>
+		      1c0c:   2301          movs   r3, #1
+		      1c0e:   e004          b.n    1c1a <nrf52_errata_36+0x6e>
+		      1c10:   2301          movs   r3, #1
+		--------------------
+	(    1c78,        4)	
+		--------------------
+		      1c68:   00001c79  .word   0x00001c79
+		      1c6c:   00001c7d  .word   0x00001c7d
+		      1c70:   00001c81  .word   0x00001c81
+		      1c74:   00001c85  .word   0x00001c85
+		->    1c78:   2301          movs   r3, #1
+		      1c7a:   e008          b.n    1c8e <nrf52_errata_37+0x56>
+		      1c7c:   2300          movs   r3, #0
+		      1c7e:   e006          b.n    1c8e <nrf52_errata_37+0x56>
+		      1c80:   2300          movs   r3, #0
+		--------------------
+	(    1c80,        4)	
+		--------------------
+		      1c78:   2301          movs   r3, #1
+		      1c7a:   e008          b.n    1c8e <nrf52_errata_37+0x56>
+		      1c7c:   2300          movs   r3, #0
+		      1c7e:   e006          b.n    1c8e <nrf52_errata_37+0x56>
+		->    1c80:   2300          movs   r3, #0
+		      1c82:   e004          b.n    1c8e <nrf52_errata_37+0x56>
+		      1c84:   2300          movs   r3, #0
+		      1c86:   e002          b.n    1c8e <nrf52_errata_37+0x56>
+		      1c88:   2300          movs   r3, #0
+		--------------------
+	(    1c84,        4)	
+		--------------------
+		      1c7c:   2300          movs   r3, #0
+		      1c7e:   e006          b.n    1c8e <nrf52_errata_37+0x56>
+		      1c80:   2300          movs   r3, #0
+		      1c82:   e004          b.n    1c8e <nrf52_errata_37+0x56>
+		->    1c84:   2300          movs   r3, #0
+		      1c86:   e002          b.n    1c8e <nrf52_errata_37+0x56>
+		      1c88:   2300          movs   r3, #0
+		      1c8a:   e000          b.n    1c8e <nrf52_errata_37+0x56>
+		      1c8c:   2300          movs   r3, #0
+		--------------------
+	(    1ce4,        4)	
+		--------------------
+		      1cd4:   00001ce5  .word   0x00001ce5
+		      1cd8:   00001ce9  .word   0x00001ce9
+		      1cdc:   00001ced  .word   0x00001ced
+		      1ce0:   00001cf1  .word   0x00001cf1
+		->    1ce4:   2301          movs   r3, #1
+		      1ce6:   e008          b.n    1cfa <nrf52_errata_57+0x56>
+		      1ce8:   2300          movs   r3, #0
+		      1cea:   e006          b.n    1cfa <nrf52_errata_57+0x56>
+		      1cec:   2300          movs   r3, #0
+		--------------------
+	(    1ce8,        4)	
+		--------------------
+		      1cdc:   00001ced  .word   0x00001ced
+		      1ce0:   00001cf1  .word   0x00001cf1
+		      1ce4:   2301          movs   r3, #1
+		      1ce6:   e008          b.n    1cfa <nrf52_errata_57+0x56>
+		->    1ce8:   2300          movs   r3, #0
+		      1cea:   e006          b.n    1cfa <nrf52_errata_57+0x56>
+		      1cec:   2300          movs   r3, #0
+		      1cee:   e004          b.n    1cfa <nrf52_errata_57+0x56>
+		      1cf0:   2300          movs   r3, #0
+		--------------------
+	(    1df4,        4)	
+		--------------------
+		      1de4:   00001df5  .word   0x00001df5
+		      1de8:   00001df9  .word   0x00001df9
+		      1dec:   00001dfd  .word   0x00001dfd
+		      1df0:   00001e01  .word   0x00001e01
+		->    1df4:   2301          movs   r3, #1
+		      1df6:   e008          b.n    1e0a <nrf52_errata_108+0x6e>
+		      1df8:   2301          movs   r3, #1
+		      1dfa:   e006          b.n    1e0a <nrf52_errata_108+0x6e>
+		      1dfc:   2301          movs   r3, #1
+		--------------------
+	(    1e80,        4)	
+		--------------------
+		      1e70:   00001e81  .word   0x00001e81
+		      1e74:   00001e85  .word   0x00001e85
+		      1e78:   00001e89  .word   0x00001e89
+		      1e7c:   00001e8d  .word   0x00001e8d
+		->    1e80:   2301          movs   r3, #1
+		      1e82:   e008          b.n    1e96 <nrf52_errata_136+0x6e>
+		      1e84:   2301          movs   r3, #1
+		      1e86:   e006          b.n    1e96 <nrf52_errata_136+0x6e>
+		      1e88:   2301          movs   r3, #1
+		--------------------
+	(    1e84,        4)	
+		--------------------
+		      1e78:   00001e89  .word   0x00001e89
+		      1e7c:   00001e8d  .word   0x00001e8d
+		      1e80:   2301          movs   r3, #1
+		      1e82:   e008          b.n    1e96 <nrf52_errata_136+0x6e>
+		->    1e84:   2301          movs   r3, #1
+		      1e86:   e006          b.n    1e96 <nrf52_errata_136+0x6e>
+		      1e88:   2301          movs   r3, #1
+		      1e8a:   e004          b.n    1e96 <nrf52_errata_136+0x6e>
+		      1e8c:   2301          movs   r3, #1
+		--------------------
+	(    1e88,        4)	
+		--------------------
+		      1e80:   2301          movs   r3, #1
+		      1e82:   e008          b.n    1e96 <nrf52_errata_136+0x6e>
+		      1e84:   2301          movs   r3, #1
+		      1e86:   e006          b.n    1e96 <nrf52_errata_136+0x6e>
+		->    1e88:   2301          movs   r3, #1
+		      1e8a:   e004          b.n    1e96 <nrf52_errata_136+0x6e>
+		      1e8c:   2301          movs   r3, #1
+		      1e8e:   e002          b.n    1e96 <nrf52_errata_136+0x6e>
+		      1e90:   2301          movs   r3, #1
+		--------------------
+	(    1e8c,        4)	
+		--------------------
+		      1e84:   2301          movs   r3, #1
+		      1e86:   e006          b.n    1e96 <nrf52_errata_136+0x6e>
+		      1e88:   2301          movs   r3, #1
+		      1e8a:   e004          b.n    1e96 <nrf52_errata_136+0x6e>
+		->    1e8c:   2301          movs   r3, #1
+		      1e8e:   e002          b.n    1e96 <nrf52_errata_136+0x6e>
+		      1e90:   2301          movs   r3, #1
+		      1e92:   e000          b.n    1e96 <nrf52_errata_136+0x6e>
+		      1e94:   2300          movs   r3, #0
+		--------------------
+	(    1eec,        4)	
+		--------------------
+		      1edc:   00001eed  .word   0x00001eed
+		      1ee0:   00001ef1  .word   0x00001ef1
+		      1ee4:   00001ef5  .word   0x00001ef5
+		      1ee8:   00001ef9  .word   0x00001ef9
+		->    1eec:   2300          movs   r3, #0
+		      1eee:   e008          b.n    1f02 <nrf52_errata_182+0x4e>
+		      1ef0:   2300          movs   r3, #0
+		      1ef2:   e006          b.n    1f02 <nrf52_errata_182+0x4e>
+		      1ef4:   2300          movs   r3, #0
+		--------------------
+	(    1ef0,        4)	
+		--------------------
+		      1ee4:   00001ef5  .word   0x00001ef5
+		      1ee8:   00001ef9  .word   0x00001ef9
+		      1eec:   2300          movs   r3, #0
+		      1eee:   e008          b.n    1f02 <nrf52_errata_182+0x4e>
+		->    1ef0:   2300          movs   r3, #0
+		      1ef2:   e006          b.n    1f02 <nrf52_errata_182+0x4e>
+		      1ef4:   2300          movs   r3, #0
+		      1ef6:   e004          b.n    1f02 <nrf52_errata_182+0x4e>
+		      1ef8:   2301          movs   r3, #1
+		--------------------
+	(    1ef4,        4)	
+		--------------------
+		      1eec:   2300          movs   r3, #0
+		      1eee:   e008          b.n    1f02 <nrf52_errata_182+0x4e>
+		      1ef0:   2300          movs   r3, #0
+		      1ef2:   e006          b.n    1f02 <nrf52_errata_182+0x4e>
+		->    1ef4:   2300          movs   r3, #0
+		      1ef6:   e004          b.n    1f02 <nrf52_errata_182+0x4e>
+		      1ef8:   2301          movs   r3, #1
+		      1efa:   e002          b.n    1f02 <nrf52_errata_182+0x4e>
+		      1efc:   2301          movs   r3, #1
+		--------------------
+
+gpiote-o1: 1 | 1
+	(     fd8,       12)	
+		--------------------
+		       fd4:   e7fe          b.n    fd4 <_exit>
+		       fd6:   bf00          nop
+		  
+		  00000fd8 <_init>:
+		->     fd8:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		       fda:   bf00          nop
+		       fdc:   bcf8          pop    {r3, r4, r5, r6, r7}
+		       fde:   bc08          pop    {r3}
+		       fe0:   469e          mov    lr, r3
+		--------------------
+
+gpiote-o2: 2 | 2
+	(     952,       10)	
+		--------------------
+		       94c:   2000008c  .word   0x2000008c
+		  
+		  00000950 <timer_dummy_handler>:
+		       950:   4770          bx lr
+		->     952:   bf00          nop
+		  
+		  00000954 <main>:
+		       954:   b510          push   {r4, lr}
+		       956:   b088          sub    sp, #32
+		--------------------
+	(     fe8,       12)	
+		--------------------
+		       fe4:   e7fe          b.n    fe4 <_exit>
+		       fe6:   bf00          nop
+		  
+		  00000fe8 <_init>:
+		->     fe8:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		       fea:   bf00          nop
+		       fec:   bcf8          pop    {r3, r4, r5, r6, r7}
+		       fee:   bc08          pop    {r3}
+		       ff0:   469e          mov    lr, r3
+		--------------------
+
+gpiote-o3: 2 | 2
+	(     aca,       10)	
+		--------------------
+		       ac4:   20000090  .word   0x20000090
+		  
+		  00000ac8 <timer_dummy_handler>:
+		       ac8:   4770          bx lr
+		->     aca:   bf00          nop
+		  
+		  00000acc <main>:
+		       acc:   b510          push   {r4, lr}
+		       ace:   b088          sub    sp, #32
+		--------------------
+	(    1150,       12)	
+		--------------------
+		      114c:   e7fe          b.n    114c <_exit>
+		      114e:   bf00          nop
+		  
+		  00001150 <_init>:
+		->    1150:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		      1152:   bf00          nop
+		      1154:   bcf8          pop    {r3, r4, r5, r6, r7}
+		      1156:   bc08          pop    {r3}
+		      1158:   469e          mov    lr, r3
+		--------------------
+
+i2s-o0: 20 | 144
+	(    31d2,       38)	
+		--------------------
+		      31c8:   71fb          strb   r3, [r7, #7]
+		      31ca:   f997 3007     ldrsb.w    r3, [r7, #7]
+		      31ce:   2b00          cmp    r3, #0
+		      31d0:   db12          blt.n  31f8 <__NVIC_DisableIRQ+0x38>
+		->    31d2:   79fb          ldrb   r3, [r7, #7]
+		      31d4:   f003 021f     and.w  r2, r3, #31
+		      31d8:   490a          ldr    r1, [pc, #40]  ; (3204 <__NVIC_DisableIRQ+0x44>)
+		      31da:   f997 3007     ldrsb.w    r3, [r7, #7]
+		      31de:   095b          lsrs   r3, r3, #5
+		--------------------
+	(    31f8,       12)	
+		--------------------
+		      31ec:   f3bf 8f4f     dsb    sy
+		      31f0:   bf00          nop
+		      31f2:   f3bf 8f6f     isb    sy
+		      31f6:   bf00          nop
+		->    31f8:   bf00          nop
+		      31fa:   370c          adds   r7, #12
+		      31fc:   46bd          mov    sp, r7
+		      31fe:   f85d 7b04     ldr.w  r7, [sp], #4
+		      3202:   4770          bx lr
+		--------------------
+	(    32b8,       20)	
+		--------------------
+		      32b4:   46bd          mov    sp, r7
+		      32b6:   bd80          pop    {r7, pc}
+		  
+		  000032b8 <_NRFX_IRQ_DISABLE>:
+		->    32b8:   b580          push   {r7, lr}
+		      32ba:   b082          sub    sp, #8
+		      32bc:   af00          add    r7, sp, #0
+		      32be:   4603          mov    r3, r0
+		      32c0:   71fb          strb   r3, [r7, #7]
+		--------------------
+	(    3450,       26)	
+		--------------------
+		      344a:   f85d 7b04     ldr.w  r7, [sp], #4
+		      344e:   4770          bx lr
+		  
+		  00003450 <nrf_uart_rx_pin_get>:
+		->    3450:   b480          push   {r7}
+		      3452:   b083          sub    sp, #12
+		      3454:   af00          add    r7, sp, #0
+		      3456:   6078          str    r0, [r7, #4]
+		      3458:   687b          ldr    r3, [r7, #4]
+		--------------------
+	(    3660,        8)	
+		--------------------
+		      3656:   2201          movs   r2, #1
+		      3658:   2100          movs   r1, #0
+		      365a:   6878          ldr    r0, [r7, #4]
+		      365c:   f7ff ffa2     bl 35a4 <nrf_gpio_cfg>
+		->    3660:   bf00          nop
+		      3662:   3708          adds   r7, #8
+		      3664:   46bd          mov    sp, r7
+		      3666:   bd80          pop    {r7, pc}
+		  
+		--------------------
+	(    3802,        8)	
+		--------------------
+		      37f8:   687b          ldr    r3, [r7, #4]
+		      37fa:   681b          ldr    r3, [r3, #0]
+		      37fc:   4618          mov    r0, r3
+		      37fe:   f7ff fd2d     bl 325c <nrfx_get_irq_number>
+		->    3802:   4603          mov    r3, r0
+		      3804:   4618          mov    r0, r3
+		      3806:   f7ff fd57     bl 32b8 <_NRFX_IRQ_DISABLE>
+		      380a:   bf00          nop
+		      380c:   3708          adds   r7, #8
+		--------------------
+	(    382a,       12)	
+		--------------------
+		      3820:   687b          ldr    r3, [r7, #4]
+		      3822:   681b          ldr    r3, [r3, #0]
+		      3824:   4618          mov    r0, r3
+		      3826:   f7ff fe06     bl 3436 <nrf_uart_tx_pin_get>
+		->    382a:   6178          str    r0, [r7, #20]
+		      382c:   687b          ldr    r3, [r7, #4]
+		      382e:   681b          ldr    r3, [r3, #0]
+		      3830:   4618          mov    r0, r3
+		      3832:   f7ff fe0d     bl 3450 <nrf_uart_rx_pin_get>
+		--------------------
+	(    3888,        6)	
+		--------------------
+		      387c:   f7ff fee2     bl 3644 <nrf_gpio_cfg_default>
+		      3880:   68bb          ldr    r3, [r7, #8]
+		      3882:   f1b3 3fff     cmp.w  r3, #4294967295  ; 0xffffffff
+		      3886:   d002          beq.n  388e <pins_to_default+0x76>
+		->    3888:   68b8          ldr    r0, [r7, #8]
+		      388a:   f7ff fedb     bl 3644 <nrf_gpio_cfg_default>
+		      388e:   68fb          ldr    r3, [r7, #12]
+		      3890:   f1b3 3fff     cmp.w  r3, #4294967295  ; 0xffffffff
+		      3894:   d002          beq.n  389c <pins_to_default+0x84>
+		--------------------
+	(    389c,        8)	
+		--------------------
+		      3890:   f1b3 3fff     cmp.w  r3, #4294967295  ; 0xffffffff
+		      3894:   d002          beq.n  389c <pins_to_default+0x84>
+		      3896:   68f8          ldr    r0, [r7, #12]
+		      3898:   f7ff fed4     bl 3644 <nrf_gpio_cfg_default>
+		->    389c:   bf00          nop
+		      389e:   3718          adds   r7, #24
+		      38a0:   46bd          mov    sp, r7
+		      38a2:   bd80          pop    {r7, pc}
+		  
+		--------------------
+	(    39a0,       10)	
+		--------------------
+		      3994:   6878          ldr    r0, [r7, #4]
+		      3996:   f7ff ff25     bl 37e4 <interrupts_disable>
+		      399a:   6878          ldr    r0, [r7, #4]
+		      399c:   f7ff ff3c     bl 3818 <pins_to_default>
+		->    39a0:   687b          ldr    r3, [r7, #4]
+		      39a2:   681b          ldr    r3, [r3, #0]
+		      39a4:   4618          mov    r0, r3
+		      39a6:   f7ff fbd8     bl 315a <nrfx_prs_release>
+		      39aa:   68fb          ldr    r3, [r7, #12]
+		--------------------
+	(    39aa,       22)	
+		--------------------
+		      39a0:   687b          ldr    r3, [r7, #4]
+		      39a2:   681b          ldr    r3, [r3, #0]
+		      39a4:   4618          mov    r0, r3
+		      39a6:   f7ff fbd8     bl 315a <nrfx_prs_release>
+		->    39aa:   68fb          ldr    r3, [r7, #12]
+		      39ac:   2200          movs   r2, #0
+		      39ae:   f883 202a     strb.w r2, [r3, #42]   ; 0x2a
+		      39b2:   68fb          ldr    r3, [r7, #12]
+		      39b4:   2200          movs   r2, #0
+		--------------------
+	(    408c,       28)	
+		--------------------
+		      4086:   f85d 7b04     ldr.w  r7, [sp], #4
+		      408a:   4770          bx lr
+		  
+		  0000408c <nrf_uarte_disable>:
+		->    408c:   b480          push   {r7}
+		      408e:   b083          sub    sp, #12
+		      4090:   af00          add    r7, sp, #0
+		      4092:   6078          str    r0, [r7, #4]
+		      4094:   687b          ldr    r3, [r7, #4]
+		--------------------
+	(    40d0,       22)	
+		--------------------
+		      40ca:   f85d 7b04     ldr.w  r7, [sp], #4
+		      40ce:   4770          bx lr
+		  
+		  000040d0 <nrf_uarte_txrx_pins_disconnect>:
+		->    40d0:   b580          push   {r7, lr}
+		      40d2:   b082          sub    sp, #8
+		      40d4:   af00          add    r7, sp, #0
+		      40d6:   6078          str    r0, [r7, #4]
+		      40d8:   f04f 32ff     mov.w  r2, #4294967295  ; 0xffffffff
+		--------------------
+	(    417e,       22)	
+		--------------------
+		      4178:   f85d 7b04     ldr.w  r7, [sp], #4
+		      417c:   4770          bx lr
+		  
+		  0000417e <nrf_uarte_hwfc_pins_disconnect>:
+		->    417e:   b580          push   {r7, lr}
+		      4180:   b082          sub    sp, #8
+		      4182:   af00          add    r7, sp, #0
+		      4184:   6078          str    r0, [r7, #4]
+		      4186:   f04f 32ff     mov.w  r2, #4294967295  ; 0xffffffff
+		--------------------
+	(    4194,        8)	
+		--------------------
+		      4186:   f04f 32ff     mov.w  r2, #4294967295  ; 0xffffffff
+		      418a:   f04f 31ff     mov.w  r1, #4294967295  ; 0xffffffff
+		      418e:   6878          ldr    r0, [r7, #4]
+		      4190:   f7ff ffe1     bl 4156 <nrf_uarte_hwfc_pins_set>
+		->    4194:   bf00          nop
+		      4196:   3708          adds   r7, #8
+		      4198:   46bd          mov    sp, r7
+		      419a:   bd80          pop    {r7, pc}
+		  
+		--------------------
+	(    454e,       12)	
+		--------------------
+		      4544:   687b          ldr    r3, [r7, #4]
+		      4546:   681b          ldr    r3, [r3, #0]
+		      4548:   4618          mov    r0, r3
+		      454a:   f7ff fdf7     bl 413c <nrf_uarte_cts_pin_get>
+		->    454e:   60b8          str    r0, [r7, #8]
+		      4550:   687b          ldr    r3, [r7, #4]
+		      4552:   681b          ldr    r3, [r3, #0]
+		      4554:   4618          mov    r0, r3
+		      4556:   f7ff fdbb     bl 40d0 <nrf_uarte_txrx_pins_disconnect>
+		--------------------
+	(    4596,        6)	
+		--------------------
+		      458a:   f7ff fec7     bl 431c <nrf_gpio_cfg_default>
+		      458e:   68fb          ldr    r3, [r7, #12]
+		      4590:   f1b3 3fff     cmp.w  r3, #4294967295  ; 0xffffffff
+		      4594:   d002          beq.n  459c <pins_to_default+0x84>
+		->    4596:   68f8          ldr    r0, [r7, #12]
+		      4598:   f7ff fec0     bl 431c <nrf_gpio_cfg_default>
+		      459c:   bf00          nop
+		      459e:   3718          adds   r7, #24
+		      45a0:   46bd          mov    sp, r7
+		--------------------
+	(    4690,        8)	
+		--------------------
+		      4686:   2b00          cmp    r3, #0
+		      4688:   d002          beq.n  4690 <nrfx_uarte_uninit+0x30>
+		      468a:   6878          ldr    r0, [r7, #4]
+		      468c:   f7ff ff2a     bl 44e4 <interrupts_disable>
+		->    4690:   2120          movs   r1, #32
+		      4692:   68b8          ldr    r0, [r7, #8]
+		      4694:   f7ff fca7     bl 3fe6 <nrf_uarte_shorts_disable>
+		      4698:   68fb          ldr    r3, [r7, #12]
+		      469a:   699b          ldr    r3, [r3, #24]
+		--------------------
+	(    51a4,        4)	
+		--------------------
+		      5194:   000051a5  .word   0x000051a5
+		      5198:   000051a9  .word   0x000051a9
+		      519c:   000051ad  .word   0x000051ad
+		      51a0:   000051b1  .word   0x000051b1
+		->    51a4:   2301          movs   r3, #1
+		      51a6:   e008          b.n    51ba <nrf52_errata_36+0x6e>
+		      51a8:   2301          movs   r3, #1
+		      51aa:   e006          b.n    51ba <nrf52_errata_36+0x6e>
+		      51ac:   2301          movs   r3, #1
+		--------------------
+	(    542c,        4)	
+		--------------------
+		      5424:   2301          movs   r3, #1
+		      5426:   e006          b.n    5436 <nrf52_errata_136+0x6e>
+		      5428:   2301          movs   r3, #1
+		      542a:   e004          b.n    5436 <nrf52_errata_136+0x6e>
+		->    542c:   2301          movs   r3, #1
+		      542e:   e002          b.n    5436 <nrf52_errata_136+0x6e>
+		      5430:   2301          movs   r3, #1
+		      5432:   e000          b.n    5436 <nrf52_errata_136+0x6e>
+		      5434:   2300          movs   r3, #0
+		--------------------
+
+i2s-o1: 0 | 0
+
+i2s-o2: 2 | 2
+	(    1e0e,        8)	
+		--------------------
+		  00001e08 <nrfx_prs_release>:
+		      1e08:   4b03          ldr    r3, [pc, #12]  ; (1e18 <nrfx_prs_release+0x10>)
+		      1e0a:   4298          cmp    r0, r3
+		      1e0c:   d103          bne.n  1e16 <nrfx_prs_release+0xe>
+		->    1e0e:   4b03          ldr    r3, [pc, #12]  ; (1e1c <nrfx_prs_release+0x14>)
+		      1e10:   2200          movs   r2, #0
+		      1e12:   601a          str    r2, [r3, #0]
+		      1e14:   711a          strb   r2, [r3, #4]
+		      1e16:   4770          bx lr
+		--------------------
+	(    1e16,        2)	
+		--------------------
+		      1e0e:   4b03          ldr    r3, [pc, #12]  ; (1e1c <nrfx_prs_release+0x14>)
+		      1e10:   2200          movs   r2, #0
+		      1e12:   601a          str    r2, [r3, #0]
+		      1e14:   711a          strb   r2, [r3, #4]
+		->    1e16:   4770          bx lr
+		      1e18:   40002000  .word   0x40002000
+		      1e1c:   20000660  .word   0x20000660
+		  
+		  00001e20 <nrfx_uart_0_irq_handler>:
+		--------------------
+
+i2s-o3: 2 | 2
+	(    1eea,        8)	
+		--------------------
+		  00001ee4 <nrfx_prs_release>:
+		      1ee4:   4b03          ldr    r3, [pc, #12]  ; (1ef4 <nrfx_prs_release+0x10>)
+		      1ee6:   4298          cmp    r0, r3
+		      1ee8:   d103          bne.n  1ef2 <nrfx_prs_release+0xe>
+		->    1eea:   4b03          ldr    r3, [pc, #12]  ; (1ef8 <nrfx_prs_release+0x14>)
+		      1eec:   2200          movs   r2, #0
+		      1eee:   601a          str    r2, [r3, #0]
+		      1ef0:   711a          strb   r2, [r3, #4]
+		      1ef2:   4770          bx lr
+		--------------------
+	(    1ef2,        2)	
+		--------------------
+		      1eea:   4b03          ldr    r3, [pc, #12]  ; (1ef8 <nrfx_prs_release+0x14>)
+		      1eec:   2200          movs   r2, #0
+		      1eee:   601a          str    r2, [r3, #0]
+		      1ef0:   711a          strb   r2, [r3, #4]
+		->    1ef2:   4770          bx lr
+		      1ef4:   40002000  .word   0x40002000
+		      1ef8:   20000664  .word   0x20000664
+		      1efc:   00000000  .word   0x00000000
+		  
+		--------------------
+
+saadc-o0: 20 | 50
+	(    169e,       40)	
+		--------------------
+		      1698:   f85d 7b04     ldr.w  r7, [sp], #4
+		      169c:   4770          bx lr
+		  
+		  0000169e <nrf_balloc_block2idx>:
+		->    169e:   b480          push   {r7}
+		      16a0:   b083          sub    sp, #12
+		      16a2:   af00          add    r7, sp, #0
+		      16a4:   6078          str    r0, [r7, #4]
+		      16a6:   6039          str    r1, [r7, #0]
+		--------------------
+	(    17b8,        8)	
+		--------------------
+		      17ae:   4603          mov    r3, r0
+		      17b0:   7023          strb   r3, [r4, #0]
+		      17b2:   2000          movs   r0, #0
+		      17b4:   f7ff febe     bl 1534 <app_util_critical_region_exit>
+		->    17b8:   bf00          nop
+		      17ba:   3714          adds   r7, #20
+		      17bc:   46bd          mov    sp, r7
+		      17be:   bd90          pop    {r4, r7, pc}
+		  
+		--------------------
+	(    3af4,        4)	
+		--------------------
+		      3ae4:   00003af5  .word   0x00003af5
+		      3ae8:   00003af9  .word   0x00003af9
+		      3aec:   00003afd  .word   0x00003afd
+		      3af0:   00003b01  .word   0x00003b01
+		->    3af4:   2301          movs   r3, #1
+		      3af6:   e008          b.n    3b0a <nrf52_errata_12+0x6e>
+		      3af8:   2301          movs   r3, #1
+		      3afa:   e006          b.n    3b0a <nrf52_errata_12+0x6e>
+		      3afc:   2301          movs   r3, #1
+		--------------------
+	(    3b00,        4)	
+		--------------------
+		      3af8:   2301          movs   r3, #1
+		      3afa:   e006          b.n    3b0a <nrf52_errata_12+0x6e>
+		      3afc:   2301          movs   r3, #1
+		      3afe:   e004          b.n    3b0a <nrf52_errata_12+0x6e>
+		->    3b00:   2301          movs   r3, #1
+		      3b02:   e002          b.n    3b0a <nrf52_errata_12+0x6e>
+		      3b04:   2301          movs   r3, #1
+		      3b06:   e000          b.n    3b0a <nrf52_errata_12+0x6e>
+		      3b08:   2300          movs   r3, #0
+		--------------------
+	(    3b70,        4)	
+		--------------------
+		      3b68:   2301          movs   r3, #1
+		      3b6a:   e008          b.n    3b7e <nrf52_errata_16+0x56>
+		      3b6c:   2300          movs   r3, #0
+		      3b6e:   e006          b.n    3b7e <nrf52_errata_16+0x56>
+		->    3b70:   2300          movs   r3, #0
+		      3b72:   e004          b.n    3b7e <nrf52_errata_16+0x56>
+		      3b74:   2300          movs   r3, #0
+		      3b76:   e002          b.n    3b7e <nrf52_errata_16+0x56>
+		      3b78:   2300          movs   r3, #0
+		--------------------
+	(    3bf0,        4)	
+		--------------------
+		      3be4:   00003bf5  .word   0x00003bf5
+		      3be8:   00003bf9  .word   0x00003bf9
+		      3bec:   2301          movs   r3, #1
+		      3bee:   e008          b.n    3c02 <nrf52_errata_31+0x6e>
+		->    3bf0:   2301          movs   r3, #1
+		      3bf2:   e006          b.n    3c02 <nrf52_errata_31+0x6e>
+		      3bf4:   2301          movs   r3, #1
+		      3bf6:   e004          b.n    3c02 <nrf52_errata_31+0x6e>
+		      3bf8:   2301          movs   r3, #1
+		--------------------
+	(    3bf4,        4)	
+		--------------------
+		      3bec:   2301          movs   r3, #1
+		      3bee:   e008          b.n    3c02 <nrf52_errata_31+0x6e>
+		      3bf0:   2301          movs   r3, #1
+		      3bf2:   e006          b.n    3c02 <nrf52_errata_31+0x6e>
+		->    3bf4:   2301          movs   r3, #1
+		      3bf6:   e004          b.n    3c02 <nrf52_errata_31+0x6e>
+		      3bf8:   2301          movs   r3, #1
+		      3bfa:   e002          b.n    3c02 <nrf52_errata_31+0x6e>
+		      3bfc:   2301          movs   r3, #1
+		--------------------
+	(    3c64,        4)	
+		--------------------
+		      3c58:   00003c69  .word   0x00003c69
+		      3c5c:   00003c6d  .word   0x00003c6d
+		      3c60:   2301          movs   r3, #1
+		      3c62:   e008          b.n    3c76 <nrf52_errata_32+0x56>
+		->    3c64:   2300          movs   r3, #0
+		      3c66:   e006          b.n    3c76 <nrf52_errata_32+0x56>
+		      3c68:   2300          movs   r3, #0
+		      3c6a:   e004          b.n    3c76 <nrf52_errata_32+0x56>
+		      3c6c:   2300          movs   r3, #0
+		--------------------
+	(    3c68,        4)	
+		--------------------
+		      3c60:   2301          movs   r3, #1
+		      3c62:   e008          b.n    3c76 <nrf52_errata_32+0x56>
+		      3c64:   2300          movs   r3, #0
+		      3c66:   e006          b.n    3c76 <nrf52_errata_32+0x56>
+		->    3c68:   2300          movs   r3, #0
+		      3c6a:   e004          b.n    3c76 <nrf52_errata_32+0x56>
+		      3c6c:   2300          movs   r3, #0
+		      3c6e:   e002          b.n    3c76 <nrf52_errata_32+0x56>
+		      3c70:   2300          movs   r3, #0
+		--------------------
+	(    3cec,        4)	
+		--------------------
+		      3ce4:   2301          movs   r3, #1
+		      3ce6:   e008          b.n    3cfa <nrf52_errata_36+0x6e>
+		      3ce8:   2301          movs   r3, #1
+		      3cea:   e006          b.n    3cfa <nrf52_errata_36+0x6e>
+		->    3cec:   2301          movs   r3, #1
+		      3cee:   e004          b.n    3cfa <nrf52_errata_36+0x6e>
+		      3cf0:   2301          movs   r3, #1
+		      3cf2:   e002          b.n    3cfa <nrf52_errata_36+0x6e>
+		      3cf4:   2301          movs   r3, #1
+		--------------------
+	(    3cf0,        4)	
+		--------------------
+		      3ce8:   2301          movs   r3, #1
+		      3cea:   e006          b.n    3cfa <nrf52_errata_36+0x6e>
+		      3cec:   2301          movs   r3, #1
+		      3cee:   e004          b.n    3cfa <nrf52_errata_36+0x6e>
+		->    3cf0:   2301          movs   r3, #1
+		      3cf2:   e002          b.n    3cfa <nrf52_errata_36+0x6e>
+		      3cf4:   2301          movs   r3, #1
+		      3cf6:   e000          b.n    3cfa <nrf52_errata_36+0x6e>
+		      3cf8:   2300          movs   r3, #0
+		--------------------
+	(    3d60,        4)	
+		--------------------
+		      3d58:   2301          movs   r3, #1
+		      3d5a:   e008          b.n    3d6e <nrf52_errata_37+0x56>
+		      3d5c:   2300          movs   r3, #0
+		      3d5e:   e006          b.n    3d6e <nrf52_errata_37+0x56>
+		->    3d60:   2300          movs   r3, #0
+		      3d62:   e004          b.n    3d6e <nrf52_errata_37+0x56>
+		      3d64:   2300          movs   r3, #0
+		      3d66:   e002          b.n    3d6e <nrf52_errata_37+0x56>
+		      3d68:   2300          movs   r3, #0
+		--------------------
+	(    3d64,        4)	
+		--------------------
+		      3d5c:   2300          movs   r3, #0
+		      3d5e:   e006          b.n    3d6e <nrf52_errata_37+0x56>
+		      3d60:   2300          movs   r3, #0
+		      3d62:   e004          b.n    3d6e <nrf52_errata_37+0x56>
+		->    3d64:   2300          movs   r3, #0
+		      3d66:   e002          b.n    3d6e <nrf52_errata_37+0x56>
+		      3d68:   2300          movs   r3, #0
+		      3d6a:   e000          b.n    3d6e <nrf52_errata_37+0x56>
+		      3d6c:   2300          movs   r3, #0
+		--------------------
+	(    3dc4,        4)	
+		--------------------
+		      3db4:   00003dc5  .word   0x00003dc5
+		      3db8:   00003dc9  .word   0x00003dc9
+		      3dbc:   00003dcd  .word   0x00003dcd
+		      3dc0:   00003dd1  .word   0x00003dd1
+		->    3dc4:   2301          movs   r3, #1
+		      3dc6:   e008          b.n    3dda <nrf52_errata_57+0x56>
+		      3dc8:   2300          movs   r3, #0
+		      3dca:   e006          b.n    3dda <nrf52_errata_57+0x56>
+		      3dcc:   2300          movs   r3, #0
+		--------------------
+	(    3dd0,        4)	
+		--------------------
+		      3dc8:   2300          movs   r3, #0
+		      3dca:   e006          b.n    3dda <nrf52_errata_57+0x56>
+		      3dcc:   2300          movs   r3, #0
+		      3dce:   e004          b.n    3dda <nrf52_errata_57+0x56>
+		->    3dd0:   2300          movs   r3, #0
+		      3dd2:   e002          b.n    3dda <nrf52_errata_57+0x56>
+		      3dd4:   2300          movs   r3, #0
+		      3dd6:   e000          b.n    3dda <nrf52_errata_57+0x56>
+		      3dd8:   2300          movs   r3, #0
+		--------------------
+	(    3e48,        4)	
+		--------------------
+		      3e38:   00003e49  .word   0x00003e49
+		      3e3c:   00003e4d  .word   0x00003e4d
+		      3e40:   00003e51  .word   0x00003e51
+		      3e44:   00003e55  .word   0x00003e55
+		->    3e48:   2300          movs   r3, #0
+		      3e4a:   e008          b.n    3e5e <nrf52_errata_66+0x6e>
+		      3e4c:   2300          movs   r3, #0
+		      3e4e:   e006          b.n    3e5e <nrf52_errata_66+0x6e>
+		      3e50:   2301          movs   r3, #1
+		--------------------
+	(    3e4c,        4)	
+		--------------------
+		      3e40:   00003e51  .word   0x00003e51
+		      3e44:   00003e55  .word   0x00003e55
+		      3e48:   2300          movs   r3, #0
+		      3e4a:   e008          b.n    3e5e <nrf52_errata_66+0x6e>
+		->    3e4c:   2300          movs   r3, #0
+		      3e4e:   e006          b.n    3e5e <nrf52_errata_66+0x6e>
+		      3e50:   2301          movs   r3, #1
+		      3e52:   e004          b.n    3e5e <nrf52_errata_66+0x6e>
+		      3e54:   2301          movs   r3, #1
+		--------------------
+	(    3ed4,        4)	
+		--------------------
+		      3ec4:   00003ed5  .word   0x00003ed5
+		      3ec8:   00003ed9  .word   0x00003ed9
+		      3ecc:   00003edd  .word   0x00003edd
+		      3ed0:   00003ee1  .word   0x00003ee1
+		->    3ed4:   2301          movs   r3, #1
+		      3ed6:   e008          b.n    3eea <nrf52_errata_108+0x6e>
+		      3ed8:   2301          movs   r3, #1
+		      3eda:   e006          b.n    3eea <nrf52_errata_108+0x6e>
+		      3edc:   2301          movs   r3, #1
+		--------------------
+	(    3ed8,        4)	
+		--------------------
+		      3ecc:   00003edd  .word   0x00003edd
+		      3ed0:   00003ee1  .word   0x00003ee1
+		      3ed4:   2301          movs   r3, #1
+		      3ed6:   e008          b.n    3eea <nrf52_errata_108+0x6e>
+		->    3ed8:   2301          movs   r3, #1
+		      3eda:   e006          b.n    3eea <nrf52_errata_108+0x6e>
+		      3edc:   2301          movs   r3, #1
+		      3ede:   e004          b.n    3eea <nrf52_errata_108+0x6e>
+		      3ee0:   2301          movs   r3, #1
+		--------------------
+	(    3edc,        4)	
+		--------------------
+		      3ed4:   2301          movs   r3, #1
+		      3ed6:   e008          b.n    3eea <nrf52_errata_108+0x6e>
+		      3ed8:   2301          movs   r3, #1
+		      3eda:   e006          b.n    3eea <nrf52_errata_108+0x6e>
+		->    3edc:   2301          movs   r3, #1
+		      3ede:   e004          b.n    3eea <nrf52_errata_108+0x6e>
+		      3ee0:   2301          movs   r3, #1
+		      3ee2:   e002          b.n    3eea <nrf52_errata_108+0x6e>
+		      3ee4:   2301          movs   r3, #1
+		--------------------
+
+saadc-o1: 0 | 0
+
+saadc-o2: 2 | 2
+	(    1e26,        8)	
+		--------------------
+		      1e20:   20000654  .word   0x20000654
+		  
+		  00001e24 <timer_handler>:
+		      1e24:   4770          bx lr
+		->    1e26:   bf00          nop
+		  
+		  00001e28 <saadc_callback>:
+		      1e28:   7803          ldrb   r3, [r0, #0]
+		      1e2a:   b103          cbz    r3, 1e2e <saadc_callback+0x6>
+		--------------------
+	(    27c8,       12)	
+		--------------------
+		      27c4:   e7fe          b.n    27c4 <_exit>
+		      27c6:   bf00          nop
+		  
+		  000027c8 <_init>:
+		->    27c8:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		      27ca:   bf00          nop
+		      27cc:   bcf8          pop    {r3, r4, r5, r6, r7}
+		      27ce:   bc08          pop    {r3}
+		      27d0:   469e          mov    lr, r3
+		--------------------
+
+saadc-o3: 1 | 1
+	(    1eae,        8)	
+		--------------------
+		      1ea8:   20000654  .word   0x20000654
+		  
+		  00001eac <timer_handler>:
+		      1eac:   4770          bx lr
+		->    1eae:   bf00          nop
+		  
+		  00001eb0 <saadc_callback>:
+		      1eb0:   7803          ldrb   r3, [r0, #0]
+		      1eb2:   b103          cbz    r3, 1eb6 <saadc_callback+0x6>
+		--------------------
+
+simple_timer-o0: 20 | 44
+	(    159c,        4)	
+		--------------------
+		      1590:   000015a1  .word   0x000015a1
+		      1594:   000015a5  .word   0x000015a5
+		      1598:   2301          movs   r3, #1
+		      159a:   e008          b.n    15ae <nrf52_errata_12+0x6e>
+		->    159c:   2301          movs   r3, #1
+		      159e:   e006          b.n    15ae <nrf52_errata_12+0x6e>
+		      15a0:   2301          movs   r3, #1
+		      15a2:   e004          b.n    15ae <nrf52_errata_12+0x6e>
+		      15a4:   2301          movs   r3, #1
+		--------------------
+	(    15a4,        4)	
+		--------------------
+		      159c:   2301          movs   r3, #1
+		      159e:   e006          b.n    15ae <nrf52_errata_12+0x6e>
+		      15a0:   2301          movs   r3, #1
+		      15a2:   e004          b.n    15ae <nrf52_errata_12+0x6e>
+		->    15a4:   2301          movs   r3, #1
+		      15a6:   e002          b.n    15ae <nrf52_errata_12+0x6e>
+		      15a8:   2301          movs   r3, #1
+		      15aa:   e000          b.n    15ae <nrf52_errata_12+0x6e>
+		      15ac:   2300          movs   r3, #0
+		--------------------
+	(    1618,        4)	
+		--------------------
+		      1610:   2300          movs   r3, #0
+		      1612:   e006          b.n    1622 <nrf52_errata_16+0x56>
+		      1614:   2300          movs   r3, #0
+		      1616:   e004          b.n    1622 <nrf52_errata_16+0x56>
+		->    1618:   2300          movs   r3, #0
+		      161a:   e002          b.n    1622 <nrf52_errata_16+0x56>
+		      161c:   2300          movs   r3, #0
+		      161e:   e000          b.n    1622 <nrf52_errata_16+0x56>
+		      1620:   2300          movs   r3, #0
+		--------------------
+	(    1694,        4)	
+		--------------------
+		      1688:   00001699  .word   0x00001699
+		      168c:   0000169d  .word   0x0000169d
+		      1690:   2301          movs   r3, #1
+		      1692:   e008          b.n    16a6 <nrf52_errata_31+0x6e>
+		->    1694:   2301          movs   r3, #1
+		      1696:   e006          b.n    16a6 <nrf52_errata_31+0x6e>
+		      1698:   2301          movs   r3, #1
+		      169a:   e004          b.n    16a6 <nrf52_errata_31+0x6e>
+		      169c:   2301          movs   r3, #1
+		--------------------
+	(    169c,        4)	
+		--------------------
+		      1694:   2301          movs   r3, #1
+		      1696:   e006          b.n    16a6 <nrf52_errata_31+0x6e>
+		      1698:   2301          movs   r3, #1
+		      169a:   e004          b.n    16a6 <nrf52_errata_31+0x6e>
+		->    169c:   2301          movs   r3, #1
+		      169e:   e002          b.n    16a6 <nrf52_errata_31+0x6e>
+		      16a0:   2301          movs   r3, #1
+		      16a2:   e000          b.n    16a6 <nrf52_errata_31+0x6e>
+		      16a4:   2300          movs   r3, #0
+		--------------------
+	(    170c,        4)	
+		--------------------
+		      1704:   2301          movs   r3, #1
+		      1706:   e008          b.n    171a <nrf52_errata_32+0x56>
+		      1708:   2300          movs   r3, #0
+		      170a:   e006          b.n    171a <nrf52_errata_32+0x56>
+		->    170c:   2300          movs   r3, #0
+		      170e:   e004          b.n    171a <nrf52_errata_32+0x56>
+		      1710:   2300          movs   r3, #0
+		      1712:   e002          b.n    171a <nrf52_errata_32+0x56>
+		      1714:   2300          movs   r3, #0
+		--------------------
+	(    178c,        4)	
+		--------------------
+		      1780:   00001791  .word   0x00001791
+		      1784:   00001795  .word   0x00001795
+		      1788:   2301          movs   r3, #1
+		      178a:   e008          b.n    179e <nrf52_errata_36+0x6e>
+		->    178c:   2301          movs   r3, #1
+		      178e:   e006          b.n    179e <nrf52_errata_36+0x6e>
+		      1790:   2301          movs   r3, #1
+		      1792:   e004          b.n    179e <nrf52_errata_36+0x6e>
+		      1794:   2301          movs   r3, #1
+		--------------------
+	(    1790,        4)	
+		--------------------
+		      1788:   2301          movs   r3, #1
+		      178a:   e008          b.n    179e <nrf52_errata_36+0x6e>
+		      178c:   2301          movs   r3, #1
+		      178e:   e006          b.n    179e <nrf52_errata_36+0x6e>
+		->    1790:   2301          movs   r3, #1
+		      1792:   e004          b.n    179e <nrf52_errata_36+0x6e>
+		      1794:   2301          movs   r3, #1
+		      1796:   e002          b.n    179e <nrf52_errata_36+0x6e>
+		      1798:   2301          movs   r3, #1
+		--------------------
+	(    1794,        4)	
+		--------------------
+		      178c:   2301          movs   r3, #1
+		      178e:   e006          b.n    179e <nrf52_errata_36+0x6e>
+		      1790:   2301          movs   r3, #1
+		      1792:   e004          b.n    179e <nrf52_errata_36+0x6e>
+		->    1794:   2301          movs   r3, #1
+		      1796:   e002          b.n    179e <nrf52_errata_36+0x6e>
+		      1798:   2301          movs   r3, #1
+		      179a:   e000          b.n    179e <nrf52_errata_36+0x6e>
+		      179c:   2300          movs   r3, #0
+		--------------------
+	(    17fc,        4)	
+		--------------------
+		      17ec:   000017fd  .word   0x000017fd
+		      17f0:   00001801  .word   0x00001801
+		      17f4:   00001805  .word   0x00001805
+		      17f8:   00001809  .word   0x00001809
+		->    17fc:   2301          movs   r3, #1
+		      17fe:   e008          b.n    1812 <nrf52_errata_37+0x56>
+		      1800:   2300          movs   r3, #0
+		      1802:   e006          b.n    1812 <nrf52_errata_37+0x56>
+		      1804:   2300          movs   r3, #0
+		--------------------
+	(    186c,        4)	
+		--------------------
+		      1860:   00001871  .word   0x00001871
+		      1864:   00001875  .word   0x00001875
+		      1868:   2301          movs   r3, #1
+		      186a:   e008          b.n    187e <nrf52_errata_57+0x56>
+		->    186c:   2300          movs   r3, #0
+		      186e:   e006          b.n    187e <nrf52_errata_57+0x56>
+		      1870:   2300          movs   r3, #0
+		      1872:   e004          b.n    187e <nrf52_errata_57+0x56>
+		      1874:   2300          movs   r3, #0
+		--------------------
+	(    1870,        4)	
+		--------------------
+		      1868:   2301          movs   r3, #1
+		      186a:   e008          b.n    187e <nrf52_errata_57+0x56>
+		      186c:   2300          movs   r3, #0
+		      186e:   e006          b.n    187e <nrf52_errata_57+0x56>
+		->    1870:   2300          movs   r3, #0
+		      1872:   e004          b.n    187e <nrf52_errata_57+0x56>
+		      1874:   2300          movs   r3, #0
+		      1876:   e002          b.n    187e <nrf52_errata_57+0x56>
+		      1878:   2300          movs   r3, #0
+		--------------------
+	(    1874,        4)	
+		--------------------
+		      186c:   2300          movs   r3, #0
+		      186e:   e006          b.n    187e <nrf52_errata_57+0x56>
+		      1870:   2300          movs   r3, #0
+		      1872:   e004          b.n    187e <nrf52_errata_57+0x56>
+		->    1874:   2300          movs   r3, #0
+		      1876:   e002          b.n    187e <nrf52_errata_57+0x56>
+		      1878:   2300          movs   r3, #0
+		      187a:   e000          b.n    187e <nrf52_errata_57+0x56>
+		      187c:   2300          movs   r3, #0
+		--------------------
+	(    18f0,        4)	
+		--------------------
+		      18e4:   000018f5  .word   0x000018f5
+		      18e8:   000018f9  .word   0x000018f9
+		      18ec:   2300          movs   r3, #0
+		      18ee:   e008          b.n    1902 <nrf52_errata_66+0x6e>
+		->    18f0:   2300          movs   r3, #0
+		      18f2:   e006          b.n    1902 <nrf52_errata_66+0x6e>
+		      18f4:   2301          movs   r3, #1
+		      18f6:   e004          b.n    1902 <nrf52_errata_66+0x6e>
+		      18f8:   2301          movs   r3, #1
+		--------------------
+	(    18f4,        4)	
+		--------------------
+		      18ec:   2300          movs   r3, #0
+		      18ee:   e008          b.n    1902 <nrf52_errata_66+0x6e>
+		      18f0:   2300          movs   r3, #0
+		      18f2:   e006          b.n    1902 <nrf52_errata_66+0x6e>
+		->    18f4:   2301          movs   r3, #1
+		      18f6:   e004          b.n    1902 <nrf52_errata_66+0x6e>
+		      18f8:   2301          movs   r3, #1
+		      18fa:   e002          b.n    1902 <nrf52_errata_66+0x6e>
+		      18fc:   2301          movs   r3, #1
+		--------------------
+	(    197c,        4)	
+		--------------------
+		      1970:   00001981  .word   0x00001981
+		      1974:   00001985  .word   0x00001985
+		      1978:   2301          movs   r3, #1
+		      197a:   e008          b.n    198e <nrf52_errata_108+0x6e>
+		->    197c:   2301          movs   r3, #1
+		      197e:   e006          b.n    198e <nrf52_errata_108+0x6e>
+		      1980:   2301          movs   r3, #1
+		      1982:   e004          b.n    198e <nrf52_errata_108+0x6e>
+		      1984:   2301          movs   r3, #1
+		--------------------
+	(    1a0c,        4)	
+		--------------------
+		      1a04:   2301          movs   r3, #1
+		      1a06:   e008          b.n    1a1a <nrf52_errata_136+0x6e>
+		      1a08:   2301          movs   r3, #1
+		      1a0a:   e006          b.n    1a1a <nrf52_errata_136+0x6e>
+		->    1a0c:   2301          movs   r3, #1
+		      1a0e:   e004          b.n    1a1a <nrf52_errata_136+0x6e>
+		      1a10:   2301          movs   r3, #1
+		      1a12:   e002          b.n    1a1a <nrf52_errata_136+0x6e>
+		      1a14:   2301          movs   r3, #1
+		--------------------
+	(    1a70,        4)	
+		--------------------
+		      1a60:   00001a71  .word   0x00001a71
+		      1a64:   00001a75  .word   0x00001a75
+		      1a68:   00001a79  .word   0x00001a79
+		      1a6c:   00001a7d  .word   0x00001a7d
+		->    1a70:   2300          movs   r3, #0
+		      1a72:   e008          b.n    1a86 <nrf52_errata_182+0x4e>
+		      1a74:   2300          movs   r3, #0
+		      1a76:   e006          b.n    1a86 <nrf52_errata_182+0x4e>
+		      1a78:   2300          movs   r3, #0
+		--------------------
+	(    1a74,        4)	
+		--------------------
+		      1a68:   00001a79  .word   0x00001a79
+		      1a6c:   00001a7d  .word   0x00001a7d
+		      1a70:   2300          movs   r3, #0
+		      1a72:   e008          b.n    1a86 <nrf52_errata_182+0x4e>
+		->    1a74:   2300          movs   r3, #0
+		      1a76:   e006          b.n    1a86 <nrf52_errata_182+0x4e>
+		      1a78:   2300          movs   r3, #0
+		      1a7a:   e004          b.n    1a86 <nrf52_errata_182+0x4e>
+		      1a7c:   2301          movs   r3, #1
+		--------------------
+	(    1a78,        4)	
+		--------------------
+		      1a70:   2300          movs   r3, #0
+		      1a72:   e008          b.n    1a86 <nrf52_errata_182+0x4e>
+		      1a74:   2300          movs   r3, #0
+		      1a76:   e006          b.n    1a86 <nrf52_errata_182+0x4e>
+		->    1a78:   2300          movs   r3, #0
+		      1a7a:   e004          b.n    1a86 <nrf52_errata_182+0x4e>
+		      1a7c:   2301          movs   r3, #1
+		      1a7e:   e002          b.n    1a86 <nrf52_errata_182+0x4e>
+		      1a80:   2301          movs   r3, #1
+		--------------------
+
+simple_timer-o1: 1 | 1
+	(    1000,        4)	
+		--------------------
+		  00000ff4 <SIMPLE_TIMER>:
+		       ff4:   9000 4000 0400 0000 0000 0000               ...@........
+		  
+		  00001000 <delay_machine_code.0>:
+		->    1000:   3803 d8fd 4770 0000                         .8..pG..
+		  
+		  00001008 <__EH_FRAME_BEGIN__>:
+		      1008:   0000 0000                                   ....
+		  
+		--------------------
+
+simple_timer-o2: 0 | 0
+
+simple_timer-o3: 0 | 0
+
+spi-o0: 20 | 47
+	(    1b7c,       40)	
+		--------------------
+		      1b76:   f85d 7b04     ldr.w  r7, [sp], #4
+		      1b7a:   4770          bx lr
+		  
+		  00001b7c <nrf_balloc_block2idx>:
+		->    1b7c:   b480          push   {r7}
+		      1b7e:   b083          sub    sp, #12
+		      1b80:   af00          add    r7, sp, #0
+		      1b82:   6078          str    r0, [r7, #4]
+		      1b84:   6039          str    r1, [r7, #0]
+		--------------------
+	(    1c96,        8)	
+		--------------------
+		      1c8c:   4603          mov    r3, r0
+		      1c8e:   7023          strb   r3, [r4, #0]
+		      1c90:   2000          movs   r0, #0
+		      1c92:   f7ff feaf     bl 19f4 <app_util_critical_region_exit>
+		->    1c96:   bf00          nop
+		      1c98:   3714          adds   r7, #20
+		      1c9a:   46bd          mov    sp, r7
+		      1c9c:   bd90          pop    {r4, r7, pc}
+		  
+		--------------------
+	(    53e4,        4)	
+		--------------------
+		      53dc:   2301          movs   r3, #1
+		      53de:   e008          b.n    53f2 <nrf52_errata_12+0x6e>
+		      53e0:   2301          movs   r3, #1
+		      53e2:   e006          b.n    53f2 <nrf52_errata_12+0x6e>
+		->    53e4:   2301          movs   r3, #1
+		      53e6:   e004          b.n    53f2 <nrf52_errata_12+0x6e>
+		      53e8:   2301          movs   r3, #1
+		      53ea:   e002          b.n    53f2 <nrf52_errata_12+0x6e>
+		      53ec:   2301          movs   r3, #1
+		--------------------
+	(    5450,        4)	
+		--------------------
+		      5440:   00005451  .word   0x00005451
+		      5444:   00005455  .word   0x00005455
+		      5448:   00005459  .word   0x00005459
+		      544c:   0000545d  .word   0x0000545d
+		->    5450:   2301          movs   r3, #1
+		      5452:   e008          b.n    5466 <nrf52_errata_16+0x56>
+		      5454:   2300          movs   r3, #0
+		      5456:   e006          b.n    5466 <nrf52_errata_16+0x56>
+		      5458:   2300          movs   r3, #0
+		--------------------
+	(    5454,        4)	
+		--------------------
+		      5448:   00005459  .word   0x00005459
+		      544c:   0000545d  .word   0x0000545d
+		      5450:   2301          movs   r3, #1
+		      5452:   e008          b.n    5466 <nrf52_errata_16+0x56>
+		->    5454:   2300          movs   r3, #0
+		      5456:   e006          b.n    5466 <nrf52_errata_16+0x56>
+		      5458:   2300          movs   r3, #0
+		      545a:   e004          b.n    5466 <nrf52_errata_16+0x56>
+		      545c:   2300          movs   r3, #0
+		--------------------
+	(    54d4,        4)	
+		--------------------
+		      54c4:   000054d5  .word   0x000054d5
+		      54c8:   000054d9  .word   0x000054d9
+		      54cc:   000054dd  .word   0x000054dd
+		      54d0:   000054e1  .word   0x000054e1
+		->    54d4:   2301          movs   r3, #1
+		      54d6:   e008          b.n    54ea <nrf52_errata_31+0x6e>
+		      54d8:   2301          movs   r3, #1
+		      54da:   e006          b.n    54ea <nrf52_errata_31+0x6e>
+		      54dc:   2301          movs   r3, #1
+		--------------------
+	(    54dc,        4)	
+		--------------------
+		      54d4:   2301          movs   r3, #1
+		      54d6:   e008          b.n    54ea <nrf52_errata_31+0x6e>
+		      54d8:   2301          movs   r3, #1
+		      54da:   e006          b.n    54ea <nrf52_errata_31+0x6e>
+		->    54dc:   2301          movs   r3, #1
+		      54de:   e004          b.n    54ea <nrf52_errata_31+0x6e>
+		      54e0:   2301          movs   r3, #1
+		      54e2:   e002          b.n    54ea <nrf52_errata_31+0x6e>
+		      54e4:   2301          movs   r3, #1
+		--------------------
+	(    54e0,        4)	
+		--------------------
+		      54d8:   2301          movs   r3, #1
+		      54da:   e006          b.n    54ea <nrf52_errata_31+0x6e>
+		      54dc:   2301          movs   r3, #1
+		      54de:   e004          b.n    54ea <nrf52_errata_31+0x6e>
+		->    54e0:   2301          movs   r3, #1
+		      54e2:   e002          b.n    54ea <nrf52_errata_31+0x6e>
+		      54e4:   2301          movs   r3, #1
+		      54e6:   e000          b.n    54ea <nrf52_errata_31+0x6e>
+		      54e8:   2300          movs   r3, #0
+		--------------------
+	(    5550,        4)	
+		--------------------
+		      5548:   2301          movs   r3, #1
+		      554a:   e008          b.n    555e <nrf52_errata_32+0x56>
+		      554c:   2300          movs   r3, #0
+		      554e:   e006          b.n    555e <nrf52_errata_32+0x56>
+		->    5550:   2300          movs   r3, #0
+		      5552:   e004          b.n    555e <nrf52_errata_32+0x56>
+		      5554:   2300          movs   r3, #0
+		      5556:   e002          b.n    555e <nrf52_errata_32+0x56>
+		      5558:   2300          movs   r3, #0
+		--------------------
+	(    5554,        4)	
+		--------------------
+		      554c:   2300          movs   r3, #0
+		      554e:   e006          b.n    555e <nrf52_errata_32+0x56>
+		      5550:   2300          movs   r3, #0
+		      5552:   e004          b.n    555e <nrf52_errata_32+0x56>
+		->    5554:   2300          movs   r3, #0
+		      5556:   e002          b.n    555e <nrf52_errata_32+0x56>
+		      5558:   2300          movs   r3, #0
+		      555a:   e000          b.n    555e <nrf52_errata_32+0x56>
+		      555c:   2300          movs   r3, #0
+		--------------------
+	(    55d0,        4)	
+		--------------------
+		      55c4:   000055d5  .word   0x000055d5
+		      55c8:   000055d9  .word   0x000055d9
+		      55cc:   2301          movs   r3, #1
+		      55ce:   e008          b.n    55e2 <nrf52_errata_36+0x6e>
+		->    55d0:   2301          movs   r3, #1
+		      55d2:   e006          b.n    55e2 <nrf52_errata_36+0x6e>
+		      55d4:   2301          movs   r3, #1
+		      55d6:   e004          b.n    55e2 <nrf52_errata_36+0x6e>
+		      55d8:   2301          movs   r3, #1
+		--------------------
+	(    55d4,        4)	
+		--------------------
+		      55cc:   2301          movs   r3, #1
+		      55ce:   e008          b.n    55e2 <nrf52_errata_36+0x6e>
+		      55d0:   2301          movs   r3, #1
+		      55d2:   e006          b.n    55e2 <nrf52_errata_36+0x6e>
+		->    55d4:   2301          movs   r3, #1
+		      55d6:   e004          b.n    55e2 <nrf52_errata_36+0x6e>
+		      55d8:   2301          movs   r3, #1
+		      55da:   e002          b.n    55e2 <nrf52_errata_36+0x6e>
+		      55dc:   2301          movs   r3, #1
+		--------------------
+	(    55d8,        4)	
+		--------------------
+		      55d0:   2301          movs   r3, #1
+		      55d2:   e006          b.n    55e2 <nrf52_errata_36+0x6e>
+		      55d4:   2301          movs   r3, #1
+		      55d6:   e004          b.n    55e2 <nrf52_errata_36+0x6e>
+		->    55d8:   2301          movs   r3, #1
+		      55da:   e002          b.n    55e2 <nrf52_errata_36+0x6e>
+		      55dc:   2301          movs   r3, #1
+		      55de:   e000          b.n    55e2 <nrf52_errata_36+0x6e>
+		      55e0:   2300          movs   r3, #0
+		--------------------
+	(    5648,        4)	
+		--------------------
+		      5640:   2301          movs   r3, #1
+		      5642:   e008          b.n    5656 <nrf52_errata_37+0x56>
+		      5644:   2300          movs   r3, #0
+		      5646:   e006          b.n    5656 <nrf52_errata_37+0x56>
+		->    5648:   2300          movs   r3, #0
+		      564a:   e004          b.n    5656 <nrf52_errata_37+0x56>
+		      564c:   2300          movs   r3, #0
+		      564e:   e002          b.n    5656 <nrf52_errata_37+0x56>
+		      5650:   2300          movs   r3, #0
+		--------------------
+	(    56b0,        4)	
+		--------------------
+		      56a4:   000056b5  .word   0x000056b5
+		      56a8:   000056b9  .word   0x000056b9
+		      56ac:   2301          movs   r3, #1
+		      56ae:   e008          b.n    56c2 <nrf52_errata_57+0x56>
+		->    56b0:   2300          movs   r3, #0
+		      56b2:   e006          b.n    56c2 <nrf52_errata_57+0x56>
+		      56b4:   2300          movs   r3, #0
+		      56b6:   e004          b.n    56c2 <nrf52_errata_57+0x56>
+		      56b8:   2300          movs   r3, #0
+		--------------------
+	(    5730,        4)	
+		--------------------
+		      5720:   00005731  .word   0x00005731
+		      5724:   00005735  .word   0x00005735
+		      5728:   00005739  .word   0x00005739
+		      572c:   0000573d  .word   0x0000573d
+		->    5730:   2300          movs   r3, #0
+		      5732:   e008          b.n    5746 <nrf52_errata_66+0x6e>
+		      5734:   2300          movs   r3, #0
+		      5736:   e006          b.n    5746 <nrf52_errata_66+0x6e>
+		      5738:   2301          movs   r3, #1
+		--------------------
+	(    57bc,        4)	
+		--------------------
+		      57ac:   000057bd  .word   0x000057bd
+		      57b0:   000057c1  .word   0x000057c1
+		      57b4:   000057c5  .word   0x000057c5
+		      57b8:   000057c9  .word   0x000057c9
+		->    57bc:   2301          movs   r3, #1
+		      57be:   e008          b.n    57d2 <nrf52_errata_108+0x6e>
+		      57c0:   2301          movs   r3, #1
+		      57c2:   e006          b.n    57d2 <nrf52_errata_108+0x6e>
+		      57c4:   2301          movs   r3, #1
+		--------------------
+	(    57c0,        4)	
+		--------------------
+		      57b4:   000057c5  .word   0x000057c5
+		      57b8:   000057c9  .word   0x000057c9
+		      57bc:   2301          movs   r3, #1
+		      57be:   e008          b.n    57d2 <nrf52_errata_108+0x6e>
+		->    57c0:   2301          movs   r3, #1
+		      57c2:   e006          b.n    57d2 <nrf52_errata_108+0x6e>
+		      57c4:   2301          movs   r3, #1
+		      57c6:   e004          b.n    57d2 <nrf52_errata_108+0x6e>
+		      57c8:   2301          movs   r3, #1
+		--------------------
+	(    57c8,        4)	
+		--------------------
+		      57c0:   2301          movs   r3, #1
+		      57c2:   e006          b.n    57d2 <nrf52_errata_108+0x6e>
+		      57c4:   2301          movs   r3, #1
+		      57c6:   e004          b.n    57d2 <nrf52_errata_108+0x6e>
+		->    57c8:   2301          movs   r3, #1
+		      57ca:   e002          b.n    57d2 <nrf52_errata_108+0x6e>
+		      57cc:   2301          movs   r3, #1
+		      57ce:   e000          b.n    57d2 <nrf52_errata_108+0x6e>
+		      57d0:   2300          movs   r3, #0
+		--------------------
+	(    58b8,        4)	
+		--------------------
+		      58ac:   000058bd  .word   0x000058bd
+		      58b0:   000058c1  .word   0x000058c1
+		      58b4:   2300          movs   r3, #0
+		      58b6:   e008          b.n    58ca <nrf52_errata_182+0x4e>
+		->    58b8:   2300          movs   r3, #0
+		      58ba:   e006          b.n    58ca <nrf52_errata_182+0x4e>
+		      58bc:   2300          movs   r3, #0
+		      58be:   e004          b.n    58ca <nrf52_errata_182+0x4e>
+		      58c0:   2301          movs   r3, #1
+		--------------------
+
+spi-o1: 0 | 0
+
+spi-o2: 3 | 3
+	(     f12,        4)	
+		--------------------
+		       f06:   e843 0c00     strex  ip, r0, [r3]
+		       f0a:   f09c 0f00     teq    ip, #0
+		       f0e:   d1f6          bne.n  efe <nrf_atomic_u32_add+0x2>
+		       f10:   4770          bx lr
+		->     f12:   bf00          nop
+		  
+		  00000f14 <nrf_atomic_u32_sub>:
+		       f14:   4603          mov    r3, r0
+		       f16:   e853 2f00     ldrex  r2, [r3]
+		--------------------
+	(     f2a,        6)	
+		--------------------
+		       f1e:   e843 0c00     strex  ip, r0, [r3]
+		       f22:   f09c 0f00     teq    ip, #0
+		       f26:   d1f6          bne.n  f16 <nrf_atomic_u32_sub+0x2>
+		       f28:   4770          bx lr
+		->     f2a:   bf00          nop
+		  
+		  00000f2c <nrf_atomic_flag_set>:
+		       f2c:   4603          mov    r3, r0
+		       f2e:   2201          movs   r2, #1
+		--------------------
+	(    1046,       28)	
+		--------------------
+		      103c:   b002          add    sp, #8
+		      103e:   f85d eb04     ldr.w  lr, [sp], #4
+		      1042:   b003          add    sp, #12
+		      1044:   4770          bx lr
+		->    1046:   bf00          nop
+		  
+		  00001048 <unsigned_print>:
+		      1048:   e92d 4ff0     stmdb  sp!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
+		      104c:   4616          mov    r6, r2
+		--------------------
+
+spi-o3: 3 | 3
+	(     efe,        4)	
+		--------------------
+		       ef2:   e843 0c00     strex  ip, r0, [r3]
+		       ef6:   f09c 0f00     teq    ip, #0
+		       efa:   d1f6          bne.n  eea <nrf_atomic_u32_add+0x2>
+		       efc:   4770          bx lr
+		->     efe:   bf00          nop
+		  
+		  00000f00 <nrf_atomic_u32_sub>:
+		       f00:   4603          mov    r3, r0
+		       f02:   e853 2f00     ldrex  r2, [r3]
+		--------------------
+	(     f16,        6)	
+		--------------------
+		       f0a:   e843 0c00     strex  ip, r0, [r3]
+		       f0e:   f09c 0f00     teq    ip, #0
+		       f12:   d1f6          bne.n  f02 <nrf_atomic_u32_sub+0x2>
+		       f14:   4770          bx lr
+		->     f16:   bf00          nop
+		  
+		  00000f18 <nrf_atomic_flag_set>:
+		       f18:   4603          mov    r3, r0
+		       f1a:   2201          movs   r2, #1
+		--------------------
+	(    1032,       28)	
+		--------------------
+		      1028:   b002          add    sp, #8
+		      102a:   f85d eb04     ldr.w  lr, [sp], #4
+		      102e:   b003          add    sp, #12
+		      1030:   4770          bx lr
+		->    1032:   bf00          nop
+		  
+		  00001034 <unsigned_print>:
+		      1034:   e92d 4ff0     stmdb  sp!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
+		      1038:   4615          mov    r5, r2
+		--------------------
+
+timer-o0: 20 | 45
+	(     dd0,        4)	
+		--------------------
+		       dc0:   00000dd1  .word   0x00000dd1
+		       dc4:   00000dd5  .word   0x00000dd5
+		       dc8:   00000dd9  .word   0x00000dd9
+		       dcc:   00000ddd  .word   0x00000ddd
+		->     dd0:   2301          movs   r3, #1
+		       dd2:   e008          b.n    de6 <nrf52_errata_12+0x6e>
+		       dd4:   2301          movs   r3, #1
+		       dd6:   e006          b.n    de6 <nrf52_errata_12+0x6e>
+		       dd8:   2301          movs   r3, #1
+		--------------------
+	(     e44,        4)	
+		--------------------
+		       e34:   00000e45  .word   0x00000e45
+		       e38:   00000e49  .word   0x00000e49
+		       e3c:   00000e4d  .word   0x00000e4d
+		       e40:   00000e51  .word   0x00000e51
+		->     e44:   2301          movs   r3, #1
+		       e46:   e008          b.n    e5a <nrf52_errata_16+0x56>
+		       e48:   2300          movs   r3, #0
+		       e4a:   e006          b.n    e5a <nrf52_errata_16+0x56>
+		       e4c:   2300          movs   r3, #0
+		--------------------
+	(     e48,        4)	
+		--------------------
+		       e3c:   00000e4d  .word   0x00000e4d
+		       e40:   00000e51  .word   0x00000e51
+		       e44:   2301          movs   r3, #1
+		       e46:   e008          b.n    e5a <nrf52_errata_16+0x56>
+		->     e48:   2300          movs   r3, #0
+		       e4a:   e006          b.n    e5a <nrf52_errata_16+0x56>
+		       e4c:   2300          movs   r3, #0
+		       e4e:   e004          b.n    e5a <nrf52_errata_16+0x56>
+		       e50:   2300          movs   r3, #0
+		--------------------
+	(     ec8,        4)	
+		--------------------
+		       eb8:   00000ec9  .word   0x00000ec9
+		       ebc:   00000ecd  .word   0x00000ecd
+		       ec0:   00000ed1  .word   0x00000ed1
+		       ec4:   00000ed5  .word   0x00000ed5
+		->     ec8:   2301          movs   r3, #1
+		       eca:   e008          b.n    ede <nrf52_errata_31+0x6e>
+		       ecc:   2301          movs   r3, #1
+		       ece:   e006          b.n    ede <nrf52_errata_31+0x6e>
+		       ed0:   2301          movs   r3, #1
+		--------------------
+	(     ecc,        4)	
+		--------------------
+		       ec0:   00000ed1  .word   0x00000ed1
+		       ec4:   00000ed5  .word   0x00000ed5
+		       ec8:   2301          movs   r3, #1
+		       eca:   e008          b.n    ede <nrf52_errata_31+0x6e>
+		->     ecc:   2301          movs   r3, #1
+		       ece:   e006          b.n    ede <nrf52_errata_31+0x6e>
+		       ed0:   2301          movs   r3, #1
+		       ed2:   e004          b.n    ede <nrf52_errata_31+0x6e>
+		       ed4:   2301          movs   r3, #1
+		--------------------
+	(     ed4,        4)	
+		--------------------
+		       ecc:   2301          movs   r3, #1
+		       ece:   e006          b.n    ede <nrf52_errata_31+0x6e>
+		       ed0:   2301          movs   r3, #1
+		       ed2:   e004          b.n    ede <nrf52_errata_31+0x6e>
+		->     ed4:   2301          movs   r3, #1
+		       ed6:   e002          b.n    ede <nrf52_errata_31+0x6e>
+		       ed8:   2301          movs   r3, #1
+		       eda:   e000          b.n    ede <nrf52_errata_31+0x6e>
+		       edc:   2300          movs   r3, #0
+		--------------------
+	(     f3c,        4)	
+		--------------------
+		       f2c:   00000f3d  .word   0x00000f3d
+		       f30:   00000f41  .word   0x00000f41
+		       f34:   00000f45  .word   0x00000f45
+		       f38:   00000f49  .word   0x00000f49
+		->     f3c:   2301          movs   r3, #1
+		       f3e:   e008          b.n    f52 <nrf52_errata_32+0x56>
+		       f40:   2300          movs   r3, #0
+		       f42:   e006          b.n    f52 <nrf52_errata_32+0x56>
+		       f44:   2300          movs   r3, #0
+		--------------------
+	(     f40,        4)	
+		--------------------
+		       f34:   00000f45  .word   0x00000f45
+		       f38:   00000f49  .word   0x00000f49
+		       f3c:   2301          movs   r3, #1
+		       f3e:   e008          b.n    f52 <nrf52_errata_32+0x56>
+		->     f40:   2300          movs   r3, #0
+		       f42:   e006          b.n    f52 <nrf52_errata_32+0x56>
+		       f44:   2300          movs   r3, #0
+		       f46:   e004          b.n    f52 <nrf52_errata_32+0x56>
+		       f48:   2300          movs   r3, #0
+		--------------------
+	(     f48,        4)	
+		--------------------
+		       f40:   2300          movs   r3, #0
+		       f42:   e006          b.n    f52 <nrf52_errata_32+0x56>
+		       f44:   2300          movs   r3, #0
+		       f46:   e004          b.n    f52 <nrf52_errata_32+0x56>
+		->     f48:   2300          movs   r3, #0
+		       f4a:   e002          b.n    f52 <nrf52_errata_32+0x56>
+		       f4c:   2300          movs   r3, #0
+		       f4e:   e000          b.n    f52 <nrf52_errata_32+0x56>
+		       f50:   2300          movs   r3, #0
+		--------------------
+	(     fcc,        4)	
+		--------------------
+		       fc4:   2301          movs   r3, #1
+		       fc6:   e006          b.n    fd6 <nrf52_errata_36+0x6e>
+		       fc8:   2301          movs   r3, #1
+		       fca:   e004          b.n    fd6 <nrf52_errata_36+0x6e>
+		->     fcc:   2301          movs   r3, #1
+		       fce:   e002          b.n    fd6 <nrf52_errata_36+0x6e>
+		       fd0:   2301          movs   r3, #1
+		       fd2:   e000          b.n    fd6 <nrf52_errata_36+0x6e>
+		       fd4:   2300          movs   r3, #0
+		--------------------
+	(    1038,        4)	
+		--------------------
+		      102c:   0000103d  .word   0x0000103d
+		      1030:   00001041  .word   0x00001041
+		      1034:   2301          movs   r3, #1
+		      1036:   e008          b.n    104a <nrf52_errata_37+0x56>
+		->    1038:   2300          movs   r3, #0
+		      103a:   e006          b.n    104a <nrf52_errata_37+0x56>
+		      103c:   2300          movs   r3, #0
+		      103e:   e004          b.n    104a <nrf52_errata_37+0x56>
+		      1040:   2300          movs   r3, #0
+		--------------------
+	(    103c,        4)	
+		--------------------
+		      1034:   2301          movs   r3, #1
+		      1036:   e008          b.n    104a <nrf52_errata_37+0x56>
+		      1038:   2300          movs   r3, #0
+		      103a:   e006          b.n    104a <nrf52_errata_37+0x56>
+		->    103c:   2300          movs   r3, #0
+		      103e:   e004          b.n    104a <nrf52_errata_37+0x56>
+		      1040:   2300          movs   r3, #0
+		      1042:   e002          b.n    104a <nrf52_errata_37+0x56>
+		      1044:   2300          movs   r3, #0
+		--------------------
+	(    10a4,        4)	
+		--------------------
+		      1098:   000010a9  .word   0x000010a9
+		      109c:   000010ad  .word   0x000010ad
+		      10a0:   2301          movs   r3, #1
+		      10a2:   e008          b.n    10b6 <nrf52_errata_57+0x56>
+		->    10a4:   2300          movs   r3, #0
+		      10a6:   e006          b.n    10b6 <nrf52_errata_57+0x56>
+		      10a8:   2300          movs   r3, #0
+		      10aa:   e004          b.n    10b6 <nrf52_errata_57+0x56>
+		      10ac:   2300          movs   r3, #0
+		--------------------
+	(    112c,        4)	
+		--------------------
+		      1124:   2300          movs   r3, #0
+		      1126:   e008          b.n    113a <nrf52_errata_66+0x6e>
+		      1128:   2300          movs   r3, #0
+		      112a:   e006          b.n    113a <nrf52_errata_66+0x6e>
+		->    112c:   2301          movs   r3, #1
+		      112e:   e004          b.n    113a <nrf52_errata_66+0x6e>
+		      1130:   2301          movs   r3, #1
+		      1132:   e002          b.n    113a <nrf52_errata_66+0x6e>
+		      1134:   2301          movs   r3, #1
+		--------------------
+	(    1130,        4)	
+		--------------------
+		      1128:   2300          movs   r3, #0
+		      112a:   e006          b.n    113a <nrf52_errata_66+0x6e>
+		      112c:   2301          movs   r3, #1
+		      112e:   e004          b.n    113a <nrf52_errata_66+0x6e>
+		->    1130:   2301          movs   r3, #1
+		      1132:   e002          b.n    113a <nrf52_errata_66+0x6e>
+		      1134:   2301          movs   r3, #1
+		      1136:   e000          b.n    113a <nrf52_errata_66+0x6e>
+		      1138:   2300          movs   r3, #0
+		--------------------
+	(    11bc,        4)	
+		--------------------
+		      11b4:   2301          movs   r3, #1
+		      11b6:   e006          b.n    11c6 <nrf52_errata_108+0x6e>
+		      11b8:   2301          movs   r3, #1
+		      11ba:   e004          b.n    11c6 <nrf52_errata_108+0x6e>
+		->    11bc:   2301          movs   r3, #1
+		      11be:   e002          b.n    11c6 <nrf52_errata_108+0x6e>
+		      11c0:   2301          movs   r3, #1
+		      11c2:   e000          b.n    11c6 <nrf52_errata_108+0x6e>
+		      11c4:   2300          movs   r3, #0
+		--------------------
+	(    1244,        4)	
+		--------------------
+		      123c:   2301          movs   r3, #1
+		      123e:   e008          b.n    1252 <nrf52_errata_136+0x6e>
+		      1240:   2301          movs   r3, #1
+		      1242:   e006          b.n    1252 <nrf52_errata_136+0x6e>
+		->    1244:   2301          movs   r3, #1
+		      1246:   e004          b.n    1252 <nrf52_errata_136+0x6e>
+		      1248:   2301          movs   r3, #1
+		      124a:   e002          b.n    1252 <nrf52_errata_136+0x6e>
+		      124c:   2301          movs   r3, #1
+		--------------------
+	(    12a8,        4)	
+		--------------------
+		      1298:   000012a9  .word   0x000012a9
+		      129c:   000012ad  .word   0x000012ad
+		      12a0:   000012b1  .word   0x000012b1
+		      12a4:   000012b5  .word   0x000012b5
+		->    12a8:   2300          movs   r3, #0
+		      12aa:   e008          b.n    12be <nrf52_errata_182+0x4e>
+		      12ac:   2300          movs   r3, #0
+		      12ae:   e006          b.n    12be <nrf52_errata_182+0x4e>
+		      12b0:   2300          movs   r3, #0
+		--------------------
+	(    12ac,        4)	
+		--------------------
+		      12a0:   000012b1  .word   0x000012b1
+		      12a4:   000012b5  .word   0x000012b5
+		      12a8:   2300          movs   r3, #0
+		      12aa:   e008          b.n    12be <nrf52_errata_182+0x4e>
+		->    12ac:   2300          movs   r3, #0
+		      12ae:   e006          b.n    12be <nrf52_errata_182+0x4e>
+		      12b0:   2300          movs   r3, #0
+		      12b2:   e004          b.n    12be <nrf52_errata_182+0x4e>
+		      12b4:   2301          movs   r3, #1
+		--------------------
+	(    12b4,        4)	
+		--------------------
+		      12ac:   2300          movs   r3, #0
+		      12ae:   e006          b.n    12be <nrf52_errata_182+0x4e>
+		      12b0:   2300          movs   r3, #0
+		      12b2:   e004          b.n    12be <nrf52_errata_182+0x4e>
+		->    12b4:   2301          movs   r3, #1
+		      12b6:   e002          b.n    12be <nrf52_errata_182+0x4e>
+		      12b8:   2301          movs   r3, #1
+		      12ba:   e000          b.n    12be <nrf52_errata_182+0x4e>
+		      12bc:   2300          movs   r3, #0
+		--------------------
+
+timer-o1: 1 | 1
+	(     bd8,       12)	
+		--------------------
+		   bd4:   e7fe          b.n    bd4 <_exit>
+		   bd6:   bf00          nop
+		  
+		  00000bd8 <_init>:
+		-> bd8:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		   bda:   bf00          nop
+		   bdc:   bcf8          pop    {r3, r4, r5, r6, r7}
+		   bde:   bc08          pop    {r3}
+		   be0:   469e          mov    lr, r3
+		--------------------
+
+timer-o2: 1 | 1
+	(     be4,       12)	
+		--------------------
+		   be0:   e7fe          b.n    be0 <_exit>
+		   be2:   bf00          nop
+		  
+		  00000be4 <_init>:
+		-> be4:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		   be6:   bf00          nop
+		   be8:   bcf8          pop    {r3, r4, r5, r6, r7}
+		   bea:   bc08          pop    {r3}
+		   bec:   469e          mov    lr, r3
+		--------------------
+
+timer-o3: 1 | 1
+	(     bd0,       12)	
+		--------------------
+		   bcc:   e7fe          b.n    bcc <_exit>
+		   bce:   bf00          nop
+		  
+		  00000bd0 <_init>:
+		-> bd0:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		   bd2:   bf00          nop
+		   bd4:   bcf8          pop    {r3, r4, r5, r6, r7}
+		   bd6:   bc08          pop    {r3}
+		   bd8:   469e          mov    lr, r3
+		--------------------
+
+twi_sensor-o0: 20 | 92
+	(    2b4a,       26)	
+		--------------------
+		      2b44:   f85d 7b04     ldr.w  r7, [sp], #4
+		      2b48:   4770          bx lr
+		  
+		  00002b4a <nrf_twim_rxd_amount_get>:
+		->    2b4a:   b480          push   {r7}
+		      2b4c:   b083          sub    sp, #12
+		      2b4e:   af00          add    r7, sp, #0
+		      2b50:   6078          str    r0, [r7, #4]
+		      2b52:   687b          ldr    r3, [r7, #4]
+		--------------------
+	(    2cb8,       12)	
+		--------------------
+		      2ca8:   00002d1d  .word   0x00002d1d
+		      2cac:   00002d33  .word   0x00002d33
+		      2cb0:   00002cf7  .word   0x00002cf7
+		      2cb4:   00002cb9  .word   0x00002cb9
+		->    2cb8:   683b          ldr    r3, [r7, #0]
+		      2cba:   689b          ldr    r3, [r3, #8]
+		      2cbc:   f403 2380     and.w  r3, r3, #262144  ; 0x40000
+		      2cc0:   2b00          cmp    r3, #0
+		      2cc2:   d007          beq.n  2cd4 <xfer_completeness_check+0x48>
+		--------------------
+	(    2d16,        6)	
+		--------------------
+		      2d0e:   683b          ldr    r3, [r7, #0]
+		      2d10:   695b          ldr    r3, [r3, #20]
+		      2d12:   429a          cmp    r2, r3
+		      2d14:   d01c          beq.n  2d50 <xfer_completeness_check+0xc4>
+		->    2d16:   2300          movs   r3, #0
+		      2d18:   73fb          strb   r3, [r7, #15]
+		      2d1a:   e019          b.n    2d50 <xfer_completeness_check+0xc4>
+		      2d1c:   6878          ldr    r0, [r7, #4]
+		      2d1e:   f7ff fefa     bl 2b16 <nrf_twim_txd_amount_get>
+		--------------------
+	(    2d32,        6)	
+		--------------------
+		      2d2a:   d013          beq.n  2d54 <xfer_completeness_check+0xc8>
+		      2d2c:   2300          movs   r3, #0
+		      2d2e:   73fb          strb   r3, [r7, #15]
+		      2d30:   e010          b.n    2d54 <xfer_completeness_check+0xc8>
+		->    2d32:   6878          ldr    r0, [r7, #4]
+		      2d34:   f7ff ff09     bl 2b4a <nrf_twim_rxd_amount_get>
+		      2d38:   4602          mov    r2, r0
+		      2d3a:   683b          ldr    r3, [r7, #0]
+		      2d3c:   691b          ldr    r3, [r3, #16]
+		--------------------
+	(    303e,       12)	
+		--------------------
+		      3034:   687b          ldr    r3, [r7, #4]
+		      3036:   691b          ldr    r3, [r3, #16]
+		      3038:   4618          mov    r0, r3
+		      303a:   f7ff fc29     bl 2890 <nrfx_is_in_ram>
+		->    303e:   4603          mov    r3, r0
+		      3040:   f083 0301     eor.w  r3, r3, #1
+		      3044:   b2db          uxtb   r3, r3
+		      3046:   2b00          cmp    r3, #0
+		      3048:   d003          beq.n  3052 <twim_xfer+0x136>
+		--------------------
+	(    3088,       10)	
+		--------------------
+		      307e:   2108          movs   r1, #8
+		      3080:   68b8          ldr    r0, [r7, #8]
+		      3082:   f7ff fc54     bl 292e <nrf_twim_task_trigger>
+		      3086:   bf00          nop
+		->    3088:   f44f 71a8     mov.w  r1, #336 ; 0x150
+		      308c:   68b8          ldr    r0, [r7, #8]
+		      308e:   f7ff fc76     bl 297e <nrf_twim_event_check>
+		      3092:   4603          mov    r3, r0
+		      3094:   f083 0301     eor.w  r3, r3, #1
+		--------------------
+	(    30c2,       16)	
+		--------------------
+		      30b8:   68fb          ldr    r3, [r7, #12]
+		      30ba:   f44f 2280     mov.w  r2, #262144  ; 0x40000
+		      30be:   609a          str    r2, [r3, #8]
+		      30c0:   e069          b.n    3196 <twim_xfer+0x27a>
+		->    30c2:   687b          ldr    r3, [r7, #4]
+		      30c4:   68d9          ldr    r1, [r3, #12]
+		      30c6:   687b          ldr    r3, [r7, #4]
+		      30c8:   685b          ldr    r3, [r3, #4]
+		      30ca:   461a          mov    r2, r3
+		--------------------
+	(    30e8,        8)	
+		--------------------
+		      30de:   f083 0301     eor.w  r3, r3, #1
+		      30e2:   b2db          uxtb   r3, r3
+		      30e4:   2b00          cmp    r3, #0
+		      30e6:   d003          beq.n  30f0 <twim_xfer+0x1d4>
+		->    30e8:   2310          movs   r3, #16
+		      30ea:   61fb          str    r3, [r7, #28]
+		      30ec:   69fb          ldr    r3, [r7, #28]
+		      30ee:   e106          b.n    32fe <twim_xfer+0x3e2>
+		      30f0:   687b          ldr    r3, [r7, #4]
+		--------------------
+	(    3100,       10)	
+		--------------------
+		      30f6:   689b          ldr    r3, [r3, #8]
+		      30f8:   461a          mov    r2, r3
+		      30fa:   68b8          ldr    r0, [r7, #8]
+		      30fc:   f7ff fce8     bl 2ad0 <nrf_twim_rx_buffer_set>
+		->    3100:   f44f 5184     mov.w  r1, #4224    ; 0x1080
+		      3104:   68b8          ldr    r0, [r7, #8]
+		      3106:   f7ff fcf7     bl 2af8 <nrf_twim_shorts_set>
+		      310a:   68fb          ldr    r3, [r7, #12]
+		      310c:   2202          movs   r2, #2
+		--------------------
+	(    5318,        4)	
+		--------------------
+		      5310:   2301          movs   r3, #1
+		      5312:   e008          b.n    5326 <nrf52_errata_12+0x6e>
+		      5314:   2301          movs   r3, #1
+		      5316:   e006          b.n    5326 <nrf52_errata_12+0x6e>
+		->    5318:   2301          movs   r3, #1
+		      531a:   e004          b.n    5326 <nrf52_errata_12+0x6e>
+		      531c:   2301          movs   r3, #1
+		      531e:   e002          b.n    5326 <nrf52_errata_12+0x6e>
+		      5320:   2301          movs   r3, #1
+		--------------------
+	(    5384,        4)	
+		--------------------
+		      5374:   00005385  .word   0x00005385
+		      5378:   00005389  .word   0x00005389
+		      537c:   0000538d  .word   0x0000538d
+		      5380:   00005391  .word   0x00005391
+		->    5384:   2301          movs   r3, #1
+		      5386:   e008          b.n    539a <nrf52_errata_16+0x56>
+		      5388:   2300          movs   r3, #0
+		      538a:   e006          b.n    539a <nrf52_errata_16+0x56>
+		      538c:   2300          movs   r3, #0
+		--------------------
+	(    5408,        4)	
+		--------------------
+		      53f8:   00005409  .word   0x00005409
+		      53fc:   0000540d  .word   0x0000540d
+		      5400:   00005411  .word   0x00005411
+		      5404:   00005415  .word   0x00005415
+		->    5408:   2301          movs   r3, #1
+		      540a:   e008          b.n    541e <nrf52_errata_31+0x6e>
+		      540c:   2301          movs   r3, #1
+		      540e:   e006          b.n    541e <nrf52_errata_31+0x6e>
+		      5410:   2301          movs   r3, #1
+		--------------------
+	(    547c,        4)	
+		--------------------
+		      546c:   0000547d  .word   0x0000547d
+		      5470:   00005481  .word   0x00005481
+		      5474:   00005485  .word   0x00005485
+		      5478:   00005489  .word   0x00005489
+		->    547c:   2301          movs   r3, #1
+		      547e:   e008          b.n    5492 <nrf52_errata_32+0x56>
+		      5480:   2300          movs   r3, #0
+		      5482:   e006          b.n    5492 <nrf52_errata_32+0x56>
+		      5484:   2300          movs   r3, #0
+		--------------------
+	(    557c,        4)	
+		--------------------
+		      5574:   2301          movs   r3, #1
+		      5576:   e008          b.n    558a <nrf52_errata_37+0x56>
+		      5578:   2300          movs   r3, #0
+		      557a:   e006          b.n    558a <nrf52_errata_37+0x56>
+		->    557c:   2300          movs   r3, #0
+		      557e:   e004          b.n    558a <nrf52_errata_37+0x56>
+		      5580:   2300          movs   r3, #0
+		      5582:   e002          b.n    558a <nrf52_errata_37+0x56>
+		      5584:   2300          movs   r3, #0
+		--------------------
+	(    566c,        4)	
+		--------------------
+		      5664:   2300          movs   r3, #0
+		      5666:   e008          b.n    567a <nrf52_errata_66+0x6e>
+		      5668:   2300          movs   r3, #0
+		      566a:   e006          b.n    567a <nrf52_errata_66+0x6e>
+		->    566c:   2301          movs   r3, #1
+		      566e:   e004          b.n    567a <nrf52_errata_66+0x6e>
+		      5670:   2301          movs   r3, #1
+		      5672:   e002          b.n    567a <nrf52_errata_66+0x6e>
+		      5674:   2301          movs   r3, #1
+		--------------------
+	(    56fc,        4)	
+		--------------------
+		      56f4:   2301          movs   r3, #1
+		      56f6:   e006          b.n    5706 <nrf52_errata_108+0x6e>
+		      56f8:   2301          movs   r3, #1
+		      56fa:   e004          b.n    5706 <nrf52_errata_108+0x6e>
+		->    56fc:   2301          movs   r3, #1
+		      56fe:   e002          b.n    5706 <nrf52_errata_108+0x6e>
+		      5700:   2301          movs   r3, #1
+		      5702:   e000          b.n    5706 <nrf52_errata_108+0x6e>
+		      5704:   2300          movs   r3, #0
+		--------------------
+	(    577c,        4)	
+		--------------------
+		      576c:   0000577d  .word   0x0000577d
+		      5770:   00005781  .word   0x00005781
+		      5774:   00005785  .word   0x00005785
+		      5778:   00005789  .word   0x00005789
+		->    577c:   2301          movs   r3, #1
+		      577e:   e008          b.n    5792 <nrf52_errata_136+0x6e>
+		      5780:   2301          movs   r3, #1
+		      5782:   e006          b.n    5792 <nrf52_errata_136+0x6e>
+		      5784:   2301          movs   r3, #1
+		--------------------
+	(    5bdc,        2)	
+		--------------------
+		      5bd8:   d1f9          bne.n  5bce <memcpy+0xe>
+		      5bda:   bd10          pop    {r4, pc}
+		  
+		  00005bdc <strlen>:
+		->    5bdc:   4603          mov    r3, r0
+		      5bde:   f813 2b01     ldrb.w r2, [r3], #1
+		      5be2:   2a00          cmp    r2, #0
+		      5be4:   d1fb          bne.n  5bde <strlen+0x2>
+		      5be6:   1a18          subs   r0, r3, r0
+		--------------------
+	(    5bde,        8)	
+		--------------------
+		      5bda:   bd10          pop    {r4, pc}
+		  
+		  00005bdc <strlen>:
+		      5bdc:   4603          mov    r3, r0
+		->    5bde:   f813 2b01     ldrb.w r2, [r3], #1
+		      5be2:   2a00          cmp    r2, #0
+		      5be4:   d1fb          bne.n  5bde <strlen+0x2>
+		      5be6:   1a18          subs   r0, r3, r0
+		      5be8:   3801          subs   r0, #1
+		--------------------
+	(    5be6,        6)	
+		--------------------
+		      5bdc:   4603          mov    r3, r0
+		      5bde:   f813 2b01     ldrb.w r2, [r3], #1
+		      5be2:   2a00          cmp    r2, #0
+		      5be4:   d1fb          bne.n  5bde <strlen+0x2>
+		->    5be6:   1a18          subs   r0, r3, r0
+		      5be8:   3801          subs   r0, #1
+		      5bea:   4770          bx lr
+		  
+		  00005bec <__register_exitproc>:
+		--------------------
+
+twi_sensor-o1: 0 | 0
+
+twi_sensor-o2: 3 | 3
+	(     e32,        4)	
+		--------------------
+		       e26:   e843 0c00     strex  ip, r0, [r3]
+		       e2a:   f09c 0f00     teq    ip, #0
+		       e2e:   d1f6          bne.n  e1e <nrf_atomic_u32_add+0x2>
+		       e30:   4770          bx lr
+		->     e32:   bf00          nop
+		  
+		  00000e34 <nrf_atomic_u32_sub>:
+		       e34:   4603          mov    r3, r0
+		       e36:   e853 2f00     ldrex  r2, [r3]
+		--------------------
+	(     e4a,        6)	
+		--------------------
+		       e3e:   e843 0c00     strex  ip, r0, [r3]
+		       e42:   f09c 0f00     teq    ip, #0
+		       e46:   d1f6          bne.n  e36 <nrf_atomic_u32_sub+0x2>
+		       e48:   4770          bx lr
+		->     e4a:   bf00          nop
+		  
+		  00000e4c <nrf_atomic_flag_set>:
+		       e4c:   4603          mov    r3, r0
+		       e4e:   2201          movs   r2, #1
+		--------------------
+	(     f66,       28)	
+		--------------------
+		       f5c:   b002          add    sp, #8
+		       f5e:   f85d eb04     ldr.w  lr, [sp], #4
+		       f62:   b003          add    sp, #12
+		       f64:   4770          bx lr
+		->     f66:   bf00          nop
+		  
+		  00000f68 <unsigned_print>:
+		       f68:   e92d 4ff0     stmdb  sp!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
+		       f6c:   4616          mov    r6, r2
+		--------------------
+
+twi_sensor-o3: 3 | 3
+	(     e16,        4)	
+		--------------------
+		       e0a:   e843 0c00     strex  ip, r0, [r3]
+		       e0e:   f09c 0f00     teq    ip, #0
+		       e12:   d1f6          bne.n  e02 <nrf_atomic_u32_add+0x2>
+		       e14:   4770          bx lr
+		->     e16:   bf00          nop
+		  
+		  00000e18 <nrf_atomic_u32_sub>:
+		       e18:   4603          mov    r3, r0
+		       e1a:   e853 2f00     ldrex  r2, [r3]
+		--------------------
+	(     e2e,        6)	
+		--------------------
+		       e22:   e843 0c00     strex  ip, r0, [r3]
+		       e26:   f09c 0f00     teq    ip, #0
+		       e2a:   d1f6          bne.n  e1a <nrf_atomic_u32_sub+0x2>
+		       e2c:   4770          bx lr
+		->     e2e:   bf00          nop
+		  
+		  00000e30 <nrf_atomic_flag_set>:
+		       e30:   4603          mov    r3, r0
+		       e32:   2201          movs   r2, #1
+		--------------------
+	(     f4a,       28)	
+		--------------------
+		       f40:   b002          add    sp, #8
+		       f42:   f85d eb04     ldr.w  lr, [sp], #4
+		       f46:   b003          add    sp, #12
+		       f48:   4770          bx lr
+		->     f4a:   bf00          nop
+		  
+		  00000f4c <unsigned_print>:
+		       f4c:   e92d 4ff0     stmdb  sp!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
+		       f50:   4615          mov    r5, r2
+		--------------------
+
+uart-o0: 20 | 109
+	(     3ce,       16)	
+		--------------------
+		       3ca:   46bd          mov    sp, r7
+		       3cc:   bd80          pop    {r7, pc}
+		  
+		  000003ce <nrf_gpio_pin_clear>:
+		->     3ce:   b580          push   {r7, lr}
+		       3d0:   b084          sub    sp, #16
+		       3d2:   af00          add    r7, sp, #0
+		       3d4:   6078          str    r0, [r7, #4]
+		       3d6:   1d3b          adds   r3, r7, #4
+		--------------------
+	(     43c,       30)	
+		--------------------
+		       436:   f85d 7b04     ldr.w  r7, [sp], #4
+		       43a:   4770          bx lr
+		  
+		  0000043c <nrf_gpio_port_out_clear>:
+		->     43c:   b480          push   {r7}
+		       43e:   b083          sub    sp, #12
+		       440:   af00          add    r7, sp, #0
+		       442:   6078          str    r0, [r7, #4]
+		       444:   6039          str    r1, [r7, #0]
+		--------------------
+	(     fde,       38)	
+		--------------------
+		       fd8:   f85d 7b04     ldr.w  r7, [sp], #4
+		       fdc:   4770          bx lr
+		  
+		  00000fde <nrf_uart_errorsrc_get_and_clear>:
+		->     fde:   b480          push   {r7}
+		       fe0:   b085          sub    sp, #20
+		       fe2:   af00          add    r7, sp, #0
+		       fe4:   6078          str    r0, [r7, #4]
+		       fe6:   687b          ldr    r3, [r7, #4]
+		--------------------
+	(    182c,       46)	
+		--------------------
+		      1828:   46bd          mov    sp, r7
+		      182a:   bd80          pop    {r7, pc}
+		  
+		  0000182c <tx_done_event>:
+		->    182c:   b580          push   {r7, lr}
+		      182e:   b086          sub    sp, #24
+		      1830:   af00          add    r7, sp, #0
+		      1832:   6078          str    r0, [r7, #4]
+		      1834:   6039          str    r1, [r7, #0]
+		--------------------
+	(    1886,        6)	
+		--------------------
+		      187a:   d039          beq.n  18f0 <uart_irq_handler+0x8e>
+		      187c:   f44f 7192     mov.w  r1, #292 ; 0x124
+		      1880:   6878          ldr    r0, [r7, #4]
+		      1882:   f7ff fb64     bl f4e <nrf_uart_event_check>
+		->    1886:   4603          mov    r3, r0
+		      1888:   2b00          cmp    r3, #0
+		      188a:   d031          beq.n  18f0 <uart_irq_handler+0x8e>
+		      188c:   f44f 7192     mov.w  r1, #292 ; 0x124
+		      1890:   6878          ldr    r0, [r7, #4]
+		--------------------
+	(    188c,       10)	
+		--------------------
+		      1882:   f7ff fb64     bl f4e <nrf_uart_event_check>
+		      1886:   4603          mov    r3, r0
+		      1888:   2b00          cmp    r3, #0
+		      188a:   d031          beq.n  18f0 <uart_irq_handler+0x8e>
+		->    188c:   f44f 7192     mov.w  r1, #292 ; 0x124
+		      1890:   6878          ldr    r0, [r7, #4]
+		      1892:   f7ff fb45     bl f20 <nrf_uart_event_clear>
+		      1896:   f44f 7101     mov.w  r1, #516 ; 0x204
+		      189a:   6878          ldr    r0, [r7, #4]
+		--------------------
+	(    18a0,       16)	
+		--------------------
+		      1892:   f7ff fb45     bl f20 <nrf_uart_event_clear>
+		      1896:   f44f 7101     mov.w  r1, #516 ; 0x204
+		      189a:   6878          ldr    r0, [r7, #4]
+		      189c:   f7ff fb90     bl fc0 <nrf_uart_int_disable>
+		->    18a0:   683b          ldr    r3, [r7, #0]
+		      18a2:   f893 3029     ldrb.w r3, [r3, #41]   ; 0x29
+		      18a6:   f083 0301     eor.w  r3, r3, #1
+		      18aa:   b2db          uxtb   r3, r3
+		      18ac:   2b00          cmp    r3, #0
+		--------------------
+	(    1908,        6)	
+		--------------------
+		      18fc:   d04b          beq.n  1996 <uart_irq_handler+0x134>
+		      18fe:   f44f 7184     mov.w  r1, #264 ; 0x108
+		      1902:   6878          ldr    r0, [r7, #4]
+		      1904:   f7ff fb23     bl f4e <nrf_uart_event_check>
+		->    1908:   4603          mov    r3, r0
+		      190a:   2b00          cmp    r3, #0
+		      190c:   d043          beq.n  1996 <uart_irq_handler+0x134>
+		      190e:   6839          ldr    r1, [r7, #0]
+		      1910:   6878          ldr    r0, [r7, #4]
+		--------------------
+	(    192a,       50)	
+		--------------------
+		      1922:   683b          ldr    r3, [r7, #0]
+		      1924:   69db          ldr    r3, [r3, #28]
+		      1926:   2b00          cmp    r3, #0
+		      1928:   d019          beq.n  195e <uart_irq_handler+0xfc>
+		->    192a:   683b          ldr    r3, [r7, #0]
+		      192c:   68db          ldr    r3, [r3, #12]
+		      192e:   627b          str    r3, [r7, #36]  ; 0x24
+		      1930:   683b          ldr    r3, [r7, #0]
+		      1932:   6a5b          ldr    r3, [r3, #36]  ; 0x24
+		--------------------
+	(    1980,       22)	
+		--------------------
+		      1972:   f7ff fb9b     bl 10ac <nrf_uart_task_trigger>
+		      1976:   f44f 7101     mov.w  r1, #516 ; 0x204
+		      197a:   6878          ldr    r0, [r7, #4]
+		      197c:   f7ff fb20     bl fc0 <nrf_uart_int_disable>
+		->    1980:   683b          ldr    r3, [r7, #0]
+		      1982:   2200          movs   r2, #0
+		      1984:   619a          str    r2, [r3, #24]
+		      1986:   683b          ldr    r3, [r7, #0]
+		      1988:   6a59          ldr    r1, [r3, #36]  ; 0x24
+		--------------------
+	(    19dc,        8)	
+		--------------------
+		      19d0:   e00e          b.n    19f0 <uart_irq_handler+0x18e>
+		      19d2:   f44f 718e     mov.w  r1, #284 ; 0x11c
+		      19d6:   6878          ldr    r0, [r7, #4]
+		      19d8:   f7ff faa2     bl f20 <nrf_uart_event_clear>
+		->    19dc:   683b          ldr    r3, [r7, #0]
+		      19de:   695b          ldr    r3, [r3, #20]
+		      19e0:   2b00          cmp    r3, #0
+		      19e2:   d005          beq.n  19f0 <uart_irq_handler+0x18e>
+		      19e4:   683b          ldr    r3, [r7, #0]
+		--------------------
+	(    19e4,       12)	
+		--------------------
+		      19dc:   683b          ldr    r3, [r7, #0]
+		      19de:   695b          ldr    r3, [r3, #20]
+		      19e0:   2b00          cmp    r3, #0
+		      19e2:   d005          beq.n  19f0 <uart_irq_handler+0x18e>
+		->    19e4:   683b          ldr    r3, [r7, #0]
+		      19e6:   695b          ldr    r3, [r3, #20]
+		      19e8:   4619          mov    r1, r3
+		      19ea:   6838          ldr    r0, [r7, #0]
+		      19ec:   f7ff ff1e     bl 182c <tx_done_event>
+		--------------------
+	(    1a0a,       10)	
+		--------------------
+		      19fe:   d01c          beq.n  1a3a <uart_irq_handler+0x1d8>
+		      1a00:   f44f 71a2     mov.w  r1, #324 ; 0x144
+		      1a04:   6878          ldr    r0, [r7, #4]
+		      1a06:   f7ff fa8b     bl f20 <nrf_uart_event_clear>
+		->    1a0a:   683b          ldr    r3, [r7, #0]
+		      1a0c:   f893 3029     ldrb.w r3, [r3, #41]   ; 0x29
+		      1a10:   2b00          cmp    r3, #0
+		      1a12:   d003          beq.n  1a1c <uart_irq_handler+0x1ba>
+		      1a14:   2100          movs   r1, #0
+		--------------------
+	(    1a1c,        8)	
+		--------------------
+		      1a12:   d003          beq.n  1a1c <uart_irq_handler+0x1ba>
+		      1a14:   2100          movs   r1, #0
+		      1a16:   6878          ldr    r0, [r7, #4]
+		      1a18:   f7ff fb48     bl 10ac <nrf_uart_task_trigger>
+		->    1a1c:   683b          ldr    r3, [r7, #0]
+		      1a1e:   699b          ldr    r3, [r3, #24]
+		      1a20:   2b00          cmp    r3, #0
+		      1a22:   d00a          beq.n  1a3a <uart_irq_handler+0x1d8>
+		      1a24:   683b          ldr    r3, [r7, #0]
+		--------------------
+	(    1a50,        4)	
+		--------------------
+		      1a46:   af00          add    r7, sp, #0
+		      1a48:   4902          ldr    r1, [pc, #8]   ; (1a54 <nrfx_uart_0_irq_handler+0x10>)
+		      1a4a:   4803          ldr    r0, [pc, #12]  ; (1a58 <nrfx_uart_0_irq_handler+0x14>)
+		      1a4c:   f7ff ff09     bl 1862 <uart_irq_handler>
+		->    1a50:   bf00          nop
+		      1a52:   bd80          pop    {r7, pc}
+		      1a54:   200000e0  .word   0x200000e0
+		      1a58:   40002000  .word   0x40002000
+		  
+		--------------------
+	(    2788,        4)	
+		--------------------
+		      2780:   2301          movs   r3, #1
+		      2782:   e006          b.n    2792 <nrf52_errata_12+0x6e>
+		      2784:   2301          movs   r3, #1
+		      2786:   e004          b.n    2792 <nrf52_errata_12+0x6e>
+		->    2788:   2301          movs   r3, #1
+		      278a:   e002          b.n    2792 <nrf52_errata_12+0x6e>
+		      278c:   2301          movs   r3, #1
+		      278e:   e000          b.n    2792 <nrf52_errata_12+0x6e>
+		      2790:   2300          movs   r3, #0
+		--------------------
+	(    287c,        4)	
+		--------------------
+		      2874:   2301          movs   r3, #1
+		      2876:   e008          b.n    288a <nrf52_errata_31+0x6e>
+		      2878:   2301          movs   r3, #1
+		      287a:   e006          b.n    288a <nrf52_errata_31+0x6e>
+		->    287c:   2301          movs   r3, #1
+		      287e:   e004          b.n    288a <nrf52_errata_31+0x6e>
+		      2880:   2301          movs   r3, #1
+		      2882:   e002          b.n    288a <nrf52_errata_31+0x6e>
+		      2884:   2301          movs   r3, #1
+		--------------------
+	(    2a4c,        4)	
+		--------------------
+		      2a3c:   00002a4d  .word   0x00002a4d
+		      2a40:   00002a51  .word   0x00002a51
+		      2a44:   00002a55  .word   0x00002a55
+		      2a48:   00002a59  .word   0x00002a59
+		->    2a4c:   2301          movs   r3, #1
+		      2a4e:   e008          b.n    2a62 <nrf52_errata_57+0x56>
+		      2a50:   2300          movs   r3, #0
+		      2a52:   e006          b.n    2a62 <nrf52_errata_57+0x56>
+		      2a54:   2300          movs   r3, #0
+		--------------------
+	(    2ad0,        4)	
+		--------------------
+		      2ac0:   00002ad1  .word   0x00002ad1
+		      2ac4:   00002ad5  .word   0x00002ad5
+		      2ac8:   00002ad9  .word   0x00002ad9
+		      2acc:   00002add  .word   0x00002add
+		->    2ad0:   2300          movs   r3, #0
+		      2ad2:   e008          b.n    2ae6 <nrf52_errata_66+0x6e>
+		      2ad4:   2300          movs   r3, #0
+		      2ad6:   e006          b.n    2ae6 <nrf52_errata_66+0x6e>
+		      2ad8:   2301          movs   r3, #1
+		--------------------
+	(    2ad4,        4)	
+		--------------------
+		      2ac8:   00002ad9  .word   0x00002ad9
+		      2acc:   00002add  .word   0x00002add
+		      2ad0:   2300          movs   r3, #0
+		      2ad2:   e008          b.n    2ae6 <nrf52_errata_66+0x6e>
+		->    2ad4:   2300          movs   r3, #0
+		      2ad6:   e006          b.n    2ae6 <nrf52_errata_66+0x6e>
+		      2ad8:   2301          movs   r3, #1
+		      2ada:   e004          b.n    2ae6 <nrf52_errata_66+0x6e>
+		      2adc:   2301          movs   r3, #1
+		--------------------
+
+uart-o1: 1 | 1
+	(    28e8,       12)	
+		--------------------
+		      28e4:   e7fe          b.n    28e4 <_exit>
+		      28e6:   bf00          nop
+		  
+		  000028e8 <_init>:
+		->    28e8:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		      28ea:   bf00          nop
+		      28ec:   bcf8          pop    {r3, r4, r5, r6, r7}
+		      28ee:   bc08          pop    {r3}
+		      28f0:   469e          mov    lr, r3
+		--------------------
+
+uart-o2: 20 | 37
+	(     872,        8)	
+		--------------------
+		       868:   f8d2 3304     ldr.w  r3, [r2, #772]   ; 0x304
+		       86c:   0599          lsls   r1, r3, #22
+		       86e:   b08a          sub    sp, #40    ; 0x28
+		       870:   d567          bpl.n  942 <nrfx_uart_0_irq_handler+0xde>
+		->     872:   f8d2 3124     ldr.w  r3, [r2, #292]   ; 0x124
+		       876:   2b00          cmp    r3, #0
+		       878:   d063          beq.n  942 <nrfx_uart_0_irq_handler+0xde>
+		       87a:   2300          movs   r3, #0
+		       87c:   f8c2 3124     str.w  r3, [r2, #292]   ; 0x124
+		--------------------
+	(     87a,       34)	
+		--------------------
+		       870:   d567          bpl.n  942 <nrfx_uart_0_irq_handler+0xde>
+		       872:   f8d2 3124     ldr.w  r3, [r2, #292]   ; 0x124
+		       876:   2b00          cmp    r3, #0
+		       878:   d063          beq.n  942 <nrfx_uart_0_irq_handler+0xde>
+		->     87a:   2300          movs   r3, #0
+		       87c:   f8c2 3124     str.w  r3, [r2, #292]   ; 0x124
+		       880:   f8d2 3124     ldr.w  r3, [r2, #292]   ; 0x124
+		       884:   9301          str    r3, [sp, #4]
+		       886:   f44f 7101     mov.w  r1, #516 ; 0x204
+		--------------------
+	(     89c,       40)	
+		--------------------
+		       892:   f893 1029     ldrb.w r1, [r3, #41]   ; 0x29
+		       896:   b909          cbnz   r1, 89c <nrfx_uart_0_irq_handler+0x38>
+		       898:   2101          movs   r1, #1
+		       89a:   6051          str    r1, [r2, #4]
+		->     89c:   4a60          ldr    r2, [pc, #384] ; (a20 <nrfx_uart_0_irq_handler+0x1bc>)
+		       89e:   2102          movs   r1, #2
+		       8a0:   f88d 1018     strb.w r1, [sp, #24]
+		       8a4:   f8d2 1480     ldr.w  r1, [r2, #1152]  ; 0x480
+		       8a8:   f8c2 1480     str.w  r1, [r2, #1152]  ; 0x480
+		--------------------
+	(     8d6,       12)	
+		--------------------
+		       8ce:   6958          ldr    r0, [r3, #20]
+		       8d0:   6a19          ldr    r1, [r3, #32]
+		       8d2:   4288          cmp    r0, r1
+		       8d4:   d96a          bls.n  9ac <nrfx_uart_0_irq_handler+0x148>
+		->     8d6:   f893 1028     ldrb.w r1, [r3, #40]   ; 0x28
+		       8da:   f001 00ff     and.w  r0, r1, #255 ; 0xff
+		       8de:   2900          cmp    r1, #0
+		       8e0:   d164          bne.n  9ac <nrfx_uart_0_irq_handler+0x148>
+		       8e2:   f8c2 011c     str.w  r0, [r2, #284]   ; 0x11c
+		--------------------
+	(     8e2,       28)	
+		--------------------
+		       8d6:   f893 1028     ldrb.w r1, [r3, #40]   ; 0x28
+		       8da:   f001 00ff     and.w  r0, r1, #255 ; 0xff
+		       8de:   2900          cmp    r1, #0
+		       8e0:   d164          bne.n  9ac <nrfx_uart_0_irq_handler+0x148>
+		->     8e2:   f8c2 011c     str.w  r0, [r2, #284]   ; 0x11c
+		       8e6:   f8d2 111c     ldr.w  r1, [r2, #284]   ; 0x11c
+		       8ea:   9103          str    r1, [sp, #12]
+		       8ec:   9903          ldr    r1, [sp, #12]
+		       8ee:   689c          ldr    r4, [r3, #8]
+		--------------------
+	(     920,       30)	
+		--------------------
+		       918:   9800          ldr    r0, [sp, #0]
+		       91a:   b109          cbz    r1, 920 <nrfx_uart_0_irq_handler+0xbc>
+		       91c:   2101          movs   r1, #1
+		       91e:   6011          str    r1, [r2, #0]
+		->     920:   699a          ldr    r2, [r3, #24]
+		       922:   b162          cbz    r2, 93e <nrfx_uart_0_irq_handler+0xda>
+		       924:   68d8          ldr    r0, [r3, #12]
+		       926:   6a5c          ldr    r4, [r3, #36]  ; 0x24
+		       928:   2100          movs   r1, #0
+		--------------------
+	(     93e,        4)	
+		--------------------
+		       932:   f88d 2018     strb.w r2, [sp, #24]
+		       936:   a806          add    r0, sp, #24
+		       938:   e9d3 1200     ldrd   r1, r2, [r3]
+		       93c:   4790          blx    r2
+		->     93e:   b00a          add    sp, #40    ; 0x28
+		       940:   bd10          pop    {r4, pc}
+		       942:   4a37          ldr    r2, [pc, #220] ; (a20 <nrfx_uart_0_irq_handler+0x1bc>)
+		       944:   f8d2 3304     ldr.w  r3, [r2, #772]   ; 0x304
+		       948:   075b          lsls   r3, r3, #29
+		--------------------
+	(     942,       10)	
+		--------------------
+		       938:   e9d3 1200     ldrd   r1, r2, [r3]
+		       93c:   4790          blx    r2
+		       93e:   b00a          add    sp, #40    ; 0x28
+		       940:   bd10          pop    {r4, pc}
+		->     942:   4a37          ldr    r2, [pc, #220] ; (a20 <nrfx_uart_0_irq_handler+0x1bc>)
+		       944:   f8d2 3304     ldr.w  r3, [r2, #772]   ; 0x304
+		       948:   075b          lsls   r3, r3, #29
+		       94a:   d5bb          bpl.n  8c4 <nrfx_uart_0_irq_handler+0x60>
+		       94c:   f8d2 3108     ldr.w  r3, [r2, #264]   ; 0x108
+		--------------------
+	(     97c,        6)	
+		--------------------
+		       974:   6a5a          ldr    r2, [r3, #36]  ; 0x24
+		       976:   6999          ldr    r1, [r3, #24]
+		       978:   3201          adds   r2, #1
+		       97a:   625a          str    r2, [r3, #36]  ; 0x24
+		->     97c:   6a5a          ldr    r2, [r3, #36]  ; 0x24
+		       97e:   428a          cmp    r2, r1
+		       980:   d1a0          bne.n  8c4 <nrfx_uart_0_irq_handler+0x60>
+		       982:   69da          ldr    r2, [r3, #28]
+		       984:   2a00          cmp    r2, #0
+		--------------------
+	(     982,        6)	
+		--------------------
+		       97a:   625a          str    r2, [r3, #36]  ; 0x24
+		       97c:   6a5a          ldr    r2, [r3, #36]  ; 0x24
+		       97e:   428a          cmp    r2, r1
+		       980:   d1a0          bne.n  8c4 <nrfx_uart_0_irq_handler+0x60>
+		->     982:   69da          ldr    r2, [r3, #28]
+		       984:   2a00          cmp    r2, #0
+		       986:   d031          beq.n  9ec <nrfx_uart_0_irq_handler+0x188>
+		       988:   619a          str    r2, [r3, #24]
+		       98a:   691a          ldr    r2, [r3, #16]
+		--------------------
+	(     9ac,       22)	
+		--------------------
+		       9a2:   f88d 2018     strb.w r2, [sp, #24]
+		       9a6:   a806          add    r0, sp, #24
+		       9a8:   47a0          blx    r4
+		       9aa:   e78b          b.n    8c4 <nrfx_uart_0_irq_handler+0x60>
+		->     9ac:   4a1c          ldr    r2, [pc, #112] ; (a20 <nrfx_uart_0_irq_handler+0x1bc>)
+		       9ae:   2000          movs   r0, #0
+		       9b0:   f8c2 011c     str.w  r0, [r2, #284]   ; 0x11c
+		       9b4:   f8d2 211c     ldr.w  r2, [r2, #284]   ; 0x11c
+		       9b8:   9202          str    r2, [sp, #8]
+		--------------------
+	(     9f8,       36)	
+		--------------------
+		       9f0:   b912          cbnz   r2, 9f8 <nrfx_uart_0_irq_handler+0x194>
+		       9f2:   4a0b          ldr    r2, [pc, #44]  ; (a20 <nrfx_uart_0_irq_handler+0x1bc>)
+		       9f4:   2101          movs   r1, #1
+		       9f6:   6051          str    r1, [r2, #4]
+		->     9f8:   4a09          ldr    r2, [pc, #36]  ; (a20 <nrfx_uart_0_irq_handler+0x1bc>)
+		       9fa:   f44f 7101     mov.w  r1, #516 ; 0x204
+		       9fe:   f8c2 1308     str.w  r1, [r2, #776]   ; 0x308
+		       a02:   68d8          ldr    r0, [r3, #12]
+		       a04:   6a5c          ldr    r4, [r3, #36]  ; 0x24
+		--------------------
+	(    1c62,        8)	
+		--------------------
+		      1c56:   f1a1 0404     sub.w  r4, r1, #4
+		      1c5a:   bfb8          it lt
+		      1c5c:   18e4          addlt  r4, r4, r3
+		      1c5e:   f000 f8d5     bl 1e0c <__malloc_lock>
+		->    1c62:   4a1e          ldr    r2, [pc, #120] ; (1cdc <_free_r+0x94>)
+		      1c64:   9801          ldr    r0, [sp, #4]
+		      1c66:   6813          ldr    r3, [r2, #0]
+		      1c68:   b933          cbnz   r3, 1c78 <_free_r+0x30>
+		      1c6a:   6063          str    r3, [r4, #4]
+		--------------------
+	(    1c6e,       10)	
+		--------------------
+		      1c66:   6813          ldr    r3, [r2, #0]
+		      1c68:   b933          cbnz   r3, 1c78 <_free_r+0x30>
+		      1c6a:   6063          str    r3, [r4, #4]
+		      1c6c:   6014          str    r4, [r2, #0]
+		->    1c6e:   b003          add    sp, #12
+		      1c70:   e8bd 4030     ldmia.w    sp!, {r4, r5, lr}
+		      1c74:   f000 b8d0     b.w    1e18 <__malloc_unlock>
+		      1c78:   42a3          cmp    r3, r4
+		      1c7a:   d908          bls.n  1c8e <_free_r+0x46>
+		--------------------
+	(    1c78,        4)	
+		--------------------
+		      1c6c:   6014          str    r4, [r2, #0]
+		      1c6e:   b003          add    sp, #12
+		      1c70:   e8bd 4030     ldmia.w    sp!, {r4, r5, lr}
+		      1c74:   f000 b8d0     b.w    1e18 <__malloc_unlock>
+		->    1c78:   42a3          cmp    r3, r4
+		      1c7a:   d908          bls.n  1c8e <_free_r+0x46>
+		      1c7c:   6825          ldr    r5, [r4, #0]
+		      1c7e:   1961          adds   r1, r4, r5
+		      1c80:   428b          cmp    r3, r1
+		--------------------
+	(    1c8e,       10)	
+		--------------------
+		      1c86:   685b          ldreq  r3, [r3, #4]
+		      1c88:   1949          addeq  r1, r1, r5
+		      1c8a:   6021          streq  r1, [r4, #0]
+		      1c8c:   e7ed          b.n    1c6a <_free_r+0x22>
+		->    1c8e:   461a          mov    r2, r3
+		      1c90:   685b          ldr    r3, [r3, #4]
+		      1c92:   b10b          cbz    r3, 1c98 <_free_r+0x50>
+		      1c94:   42a3          cmp    r3, r4
+		      1c96:   d9fa          bls.n  1c8e <_free_r+0x46>
+		--------------------
+	(    1ca0,       12)	
+		--------------------
+		      1c98:   6811          ldr    r1, [r2, #0]
+		      1c9a:   1855          adds   r5, r2, r1
+		      1c9c:   42a5          cmp    r5, r4
+		      1c9e:   d10b          bne.n  1cb8 <_free_r+0x70>
+		->    1ca0:   6824          ldr    r4, [r4, #0]
+		      1ca2:   4421          add    r1, r4
+		      1ca4:   1854          adds   r4, r2, r1
+		      1ca6:   42a3          cmp    r3, r4
+		      1ca8:   6011          str    r1, [r2, #0]
+		--------------------
+	(    1cb8,        2)	
+		--------------------
+		      1cb0:   6053          str    r3, [r2, #4]
+		      1cb2:   440c          add    r4, r1
+		      1cb4:   6014          str    r4, [r2, #0]
+		      1cb6:   e7da          b.n    1c6e <_free_r+0x26>
+		->    1cb8:   d902          bls.n  1cc0 <_free_r+0x78>
+		      1cba:   230c          movs   r3, #12
+		      1cbc:   6003          str    r3, [r0, #0]
+		      1cbe:   e7d6          b.n    1c6e <_free_r+0x26>
+		      1cc0:   6825          ldr    r5, [r4, #0]
+		--------------------
+	(    1cba,        6)	
+		--------------------
+		      1cb2:   440c          add    r4, r1
+		      1cb4:   6014          str    r4, [r2, #0]
+		      1cb6:   e7da          b.n    1c6e <_free_r+0x26>
+		      1cb8:   d902          bls.n  1cc0 <_free_r+0x78>
+		->    1cba:   230c          movs   r3, #12
+		      1cbc:   6003          str    r3, [r0, #0]
+		      1cbe:   e7d6          b.n    1c6e <_free_r+0x26>
+		      1cc0:   6825          ldr    r5, [r4, #0]
+		      1cc2:   1961          adds   r1, r4, r5
+		--------------------
+	(    2888,       12)	
+		--------------------
+		      2884:   e7fe          b.n    2884 <_exit>
+		      2886:   bf00          nop
+		  
+		  00002888 <_init>:
+		->    2888:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		      288a:   bf00          nop
+		      288c:   bcf8          pop    {r3, r4, r5, r6, r7}
+		      288e:   bc08          pop    {r3}
+		      2890:   469e          mov    lr, r3
+		--------------------
+
+uart-o3: 20 | 37
+	(     898,       42)	
+		--------------------
+		       88e:   f893 1029     ldrb.w r1, [r3, #41]   ; 0x29
+		       892:   b909          cbnz   r1, 898 <nrfx_uart_0_irq_handler+0x38>
+		       894:   2101          movs   r1, #1
+		       896:   6051          str    r1, [r2, #4]
+		->     898:   4963          ldr    r1, [pc, #396] ; (a28 <nrfx_uart_0_irq_handler+0x1c8>)
+		       89a:   2202          movs   r2, #2
+		       89c:   f88d 2018     strb.w r2, [sp, #24]
+		       8a0:   f8d1 2480     ldr.w  r2, [r1, #1152]  ; 0x480
+		       8a4:   f8c1 2480     str.w  r2, [r1, #1152]  ; 0x480
+		--------------------
+	(     8e0,       28)	
+		--------------------
+		       8d4:   f893 1028     ldrb.w r1, [r3, #40]   ; 0x28
+		       8d8:   f001 00ff     and.w  r0, r1, #255 ; 0xff
+		       8dc:   2900          cmp    r1, #0
+		       8de:   d164          bne.n  9aa <nrfx_uart_0_irq_handler+0x14a>
+		->     8e0:   f8c2 011c     str.w  r0, [r2, #284]   ; 0x11c
+		       8e4:   f8d2 111c     ldr.w  r1, [r2, #284]   ; 0x11c
+		       8e8:   9103          str    r1, [sp, #12]
+		       8ea:   9903          ldr    r1, [sp, #12]
+		       8ec:   689c          ldr    r4, [r3, #8]
+		--------------------
+	(     91e,       30)	
+		--------------------
+		       916:   9800          ldr    r0, [sp, #0]
+		       918:   b109          cbz    r1, 91e <nrfx_uart_0_irq_handler+0xbe>
+		       91a:   2101          movs   r1, #1
+		       91c:   6011          str    r1, [r2, #0]
+		->     91e:   699a          ldr    r2, [r3, #24]
+		       920:   b162          cbz    r2, 93c <nrfx_uart_0_irq_handler+0xdc>
+		       922:   68d8          ldr    r0, [r3, #12]
+		       924:   6a5c          ldr    r4, [r3, #36]  ; 0x24
+		       926:   2100          movs   r1, #0
+		--------------------
+	(     940,       10)	
+		--------------------
+		       936:   e9d3 1200     ldrd   r1, r2, [r3]
+		       93a:   4790          blx    r2
+		       93c:   b00a          add    sp, #40    ; 0x28
+		       93e:   bd10          pop    {r4, pc}
+		->     940:   4a39          ldr    r2, [pc, #228] ; (a28 <nrfx_uart_0_irq_handler+0x1c8>)
+		       942:   f8d2 3304     ldr.w  r3, [r2, #772]   ; 0x304
+		       946:   075b          lsls   r3, r3, #29
+		       948:   d5bb          bpl.n  8c2 <nrfx_uart_0_irq_handler+0x62>
+		       94a:   f8d2 3108     ldr.w  r3, [r2, #264]   ; 0x108
+		--------------------
+	(     952,        8)	
+		--------------------
+		       948:   d5bb          bpl.n  8c2 <nrfx_uart_0_irq_handler+0x62>
+		       94a:   f8d2 3108     ldr.w  r3, [r2, #264]   ; 0x108
+		       94e:   2b00          cmp    r3, #0
+		       950:   d0b7          beq.n  8c2 <nrfx_uart_0_irq_handler+0x62>
+		->     952:   4b36          ldr    r3, [pc, #216] ; (a2c <nrfx_uart_0_irq_handler+0x1cc>)
+		       954:   6999          ldr    r1, [r3, #24]
+		       956:   2900          cmp    r1, #0
+		       958:   d03e          beq.n  9d8 <nrfx_uart_0_irq_handler+0x178>
+		       95a:   2100          movs   r1, #0
+		--------------------
+	(     97a,        6)	
+		--------------------
+		       972:   6a5a          ldr    r2, [r3, #36]  ; 0x24
+		       974:   6999          ldr    r1, [r3, #24]
+		       976:   3201          adds   r2, #1
+		       978:   625a          str    r2, [r3, #36]  ; 0x24
+		->     97a:   6a5a          ldr    r2, [r3, #36]  ; 0x24
+		       97c:   428a          cmp    r2, r1
+		       97e:   d1a0          bne.n  8c2 <nrfx_uart_0_irq_handler+0x62>
+		       980:   69da          ldr    r2, [r3, #28]
+		       982:   2a00          cmp    r2, #0
+		--------------------
+	(     9a8,        2)	
+		--------------------
+		       99e:   6819          ldr    r1, [r3, #0]
+		       9a0:   f88d 2018     strb.w r2, [sp, #24]
+		       9a4:   a806          add    r0, sp, #24
+		       9a6:   47a0          blx    r4
+		->     9a8:   e78b          b.n    8c2 <nrfx_uart_0_irq_handler+0x62>
+		       9aa:   4a1f          ldr    r2, [pc, #124] ; (a28 <nrfx_uart_0_irq_handler+0x1c8>)
+		       9ac:   2000          movs   r0, #0
+		       9ae:   f8c2 011c     str.w  r0, [r2, #284]   ; 0x11c
+		       9b2:   f8d2 211c     ldr.w  r2, [r2, #284]   ; 0x11c
+		--------------------
+	(     9aa,       22)	
+		--------------------
+		       9a0:   f88d 2018     strb.w r2, [sp, #24]
+		       9a4:   a806          add    r0, sp, #24
+		       9a6:   47a0          blx    r4
+		       9a8:   e78b          b.n    8c2 <nrfx_uart_0_irq_handler+0x62>
+		->     9aa:   4a1f          ldr    r2, [pc, #124] ; (a28 <nrfx_uart_0_irq_handler+0x1c8>)
+		       9ac:   2000          movs   r0, #0
+		       9ae:   f8c2 011c     str.w  r0, [r2, #284]   ; 0x11c
+		       9b2:   f8d2 211c     ldr.w  r2, [r2, #284]   ; 0x11c
+		       9b6:   9202          str    r2, [sp, #8]
+		--------------------
+	(     9d6,        2)	
+		--------------------
+		       9ce:   6158          str    r0, [r3, #20]
+		       9d0:   6819          ldr    r1, [r3, #0]
+		       9d2:   a806          add    r0, sp, #24
+		       9d4:   4790          blx    r2
+		->     9d6:   e791          b.n    8fc <nrfx_uart_0_irq_handler+0x9c>
+		       9d8:   f8c2 1108     str.w  r1, [r2, #264]   ; 0x108
+		       9dc:   f8d2 0108     ldr.w  r0, [r2, #264]   ; 0x108
+		       9e0:   9005          str    r0, [sp, #20]
+		       9e2:   9805          ldr    r0, [sp, #20]
+		--------------------
+	(     9d8,       18)	
+		--------------------
+		       9d0:   6819          ldr    r1, [r3, #0]
+		       9d2:   a806          add    r0, sp, #24
+		       9d4:   4790          blx    r2
+		       9d6:   e791          b.n    8fc <nrfx_uart_0_irq_handler+0x9c>
+		->     9d8:   f8c2 1108     str.w  r1, [r2, #264]   ; 0x108
+		       9dc:   f8d2 0108     ldr.w  r0, [r2, #264]   ; 0x108
+		       9e0:   9005          str    r0, [sp, #20]
+		       9e2:   9805          ldr    r0, [sp, #20]
+		       9e4:   f8d2 2518     ldr.w  r2, [r2, #1304]  ; 0x518
+		--------------------
+	(     9ea,       12)	
+		--------------------
+		       9e0:   9005          str    r0, [sp, #20]
+		       9e2:   9805          ldr    r0, [sp, #20]
+		       9e4:   f8d2 2518     ldr.w  r2, [r2, #1304]  ; 0x518
+		       9e8:   e7c7          b.n    97a <nrfx_uart_0_irq_handler+0x11a>
+		->     9ea:   f893 2029     ldrb.w r2, [r3, #41]   ; 0x29
+		       9ee:   b912          cbnz   r2, 9f6 <nrfx_uart_0_irq_handler+0x196>
+		       9f0:   4a0d          ldr    r2, [pc, #52]  ; (a28 <nrfx_uart_0_irq_handler+0x1c8>)
+		       9f2:   2101          movs   r1, #1
+		       9f4:   6051          str    r1, [r2, #4]
+		--------------------
+	(     a1a,        2)	
+		--------------------
+		       a0e:   e9d3 1200     ldrd   r1, r2, [r3]
+		       a12:   e9cd 0407     strd   r0, r4, [sp, #28]
+		       a16:   a806          add    r0, sp, #24
+		       a18:   4790          blx    r2
+		->     a1a:   e752          b.n    8c2 <nrfx_uart_0_irq_handler+0x62>
+		       a1c:   f3af 8000     nop.w
+		      ...
+		       a28:   40002000  .word   0x40002000
+		       a2c:   200000e8  .word   0x200000e8
+		--------------------
+	(    1c6a,        8)	
+		--------------------
+		      1c5e:   f1a1 0404     sub.w  r4, r1, #4
+		      1c62:   bfb8          it lt
+		      1c64:   18e4          addlt  r4, r4, r3
+		      1c66:   f000 f8d5     bl 1e14 <__malloc_lock>
+		->    1c6a:   4a1e          ldr    r2, [pc, #120] ; (1ce4 <_free_r+0x94>)
+		      1c6c:   9801          ldr    r0, [sp, #4]
+		      1c6e:   6813          ldr    r3, [r2, #0]
+		      1c70:   b933          cbnz   r3, 1c80 <_free_r+0x30>
+		      1c72:   6063          str    r3, [r4, #4]
+		--------------------
+	(    1c72,        4)	
+		--------------------
+		      1c6a:   4a1e          ldr    r2, [pc, #120] ; (1ce4 <_free_r+0x94>)
+		      1c6c:   9801          ldr    r0, [sp, #4]
+		      1c6e:   6813          ldr    r3, [r2, #0]
+		      1c70:   b933          cbnz   r3, 1c80 <_free_r+0x30>
+		->    1c72:   6063          str    r3, [r4, #4]
+		      1c74:   6014          str    r4, [r2, #0]
+		      1c76:   b003          add    sp, #12
+		      1c78:   e8bd 4030     ldmia.w    sp!, {r4, r5, lr}
+		      1c7c:   f000 b8d0     b.w    1e20 <__malloc_unlock>
+		--------------------
+	(    1c76,       10)	
+		--------------------
+		      1c6e:   6813          ldr    r3, [r2, #0]
+		      1c70:   b933          cbnz   r3, 1c80 <_free_r+0x30>
+		      1c72:   6063          str    r3, [r4, #4]
+		      1c74:   6014          str    r4, [r2, #0]
+		->    1c76:   b003          add    sp, #12
+		      1c78:   e8bd 4030     ldmia.w    sp!, {r4, r5, lr}
+		      1c7c:   f000 b8d0     b.w    1e20 <__malloc_unlock>
+		      1c80:   42a3          cmp    r3, r4
+		      1c82:   d908          bls.n  1c96 <_free_r+0x46>
+		--------------------
+	(    1c80,        4)	
+		--------------------
+		      1c74:   6014          str    r4, [r2, #0]
+		      1c76:   b003          add    sp, #12
+		      1c78:   e8bd 4030     ldmia.w    sp!, {r4, r5, lr}
+		      1c7c:   f000 b8d0     b.w    1e20 <__malloc_unlock>
+		->    1c80:   42a3          cmp    r3, r4
+		      1c82:   d908          bls.n  1c96 <_free_r+0x46>
+		      1c84:   6825          ldr    r5, [r4, #0]
+		      1c86:   1961          adds   r1, r4, r5
+		      1c88:   428b          cmp    r3, r1
+		--------------------
+	(    1c84,       18)	
+		--------------------
+		      1c78:   e8bd 4030     ldmia.w    sp!, {r4, r5, lr}
+		      1c7c:   f000 b8d0     b.w    1e20 <__malloc_unlock>
+		      1c80:   42a3          cmp    r3, r4
+		      1c82:   d908          bls.n  1c96 <_free_r+0x46>
+		->    1c84:   6825          ldr    r5, [r4, #0]
+		      1c86:   1961          adds   r1, r4, r5
+		      1c88:   428b          cmp    r3, r1
+		      1c8a:   bf01          itttt  eq
+		      1c8c:   6819          ldreq  r1, [r3, #0]
+		--------------------
+	(    1cc0,        2)	
+		--------------------
+		      1cb8:   6053          str    r3, [r2, #4]
+		      1cba:   440c          add    r4, r1
+		      1cbc:   6014          str    r4, [r2, #0]
+		      1cbe:   e7da          b.n    1c76 <_free_r+0x26>
+		->    1cc0:   d902          bls.n  1cc8 <_free_r+0x78>
+		      1cc2:   230c          movs   r3, #12
+		      1cc4:   6003          str    r3, [r0, #0]
+		      1cc6:   e7d6          b.n    1c76 <_free_r+0x26>
+		      1cc8:   6825          ldr    r5, [r4, #0]
+		--------------------
+	(    1cc8,       24)	
+		--------------------
+		      1cc0:   d902          bls.n  1cc8 <_free_r+0x78>
+		      1cc2:   230c          movs   r3, #12
+		      1cc4:   6003          str    r3, [r0, #0]
+		      1cc6:   e7d6          b.n    1c76 <_free_r+0x26>
+		->    1cc8:   6825          ldr    r5, [r4, #0]
+		      1cca:   1961          adds   r1, r4, r5
+		      1ccc:   428b          cmp    r3, r1
+		      1cce:   bf04          itt    eq
+		      1cd0:   6819          ldreq  r1, [r3, #0]
+		--------------------
+	(    2888,       12)	
+		--------------------
+		      2884:   e7fe          b.n    2884 <_exit>
+		      2886:   bf00          nop
+		  
+		  00002888 <_init>:
+		->    2888:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		      288a:   bf00          nop
+		      288c:   bcf8          pop    {r3, r4, r5, r6, r7}
+		      288e:   bc08          pop    {r3}
+		      2890:   469e          mov    lr, r3
+		--------------------

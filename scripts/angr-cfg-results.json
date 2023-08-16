@@ -1,182 +1,182 @@
 {
   "blinky-o0.bin": {
-                                    "fast" : { "blocks":   381, "edges":   533, "elapsed": "    0.294015500 s" },
+                                    "fast" : { "blocks":   381, "edges":   533, "elapsed": "    0.276071583 s" },
                                     "cnxd" : { "blocks":   317, "edges":   428, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":   326, "edges":   473, "elapsed": "    3.268418583 s" }
+                                    "emu"  : { "blocks":   326, "edges":   473, "elapsed": "    3.312475625 s" }
   },
   "blinky-o1.bin": {
-                                    "fast" : { "blocks":   183, "edges":   275, "elapsed": "    0.104453583 s" },
+                                    "fast" : { "blocks":   183, "edges":   275, "elapsed": "    0.163173792 s" },
                                     "cnxd" : { "blocks":   143, "edges":   195, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":   159, "edges":   236, "elapsed": "    1.272906167 s" }
+                                    "emu"  : { "blocks":   159, "edges":   236, "elapsed": "    1.150931084 s" }
   },
   "blinky-o2.bin": {
-                                    "fast" : { "blocks":   182, "edges":   271, "elapsed": "    0.101570041 s" },
+                                    "fast" : { "blocks":   182, "edges":   271, "elapsed": "    0.168464208 s" },
                                     "cnxd" : { "blocks":   143, "edges":   198, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":   154, "edges":   228, "elapsed": "    1.333461791 s" }
+                                    "emu"  : { "blocks":   154, "edges":   228, "elapsed": "    1.198699584 s" }
   },
   "blinky-o3.bin": {
-                                    "fast" : { "blocks":   177, "edges":   266, "elapsed": "    0.093519875 s" },
+                                    "fast" : { "blocks":   177, "edges":   266, "elapsed": "    0.092473000 s" },
                                     "cnxd" : { "blocks":   140, "edges":   194, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":   151, "edges":   224, "elapsed": "    1.325321375 s" }
+                                    "emu"  : { "blocks":   151, "edges":   224, "elapsed": "    1.291792750 s" }
   },
   "gpiote-o0.bin": {
-                                    "fast" : { "blocks":   691, "edges":  1027, "elapsed": "    0.321696417 s" },
+                                    "fast" : { "blocks":   691, "edges":  1027, "elapsed": "    0.314952459 s" },
                                     "cnxd" : { "blocks":   614, "edges":   805, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":   626, "edges":   945, "elapsed": "    6.744896833 s" }
+                                    "emu"  : { "blocks":   626, "edges":   945, "elapsed": "    6.179479417 s" }
   },
   "gpiote-o1.bin": {
-                                    "fast" : { "blocks":   323, "edges":   476, "elapsed": "    0.170740125 s" },
+                                    "fast" : { "blocks":   323, "edges":   476, "elapsed": "    0.149631459 s" },
                                     "cnxd" : { "blocks":   268, "edges":   367, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":   278, "edges":   421, "elapsed": "    2.919001958 s" }
+                                    "emu"  : { "blocks":   278, "edges":   421, "elapsed": "    2.642055917 s" }
   },
   "gpiote-o2.bin": {
-                                    "fast" : { "blocks":   317, "edges":   474, "elapsed": "    0.159938125 s" },
+                                    "fast" : { "blocks":   317, "edges":   474, "elapsed": "    0.152642041 s" },
                                     "cnxd" : { "blocks":   259, "edges":   363, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":   266, "edges":   406, "elapsed": "    2.377579125 s" }
+                                    "emu"  : { "blocks":   266, "edges":   406, "elapsed": "    2.708270917 s" }
   },
   "gpiote-o3.bin": {
-                                    "fast" : { "blocks":   347, "edges":   518, "elapsed": "    0.401124042 s" },
+                                    "fast" : { "blocks":   347, "edges":   518, "elapsed": "    0.162910584 s" },
                                     "cnxd" : { "blocks":   291, "edges":   412, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":   297, "edges":   456, "elapsed": "    2.766731750 s" }
+                                    "emu"  : { "blocks":   297, "edges":   456, "elapsed": "    2.759828083 s" }
   },
   "i2s-o0.bin": {
-                                    "fast" : { "blocks":  1656, "edges":  2710, "elapsed": "    0.967796625 s" },
+                                    "fast" : { "blocks":  1656, "edges":  2710, "elapsed": "    0.966137708 s" },
                                     "cnxd" : { "blocks":  1480, "edges":  2086, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":  1052, "edges":  1588, "elapsed": "   16.283661542 s" }
+                                    "emu"  : { "blocks":  1052, "edges":  1588, "elapsed": "   14.769323375 s" }
   },
   "i2s-o1.bin": {
-                                    "fast" : { "blocks":  1055, "edges":  1733, "elapsed": "    0.578009083 s" },
+                                    "fast" : { "blocks":  1055, "edges":  1733, "elapsed": "    0.501968500 s" },
                                     "cnxd" : { "blocks":   776, "edges":  1152, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":   271, "edges":   403, "elapsed": "    2.654511083 s" }
+                                    "emu"  : { "blocks":   271, "edges":   403, "elapsed": "    2.392153834 s" }
   },
   "i2s-o2.bin": {
-                                    "fast" : { "blocks":  1086, "edges":  1815, "elapsed": "    0.562981375 s" },
+                                    "fast" : { "blocks":  1086, "edges":  1815, "elapsed": "    0.539695417 s" },
                                     "cnxd" : { "blocks":   838, "edges":  1296, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":   255, "edges":   372, "elapsed": "    3.113957167 s" }
+                                    "emu"  : { "blocks":   255, "edges":   372, "elapsed": "    2.954499542 s" }
   },
   "i2s-o3.bin": {
-                                    "fast" : { "blocks":  1089, "edges":  1837, "elapsed": "    0.555608375 s" },
+                                    "fast" : { "blocks":  1089, "edges":  1837, "elapsed": "    0.540220291 s" },
                                     "cnxd" : { "blocks":   826, "edges":  1285, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":   252, "edges":   368, "elapsed": "    2.455726416 s" }
+                                    "emu"  : { "blocks":   252, "edges":   368, "elapsed": "    2.401088292 s" }
   },
   "saadc-o0.bin": {
-                                    "fast" : { "blocks":  1322, "edges":  2112, "elapsed": "    0.655206375 s" },
+                                    "fast" : { "blocks":  1322, "edges":  2112, "elapsed": "    0.632418959 s" },
                                     "cnxd" : { "blocks":  1208, "edges":  1688, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":   925, "edges":  1410, "elapsed": "   15.982026333 s" }
+                                    "emu"  : { "blocks":   925, "edges":  1410, "elapsed": "   15.734845000 s" }
   },
   "saadc-o1.bin": {
-                                    "fast" : { "blocks":   885, "edges":  1453, "elapsed": "    0.564901708 s" },
+                                    "fast" : { "blocks":   885, "edges":  1453, "elapsed": "    0.553500666 s" },
                                     "cnxd" : { "blocks":   789, "edges":  1157, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":   539, "edges":   853, "elapsed": "    8.641350208 s" }
+                                    "emu"  : { "blocks":   539, "edges":   853, "elapsed": "    8.393461375 s" }
   },
   "saadc-o2.bin": {
-                                    "fast" : { "blocks":   944, "edges":  1624, "elapsed": "    0.607018291 s" },
+                                    "fast" : { "blocks":   944, "edges":  1624, "elapsed": "    0.550865792 s" },
                                     "cnxd" : { "blocks":   839, "edges":  1308, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":   518, "edges":   853, "elapsed": "    8.501174292 s" }
+                                    "emu"  : { "blocks":   518, "edges":   853, "elapsed": "    8.424266625 s" }
   },
   "saadc-o3.bin": {
-                                    "fast" : { "blocks":   950, "edges":  1655, "elapsed": "    0.557977959 s" },
+                                    "fast" : { "blocks":   950, "edges":  1655, "elapsed": "    1.568560542 s" },
                                     "cnxd" : { "blocks":   852, "edges":  1339, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":   518, "edges":   854, "elapsed": "    8.938011833 s" }
+                                    "emu"  : { "blocks":   518, "edges":   854, "elapsed": "    7.797502875 s" }
   },
   "simple_timer-o0.bin": {
-                                    "fast" : { "blocks":   660, "edges":   970, "elapsed": "    0.338310709 s" },
+                                    "fast" : { "blocks":   660, "edges":   970, "elapsed": "    0.324565375 s" },
                                     "cnxd" : { "blocks":   554, "edges":   736, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":   560, "edges":   832, "elapsed": "    7.213693125 s" }
+                                    "emu"  : { "blocks":   560, "edges":   832, "elapsed": "    6.980449375 s" }
   },
   "simple_timer-o1.bin": {
-                                    "fast" : { "blocks":   349, "edges":   524, "elapsed": "    0.196670375 s" },
+                                    "fast" : { "blocks":   349, "edges":   524, "elapsed": "    0.180678708 s" },
                                     "cnxd" : { "blocks":   162, "edges":   226, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":   284, "edges":   421, "elapsed": "    2.513686542 s" }
+                                    "emu"  : { "blocks":   284, "edges":   421, "elapsed": "    2.383605875 s" }
   },
   "simple_timer-o2.bin": {
-                                    "fast" : { "blocks":   357, "edges":   564, "elapsed": "    0.171270584 s" },
+                                    "fast" : { "blocks":   357, "edges":   564, "elapsed": "    0.173270083 s" },
                                     "cnxd" : { "blocks":   248, "edges":   339, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":     0, "edges":     0, "elapsed": "    2.513686542 s" }
+                                    "emu"  : { "blocks":     0, "edges":     0, "elapsed": "    2.383605875 s" }
   },
   "simple_timer-o3.bin": {
-                                    "fast" : { "blocks":   400, "edges":   645, "elapsed": "    0.190255792 s" },
+                                    "fast" : { "blocks":   400, "edges":   645, "elapsed": "    0.190977208 s" },
                                     "cnxd" : { "blocks":   291, "edges":   415, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":     0, "edges":     0, "elapsed": "    2.513686542 s" }
+                                    "emu"  : { "blocks":     0, "edges":     0, "elapsed": "    2.383605875 s" }
   },
   "spi-o0.bin": {
-                                    "fast" : { "blocks":  1725, "edges":  2825, "elapsed": "    0.805724583 s" },
+                                    "fast" : { "blocks":  1725, "edges":  2825, "elapsed": "    0.781363917 s" },
                                     "cnxd" : { "blocks":  1558, "edges":  2171, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":  1195, "edges":  1810, "elapsed": "   19.772360083 s" }
+                                    "emu"  : { "blocks":  1195, "edges":  1810, "elapsed": "   19.692664792 s" }
   },
   "spi-o1.bin": {
-                                    "fast" : { "blocks":  1031, "edges":  1679, "elapsed": "    0.617134875 s" },
+                                    "fast" : { "blocks":  1031, "edges":  1679, "elapsed": "    0.599512666 s" },
                                     "cnxd" : { "blocks":   757, "edges":  1127, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":     0, "edges":     0, "elapsed": "   19.772360083 s" }
+                                    "emu"  : { "blocks":     0, "edges":     0, "elapsed": "   19.692664792 s" }
   },
   "spi-o2.bin": {
-                                    "fast" : { "blocks":  1069, "edges":  1784, "elapsed": "    0.583112709 s" },
+                                    "fast" : { "blocks":  1069, "edges":  1784, "elapsed": "    0.586626292 s" },
                                     "cnxd" : { "blocks":   832, "edges":  1289, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":   636, "edges":  1022, "elapsed": "   13.232435208 s" }
+                                    "emu"  : { "blocks":   636, "edges":  1022, "elapsed": "   12.908690791 s" }
   },
   "spi-o3.bin": {
-                                    "fast" : { "blocks":  1115, "edges":  1881, "elapsed": "    0.650283542 s" },
+                                    "fast" : { "blocks":  1115, "edges":  1881, "elapsed": "    0.616407334 s" },
                                     "cnxd" : { "blocks":   883, "edges":  1381, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":   688, "edges":  1124, "elapsed": "   10.945331916 s" }
+                                    "emu"  : { "blocks":   688, "edges":  1124, "elapsed": "   10.651896375 s" }
   },
   "timer-o0.bin": {
-                                    "fast" : { "blocks":   462, "edges":   654, "elapsed": "    0.281695041 s" },
+                                    "fast" : { "blocks":   462, "edges":   654, "elapsed": "    0.271179334 s" },
                                     "cnxd" : { "blocks":   389, "edges":   509, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":   398, "edges":   581, "elapsed": "    3.636988334 s" }
+                                    "emu"  : { "blocks":   398, "edges":   581, "elapsed": "    3.563135250 s" }
   },
   "timer-o1.bin": {
-                                    "fast" : { "blocks":   218, "edges":   316, "elapsed": "    0.120341833 s" },
+                                    "fast" : { "blocks":   218, "edges":   316, "elapsed": "    0.119976667 s" },
                                     "cnxd" : { "blocks":   163, "edges":   219, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":   183, "edges":   269, "elapsed": "    1.462618666 s" }
+                                    "emu"  : { "blocks":   183, "edges":   269, "elapsed": "    1.444469791 s" }
   },
   "timer-o2.bin": {
-                                    "fast" : { "blocks":   217, "edges":   311, "elapsed": "    0.119548667 s" },
+                                    "fast" : { "blocks":   217, "edges":   311, "elapsed": "    0.120098791 s" },
                                     "cnxd" : { "blocks":   163, "edges":   225, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":   180, "edges":   262, "elapsed": "    3.949151333 s" }
+                                    "emu"  : { "blocks":   180, "edges":   262, "elapsed": "    3.733788791 s" }
   },
   "timer-o3.bin": {
-                                    "fast" : { "blocks":   212, "edges":   306, "elapsed": "    0.120179500 s" },
+                                    "fast" : { "blocks":   212, "edges":   306, "elapsed": "    0.118744084 s" },
                                     "cnxd" : { "blocks":   160, "edges":   221, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":   177, "edges":   258, "elapsed": "    1.932687833 s" }
+                                    "emu"  : { "blocks":   177, "edges":   258, "elapsed": "    1.907531750 s" }
   },
   "twi_sensor-o0.bin": {
-                                    "fast" : { "blocks":  1764, "edges":  2937, "elapsed": "    0.751343166 s" },
+                                    "fast" : { "blocks":  1764, "edges":  2937, "elapsed": "    0.704783084 s" },
                                     "cnxd" : { "blocks":  1580, "edges":  2244, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":  1218, "edges":  1914, "elapsed": "   22.328286541 s" }
+                                    "emu"  : { "blocks":  1218, "edges":  1914, "elapsed": "   21.603562625 s" }
   },
   "twi_sensor-o1.bin": {
-                                    "fast" : { "blocks":  1057, "edges":  1714, "elapsed": "    0.537566667 s" },
+                                    "fast" : { "blocks":  1057, "edges":  1714, "elapsed": "    0.538855542 s" },
                                     "cnxd" : { "blocks":   778, "edges":  1165, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":     0, "edges":     0, "elapsed": "   22.328286541 s" }
+                                    "emu"  : { "blocks":     0, "edges":     0, "elapsed": "   21.603562625 s" }
   },
   "twi_sensor-o2.bin": {
-                                    "fast" : { "blocks":  1134, "edges":  1893, "elapsed": "    0.521675083 s" },
+                                    "fast" : { "blocks":  1134, "edges":  1893, "elapsed": "    0.516807125 s" },
                                     "cnxd" : { "blocks":   862, "edges":  1340, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":   647, "edges":  1043, "elapsed": "   11.048790959 s" }
+                                    "emu"  : { "blocks":   647, "edges":  1043, "elapsed": "   11.150030500 s" }
   },
   "twi_sensor-o3.bin": {
-                                    "fast" : { "blocks":  1116, "edges":  1876, "elapsed": "    0.511389541 s" },
+                                    "fast" : { "blocks":  1116, "edges":  1876, "elapsed": "    0.502147709 s" },
                                     "cnxd" : { "blocks":   847, "edges":  1324, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":   653, "edges":  1062, "elapsed": "   13.224787042 s" }
+                                    "emu"  : { "blocks":   653, "edges":  1062, "elapsed": "   12.801133750 s" }
   },
   "uart-o0.bin": {
-                                    "fast" : { "blocks":  1380, "edges":  2235, "elapsed": "    0.641472500 s" },
+                                    "fast" : { "blocks":  1380, "edges":  2235, "elapsed": "    0.626202542 s" },
                                     "cnxd" : { "blocks":  1170, "edges":  1678, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":  1089, "edges":  1737, "elapsed": "   23.037634542 s" }
+                                    "emu"  : { "blocks":  1089, "edges":  1737, "elapsed": "   22.720732375 s" }
   },
   "uart-o1.bin": {
-                                    "fast" : { "blocks":   968, "edges":  1537, "elapsed": "    3.586620250 s" },
+                                    "fast" : { "blocks":   968, "edges":  1537, "elapsed": "    3.471469875 s" },
                                     "cnxd" : { "blocks":   755, "edges":  1118, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":   221, "edges":   337, "elapsed": "    1.959221333 s" }
+                                    "emu"  : { "blocks":   221, "edges":   337, "elapsed": "    2.093805459 s" }
   },
   "uart-o2.bin": {
-                                    "fast" : { "blocks":   944, "edges":  1499, "elapsed": "    0.484238333 s" },
+                                    "fast" : { "blocks":   944, "edges":  1499, "elapsed": "    0.481786334 s" },
                                     "cnxd" : { "blocks":   715, "edges":  1080, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":   595, "edges":   916, "elapsed": "    9.650612083 s" }
+                                    "emu"  : { "blocks":   595, "edges":   916, "elapsed": "    9.862399750 s" }
   },
   "uart-o3.bin": {
-                                    "fast" : { "blocks":   939, "edges":  1494, "elapsed": "    0.477901334 s" },
+                                    "fast" : { "blocks":   939, "edges":  1494, "elapsed": "    0.483710250 s" },
                                     "cnxd" : { "blocks":   712, "edges":  1076, "elapsed": "n/a s" },
-                                    "emu"  : { "blocks":   598, "edges":   921, "elapsed": "    9.699262791 s" }
+                                    "emu"  : { "blocks":   598, "edges":   921, "elapsed": "    9.917361709 s" }
   }
 }

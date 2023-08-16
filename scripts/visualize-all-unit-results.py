@@ -48,6 +48,107 @@ rcParams.update({
 })
 
 
+def compare_coverage(graphs, coverage, eng0, eng1):
+    """utility for comparing coverage of cfgs for all firmware
+    returns the overlap and exclusive coverage of each engine
+    loop through both sorted node sets and compare elements for overlap
+    """
+    fw_names = list(sorted(graphs.keys()))
+
+    start = lambda n: n[0]
+    end = lambda n: n[0] + n[-1]
+
+    def covers(range1, range2):
+        """returns true if range1 strictly inside range2 or vice versa"""
+        return ((start(range1) <= start(range2) and end(range2) <= end(range1))
+            or (start(range2) <= start(range1) and end(range1) <= end(range2)))
+
+    opts = ['o0', 'o1', 'o2', 'o3']
+    only0 = { opt:[] for opt in opts }
+    ovrlp = { opt:[] for opt in opts }
+    only1 = { opt:[] for opt in opts }
+
+    for fw_name in sorted(fw_names, reverse=True):
+        for opt in opts:
+            nodes0 = graphs[fw_name][eng0][opt]['nodes']
+            nodes1 = graphs[fw_name][eng1][opt]['nodes']
+
+            coverage0 = coverage[fw_name][eng0][opt]
+            coverage1 = coverage[fw_name][eng1][opt]
+
+            eng0_only = set()
+            eng1_only = set()
+            overlap = set()
+
+            for node in nodes0:
+                if any([covers(region, node) for region in coverage1]):
+                    overlap.add(node)
+                else:
+                    eng0_only.add(node)
+
+            for node in nodes1:
+                if any([covers(region, node) for region in coverage0]):
+                    overlap.add(node)
+                else:
+                    eng1_only.add(node)
+
+            only0[opt].append(len(eng0_only))
+            only1[opt].append(len(eng1_only))
+            ovrlp[opt].append(len(overlap))
+
+    for opt in opts:
+        only0[opt] = np.array(only0[opt])
+        only1[opt] = np.array(only1[opt])
+        ovrlp[opt] = np.array(ovrlp[opt])
+
+    return [ (eng0, only0), ('ovlp', ovrlp), (eng1, only1) ]
+
+
+def generate_coverage_set(graphs, fw_name, engine, opt):
+    """utility for generating the address space coverage of cfg 
+    for a given firmware and engine
+    returns a set of tuples representing the covered address range
+    tuples of form (start, size)
+    """
+    ranges = set()
+    range_start = 0
+    range_size = 0
+    for naddr, nsize in sorted(graphs[fw_name][engine][opt]['nodes']):
+        if range_start + range_size < naddr:
+            # check if gap between current range and next block exists
+            if range_size > 0:
+                ranges.add((range_start, range_size))
+            # start consolidating new range
+            range_start = naddr
+            range_size = nsize
+        else:
+            # this includes the case of overlapping blocks
+            # in which one blocks only partially cover one another
+            # which should never occur
+            range_size = naddr + nsize - range_start
+
+    return ranges
+
+
+def generate_coverage(graphs, engs, fw_names):
+    """utility for generating coverage sets 
+    of all engines and firmwares provided
+    returns a dictionary organized by firmware, then engine
+    """
+    coverage = {}
+
+    # construct coverage sets
+    for fw_name in fw_names:
+        coverage[fw_name] = {}
+        for eng in engs:
+            coverage[fw_name][eng] = {}
+            for opt in ['o0', 'o1', 'o2', 'o3']:
+                ranges = generate_coverage_set(graphs, fw_name, eng, opt)
+                coverage[fw_name][eng][opt] = ranges
+
+    return coverage
+
+
 def get_ovlp_data(graphs, engine, settype):
     """a helper function to get intersection data"""
     opts = [f"o{i}" for i in range(4)]
@@ -206,6 +307,9 @@ if __name__ == "__main__":
     if not exists(OUT_DIR):
         Path(OUT_DIR).mkdir(parents=True, exist_ok=True)
 
+    # generate coverage data
+    coverage = generate_coverage(graphs, engs, graphs.keys())
+
     engs = ['fxe', 'angr_emu', 'angr_fast', 'angr_cnnctd', 'ghidra_simple', 'ghidra_cnnctd']
 
     fw_labels = list(sorted(graphs.keys(), reverse=True))
@@ -228,7 +332,17 @@ if __name__ == "__main__":
 
     for settype, axs in zip(['nodes', 'edges'], (nodes_ax, edges_ax)):
         for eng, ax in zip(engs, axs):
-            ovlp_data = get_ovlp_data(graphs, eng, settype)
+            if settype == 'nodes':
+                if exists(cached := f"{PARENT_DIR}/.cache/{eng}-blocks-unit-cmp.pkl"):
+                    with open(cached, 'rb') as pklfile:
+                        ovlp_data = dill.load(pklfile)
+                else:
+                    print(f"calculating coverage overlap for {eng}...")
+                    ovlp_data = compare_coverage(graphs, coverage, 'ffxe', eng)
+                    with open(cached, 'wb') as pklfile:
+                        dill.dump(ovlp_data, pklfile)
+            else:
+                ovlp_data = get_ovlp_data(graphs, eng, settype)
             
             sublabels = make_ovlp_subplot(ax, ovlp_data, getsublabels=(eng == 'fxe'))
             

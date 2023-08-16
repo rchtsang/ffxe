@@ -1,0 +1,1403 @@
+blinky-o0: 1 | 1
+	(    1110,        4)	
+		--------------------
+		  00001100 <m_board_btn_list>:
+		      1100:   0e0d 100f 0000 0000 0000 0000 0000 0000     ................
+		  
+		  00001110 <delay_machine_code.0>:
+		->    1110:   3803 d8fd 4770 0000                         .8..pG..
+		  
+		  00001118 <__EH_FRAME_BEGIN__>:
+		      1118:   0000 0000                                   ....
+		  
+		--------------------
+
+blinky-o1: 1 | 1
+	(     970,        4)	
+		--------------------
+		  0000096c <m_board_led_list>:
+		   96c:   1211 1413                                   ....
+		  
+		  00000970 <delay_machine_code.0>:
+		-> 970:   3803 d8fd 4770 0000                         .8..pG..
+		  
+		  00000978 <__EH_FRAME_BEGIN__>:
+		   978:   0000 0000                                   ....
+		  
+		--------------------
+
+blinky-o2: 1 | 1
+	(     990,        4)	
+		--------------------
+		  00000980 <m_board_led_list>:
+		   980:   1211 1413 0000 0000 0000 0000 0000 0000     ................
+		  
+		  00000990 <delay_machine_code.0>:
+		-> 990:   3803 d8fd 4770 0000                         .8..pG..
+		  
+		  00000998 <CSWTCH.15>:
+		   998:   0000 0101                                   ....
+		  
+		--------------------
+
+blinky-o3: 1 | 1
+	(     970,        4)	
+		--------------------
+		  0000096c <m_board_led_list>:
+		   96c:   1211 1413                                   ....
+		  
+		  00000970 <delay_machine_code.0>:
+		-> 970:   3803 d8fd 4770 0000                         .8..pG..
+		  
+		  00000978 <CSWTCH.15>:
+		   978:   0000 0101                                   ....
+		  
+		--------------------
+
+gpiote-o0: 2 | 2
+	(    243c,       12)	
+		--------------------
+		      2438:   e7fe          b.n    2438 <_exit>
+		      243a:   bf00          nop
+		  
+		  0000243c <_init>:
+		->    243c:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		      243e:   bf00          nop
+		      2440:   bcf8          pop    {r3, r4, r5, r6, r7}
+		      2442:   bc08          pop    {r3}
+		      2444:   469e          mov    lr, r3
+		--------------------
+	(    2448,       12)	
+		--------------------
+		      2444:   469e          mov    lr, r3
+		      2446:   4770          bx lr
+		  
+		  00002448 <_fini>:
+		->    2448:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		      244a:   bf00          nop
+		      244c:   bcf8          pop    {r3, r4, r5, r6, r7}
+		      244e:   bc08          pop    {r3}
+		      2450:   469e          mov    lr, r3
+		--------------------
+
+gpiote-o1: 2 | 2
+	(     fd8,       12)	
+		--------------------
+		       fd4:   e7fe          b.n    fd4 <_exit>
+		       fd6:   bf00          nop
+		  
+		  00000fd8 <_init>:
+		->     fd8:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		       fda:   bf00          nop
+		       fdc:   bcf8          pop    {r3, r4, r5, r6, r7}
+		       fde:   bc08          pop    {r3}
+		       fe0:   469e          mov    lr, r3
+		--------------------
+	(     fe4,       12)	
+		--------------------
+		       fe0:   469e          mov    lr, r3
+		       fe2:   4770          bx lr
+		  
+		  00000fe4 <_fini>:
+		->     fe4:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		       fe6:   bf00          nop
+		       fe8:   bcf8          pop    {r3, r4, r5, r6, r7}
+		       fea:   bc08          pop    {r3}
+		       fec:   469e          mov    lr, r3
+		--------------------
+
+gpiote-o2: 2 | 2
+	(     fe8,       12)	
+		--------------------
+		       fe4:   e7fe          b.n    fe4 <_exit>
+		       fe6:   bf00          nop
+		  
+		  00000fe8 <_init>:
+		->     fe8:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		       fea:   bf00          nop
+		       fec:   bcf8          pop    {r3, r4, r5, r6, r7}
+		       fee:   bc08          pop    {r3}
+		       ff0:   469e          mov    lr, r3
+		--------------------
+	(     ff4,       12)	
+		--------------------
+		       ff0:   469e          mov    lr, r3
+		       ff2:   4770          bx lr
+		  
+		  00000ff4 <_fini>:
+		->     ff4:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		       ff6:   bf00          nop
+		       ff8:   bcf8          pop    {r3, r4, r5, r6, r7}
+		       ffa:   bc08          pop    {r3}
+		       ffc:   469e          mov    lr, r3
+		--------------------
+
+gpiote-o3: 2 | 2
+	(    1150,       12)	
+		--------------------
+		      114c:   e7fe          b.n    114c <_exit>
+		      114e:   bf00          nop
+		  
+		  00001150 <_init>:
+		->    1150:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		      1152:   bf00          nop
+		      1154:   bcf8          pop    {r3, r4, r5, r6, r7}
+		      1156:   bc08          pop    {r3}
+		      1158:   469e          mov    lr, r3
+		--------------------
+	(    115c,       12)	
+		--------------------
+		      1158:   469e          mov    lr, r3
+		      115a:   4770          bx lr
+		  
+		  0000115c <_fini>:
+		->    115c:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		      115e:   bf00          nop
+		      1160:   bcf8          pop    {r3, r4, r5, r6, r7}
+		      1162:   bc08          pop    {r3}
+		      1164:   469e          mov    lr, r3
+		--------------------
+
+i2s-o0: 1 | 1
+	(     86c,        8)	
+		--------------------
+		       864:   e00d          b.n    882 <nrf_log_color_id_get+0x56>
+		       866:   2304          movs   r3, #4
+		       868:   73fb          strb   r3, [r7, #15]
+		       86a:   e00a          b.n    882 <nrf_log_color_id_get+0x56>
+		->     86c:   68bb          ldr    r3, [r7, #8]
+		       86e:   791b          ldrb   r3, [r3, #4]
+		       870:   73fb          strb   r3, [r7, #15]
+		       872:   e006          b.n    882 <nrf_log_color_id_get+0x56>
+		       874:   68bb          ldr    r3, [r7, #8]
+		--------------------
+
+i2s-o1: 0 | 0
+
+i2s-o2: 0 | 0
+
+i2s-o3: 0 | 0
+
+saadc-o0: 3 | 3
+	(    1256,       28)	
+		--------------------
+		      124c:   68f9          ldr    r1, [r7, #12]
+		      124e:   6ab8          ldr    r0, [r7, #40]  ; 0x28
+		      1250:   f000 facf     bl 17f2 <nrf_fprintf>
+		      1254:   e057          b.n    1306 <nrf_log_std_entry_process+0x12a>
+		->    1256:   68bb          ldr    r3, [r7, #8]
+		      1258:   681a          ldr    r2, [r3, #0]
+		      125a:   68bb          ldr    r3, [r7, #8]
+		      125c:   3304          adds   r3, #4
+		      125e:   6819          ldr    r1, [r3, #0]
+		--------------------
+	(    1272,        2)	
+		--------------------
+		      1268:   460b          mov    r3, r1
+		      126a:   68f9          ldr    r1, [r7, #12]
+		      126c:   6ab8          ldr    r0, [r7, #40]  ; 0x28
+		      126e:   f000 fac0     bl 17f2 <nrf_fprintf>
+		->    1272:   e048          b.n    1306 <nrf_log_std_entry_process+0x12a>
+		      1274:   68bb          ldr    r3, [r7, #8]
+		      1276:   6819          ldr    r1, [r3, #0]
+		      1278:   68bb          ldr    r3, [r7, #8]
+		      127a:   3304          adds   r3, #4
+		--------------------
+	(    4580,        4)	
+		--------------------
+		  00004570 <nrf_log_backend_rtt_api>:
+		      4570:   03dd 0000 041d 0000 0409 0000 0000 0000     ................
+		  
+		  00004580 <delay_machine_code.0>:
+		->    4580:   3803 d8fd 4770 0000 7472 5f74 6f6c 5f67     .8..pG..rtt_log_
+		      4590:   6162 6b63 6e65 0064                         backend.
+		  
+		  00004598 <m_log_push_ringbuf>:
+		      4598:   0184 2000 007f 0000 0204 2000 7061 0070     ... ....... app.
+		--------------------
+
+saadc-o1: 1 | 1
+	(    25b0,        4)	
+		--------------------
+		      25ac:   0000          movs   r0, r0
+		      ...
+		  
+		  000025b0 <delay_machine_code.0>:
+		->    25b0:   3803 d8fd 4770 0000                         .8..pG..
+		  
+		  000025b8 <nrf_log_backend_rtt_api>:
+		      25b8:   02f1 0000 02ef 0000 02ed 0000 7472 5f74     ............rtt_
+		      25c8:   6f6c 5f67 6162 6b63 6e65 0064 6142 6b63     log_backend.Back
+		--------------------
+
+saadc-o2: 3 | 3
+	(    27c8,       12)	
+		--------------------
+		      27c4:   e7fe          b.n    27c4 <_exit>
+		      27c6:   bf00          nop
+		  
+		  000027c8 <_init>:
+		->    27c8:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		      27ca:   bf00          nop
+		      27cc:   bcf8          pop    {r3, r4, r5, r6, r7}
+		      27ce:   bc08          pop    {r3}
+		      27d0:   469e          mov    lr, r3
+		--------------------
+	(    27d4,       12)	
+		--------------------
+		      27d0:   469e          mov    lr, r3
+		      27d2:   4770          bx lr
+		  
+		  000027d4 <_fini>:
+		->    27d4:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		      27d6:   bf00          nop
+		      27d8:   bcf8          pop    {r3, r4, r5, r6, r7}
+		      27da:   bc08          pop    {r3}
+		      27dc:   469e          mov    lr, r3
+		--------------------
+	(    27e0,        4)	
+		--------------------
+		      27dc:   469e          mov    lr, r3
+		      27de:   4770          bx lr
+		  
+		  000027e0 <delay_machine_code.0>:
+		->    27e0:   3803 d8fd 4770 0000                         .8..pG..
+		  
+		  000027e8 <nrf_log_backend_rtt_api>:
+		      27e8:   02f1 0000 0365 0000 02ed 0000 7472 5f74     ....e.......rtt_
+		      27f8:   6f6c 5f67 6162 6b63 6e65 0064 6142 6b63     log_backend.Back
+		--------------------
+
+saadc-o3: 1 | 1
+	(    28e0,        4)	
+		--------------------
+		      28dc:   0000          movs   r0, r0
+		      ...
+		  
+		  000028e0 <delay_machine_code.0>:
+		->    28e0:   3803 d8fd 4770 0000                         .8..pG..
+		  
+		  000028e8 <nrf_log_backend_rtt_api>:
+		      28e8:   02f1 0000 0365 0000 02ed 0000 7472 5f74     ....e.......rtt_
+		      28f8:   6f6c 5f67 6162 6b63 6e65 0064 6142 6b63     log_backend.Back
+		--------------------
+
+simple_timer-o0: 1 | 1
+	(    1ff0,        4)	
+		--------------------
+		  00001fe0 <SIMPLE_TIMER>:
+		      1fe0:   9000 4000 0400 0000 0000 0000 0000 0000     ...@............
+		  
+		  00001ff0 <delay_machine_code.0>:
+		->    1ff0:   3803 d8fd 4770 0000                         .8..pG..
+		  
+		  00001ff8 <__EH_FRAME_BEGIN__>:
+		      1ff8:   0000 0000                                   ....
+		  
+		--------------------
+
+simple_timer-o1: 1 | 1
+	(    1000,        4)	
+		--------------------
+		  00000ff4 <SIMPLE_TIMER>:
+		       ff4:   9000 4000 0400 0000 0000 0000               ...@........
+		  
+		  00001000 <delay_machine_code.0>:
+		->    1000:   3803 d8fd 4770 0000                         .8..pG..
+		  
+		  00001008 <__EH_FRAME_BEGIN__>:
+		      1008:   0000 0000                                   ....
+		  
+		--------------------
+
+simple_timer-o2: 1 | 1
+	(    10d0,        4)	
+		--------------------
+		  000010c4 <SIMPLE_TIMER>:
+		      10c4:   9000 4000 0400 0000 0000 0000               ...@........
+		  
+		  000010d0 <delay_machine_code.0>:
+		->    10d0:   3803 d8fd 4770 0000                         .8..pG..
+		  
+		  000010d8 <CSWTCH.15>:
+		      10d8:   0000 0101                                   ....
+		  
+		--------------------
+
+simple_timer-o3: 1 | 1
+	(    1370,        4)	
+		--------------------
+		  00001368 <SIMPLE_TIMER>:
+		      1368:   9000 4000 0400 0000                         ...@....
+		  
+		  00001370 <delay_machine_code.0>:
+		->    1370:   3803 d8fd 4770 0000                         .8..pG..
+		  
+		  00001378 <CSWTCH.15>:
+		      1378:   0000 0101                                   ....
+		  
+		--------------------
+
+spi-o0: 1 | 1
+	(    6050,        4)	
+		--------------------
+		      6034:   2e646574 00000000 ffffffff 0000ff06     ted.............
+		      6044:   40000000 00000000 00000000              ...@........
+		  
+		  00006050 <delay_machine_code.0>:
+		->    6050:   d8fd3803                                 .8..pG
+		  
+		  00006056 <_ctype_>:
+		      6056:   20202000 20202020 28282020 20282828     .         ((((( 
+		      6066:   20202020 20202020 20202020 20202020                     
+		--------------------
+
+spi-o1: 0 | 0
+
+spi-o2: 0 | 0
+
+spi-o3: 0 | 0
+
+timer-o0: 3 | 3
+	(    17f8,        8)	
+		--------------------
+		      17f4:   e7fe          b.n    17f4 <_exit>
+		      17f6:   bf00          nop
+		  
+		  000017f8 <_init>:
+		->    17f8:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		      17fa:   bf00          nop
+		      17fc:   bcf8          pop    {r3, r4, r5, r6, r7}
+		      17fe:   bc08          pop    {r3}
+		      1800:   469e          mov    lr, r3
+		--------------------
+	(    1800,        4)	
+		--------------------
+		      17f8:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		      17fa:   bf00          nop
+		      17fc:   bcf8          pop    {r3, r4, r5, r6, r7}
+		      17fe:   bc08          pop    {r3}
+		->    1800:   469e          mov    lr, r3
+		      1802:   4770          bx lr
+		  
+		  00001804 <_fini>:
+		      1804:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		--------------------
+	(    1804,       12)	
+		--------------------
+		      1800:   469e          mov    lr, r3
+		      1802:   4770          bx lr
+		  
+		  00001804 <_fini>:
+		->    1804:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		      1806:   bf00          nop
+		      1808:   bcf8          pop    {r3, r4, r5, r6, r7}
+		      180a:   bc08          pop    {r3}
+		      180c:   469e          mov    lr, r3
+		--------------------
+
+timer-o1: 2 | 2
+	(     bd8,       12)	
+		--------------------
+		   bd4:   e7fe          b.n    bd4 <_exit>
+		   bd6:   bf00          nop
+		  
+		  00000bd8 <_init>:
+		-> bd8:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		   bda:   bf00          nop
+		   bdc:   bcf8          pop    {r3, r4, r5, r6, r7}
+		   bde:   bc08          pop    {r3}
+		   be0:   469e          mov    lr, r3
+		--------------------
+	(     be4,       12)	
+		--------------------
+		   be0:   469e          mov    lr, r3
+		   be2:   4770          bx lr
+		  
+		  00000be4 <_fini>:
+		-> be4:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		   be6:   bf00          nop
+		   be8:   bcf8          pop    {r3, r4, r5, r6, r7}
+		   bea:   bc08          pop    {r3}
+		   bec:   469e          mov    lr, r3
+		--------------------
+
+timer-o2: 2 | 2
+	(     be4,       12)	
+		--------------------
+		   be0:   e7fe          b.n    be0 <_exit>
+		   be2:   bf00          nop
+		  
+		  00000be4 <_init>:
+		-> be4:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		   be6:   bf00          nop
+		   be8:   bcf8          pop    {r3, r4, r5, r6, r7}
+		   bea:   bc08          pop    {r3}
+		   bec:   469e          mov    lr, r3
+		--------------------
+	(     bf0,       12)	
+		--------------------
+		   bec:   469e          mov    lr, r3
+		   bee:   4770          bx lr
+		  
+		  00000bf0 <_fini>:
+		-> bf0:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		   bf2:   bf00          nop
+		   bf4:   bcf8          pop    {r3, r4, r5, r6, r7}
+		   bf6:   bc08          pop    {r3}
+		   bf8:   469e          mov    lr, r3
+		--------------------
+
+timer-o3: 2 | 2
+	(     bd0,       12)	
+		--------------------
+		   bcc:   e7fe          b.n    bcc <_exit>
+		   bce:   bf00          nop
+		  
+		  00000bd0 <_init>:
+		-> bd0:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		   bd2:   bf00          nop
+		   bd4:   bcf8          pop    {r3, r4, r5, r6, r7}
+		   bd6:   bc08          pop    {r3}
+		   bd8:   469e          mov    lr, r3
+		--------------------
+	(     bdc,       12)	
+		--------------------
+		   bd8:   469e          mov    lr, r3
+		   bda:   4770          bx lr
+		  
+		  00000bdc <_fini>:
+		-> bdc:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		   bde:   bf00          nop
+		   be0:   bcf8          pop    {r3, r4, r5, r6, r7}
+		   be2:   bc08          pop    {r3}
+		   be4:   469e          mov    lr, r3
+		--------------------
+
+twi_sensor-o0: 20 | 26
+	(     8a4,        8)	
+		--------------------
+		       89c:   e00d          b.n    8ba <nrf_log_color_id_get+0x56>
+		       89e:   2304          movs   r3, #4
+		       8a0:   73fb          strb   r3, [r7, #15]
+		       8a2:   e00a          b.n    8ba <nrf_log_color_id_get+0x56>
+		->     8a4:   68bb          ldr    r3, [r7, #8]
+		       8a6:   791b          ldrb   r3, [r3, #4]
+		       8a8:   73fb          strb   r3, [r7, #15]
+		       8aa:   e006          b.n    8ba <nrf_log_color_id_get+0x56>
+		       8ac:   68bb          ldr    r3, [r7, #8]
+		--------------------
+	(    195a,       28)	
+		--------------------
+		      1956:   46bd          mov    sp, r7
+		      1958:   bd80          pop    {r7, pc}
+		  
+		  0000195a <string_print>:
+		->    195a:   b580          push   {r7, lr}
+		      195c:   b086          sub    sp, #24
+		      195e:   af00          add    r7, sp, #0
+		      1960:   60f8          str    r0, [r7, #12]
+		      1962:   60b9          str    r1, [r7, #8]
+		--------------------
+	(    1976,        2)	
+		--------------------
+		      196c:   683b          ldr    r3, [r7, #0]
+		      196e:   f003 0301     and.w  r3, r3, #1
+		      1972:   2b00          cmp    r3, #0
+		      1974:   d021          beq.n  19ba <string_print+0x60>
+		->    1976:   e00a          b.n    198e <string_print+0x34>
+		      1978:   68bb          ldr    r3, [r7, #8]
+		      197a:   3301          adds   r3, #1
+		      197c:   60bb          str    r3, [r7, #8]
+		      197e:   697b          ldr    r3, [r7, #20]
+		--------------------
+	(    1978,       22)	
+		--------------------
+		      196e:   f003 0301     and.w  r3, r3, #1
+		      1972:   2b00          cmp    r3, #0
+		      1974:   d021          beq.n  19ba <string_print+0x60>
+		      1976:   e00a          b.n    198e <string_print+0x34>
+		->    1978:   68bb          ldr    r3, [r7, #8]
+		      197a:   3301          adds   r3, #1
+		      197c:   60bb          str    r3, [r7, #8]
+		      197e:   697b          ldr    r3, [r7, #20]
+		      1980:   3301          adds   r3, #1
+		--------------------
+	(    198e,       12)	
+		--------------------
+		      1984:   7cfb          ldrb   r3, [r7, #19]
+		      1986:   4619          mov    r1, r3
+		      1988:   68f8          ldr    r0, [r7, #12]
+		      198a:   f7ff ffc2     bl 1912 <buffer_add>
+		->    198e:   68bb          ldr    r3, [r7, #8]
+		      1990:   781b          ldrb   r3, [r3, #0]
+		      1992:   74fb          strb   r3, [r7, #19]
+		      1994:   7cfb          ldrb   r3, [r7, #19]
+		      1996:   2b00          cmp    r3, #0
+		--------------------
+	(    199a,        2)	
+		--------------------
+		      1992:   74fb          strb   r3, [r7, #19]
+		      1994:   7cfb          ldrb   r3, [r7, #19]
+		      1996:   2b00          cmp    r3, #0
+		      1998:   d1ee          bne.n  1978 <string_print+0x1e>
+		->    199a:   e006          b.n    19aa <string_print+0x50>
+		      199c:   687b          ldr    r3, [r7, #4]
+		      199e:   3b01          subs   r3, #1
+		      19a0:   607b          str    r3, [r7, #4]
+		      19a2:   2120          movs   r1, #32
+		--------------------
+	(    199c,       14)	
+		--------------------
+		      1994:   7cfb          ldrb   r3, [r7, #19]
+		      1996:   2b00          cmp    r3, #0
+		      1998:   d1ee          bne.n  1978 <string_print+0x1e>
+		      199a:   e006          b.n    19aa <string_print+0x50>
+		->    199c:   687b          ldr    r3, [r7, #4]
+		      199e:   3b01          subs   r3, #1
+		      19a0:   607b          str    r3, [r7, #4]
+		      19a2:   2120          movs   r1, #32
+		      19a4:   68f8          ldr    r0, [r7, #12]
+		--------------------
+	(    19aa,        8)	
+		--------------------
+		      19a0:   607b          str    r3, [r7, #4]
+		      19a2:   2120          movs   r1, #32
+		      19a4:   68f8          ldr    r0, [r7, #12]
+		      19a6:   f7ff ffb4     bl 1912 <buffer_add>
+		->    19aa:   687a          ldr    r2, [r7, #4]
+		      19ac:   697b          ldr    r3, [r7, #20]
+		      19ae:   429a          cmp    r2, r3
+		      19b0:   d92b          bls.n  1a0a <string_print+0xb0>
+		      19b2:   687b          ldr    r3, [r7, #4]
+		--------------------
+	(    19b2,        6)	
+		--------------------
+		      19aa:   687a          ldr    r2, [r7, #4]
+		      19ac:   697b          ldr    r3, [r7, #20]
+		      19ae:   429a          cmp    r2, r3
+		      19b0:   d92b          bls.n  1a0a <string_print+0xb0>
+		->    19b2:   687b          ldr    r3, [r7, #4]
+		      19b4:   2b00          cmp    r3, #0
+		      19b6:   d1f1          bne.n  199c <string_print+0x42>
+		      19b8:   e027          b.n    1a0a <string_print+0xb0>
+		      19ba:   68bb          ldr    r3, [r7, #8]
+		--------------------
+	(    19ba,        6)	
+		--------------------
+		      19b2:   687b          ldr    r3, [r7, #4]
+		      19b4:   2b00          cmp    r3, #0
+		      19b6:   d1f1          bne.n  199c <string_print+0x42>
+		      19b8:   e027          b.n    1a0a <string_print+0xb0>
+		->    19ba:   68bb          ldr    r3, [r7, #8]
+		      19bc:   2b00          cmp    r3, #0
+		      19be:   d00b          beq.n  19d8 <string_print+0x7e>
+		      19c0:   68b8          ldr    r0, [r7, #8]
+		      19c2:   f004 f90b     bl 5bdc <strlen>
+		--------------------
+	(    19c6,        4)	
+		--------------------
+		      19bc:   2b00          cmp    r3, #0
+		      19be:   d00b          beq.n  19d8 <string_print+0x7e>
+		      19c0:   68b8          ldr    r0, [r7, #8]
+		      19c2:   f004 f90b     bl 5bdc <strlen>
+		->    19c6:   6178          str    r0, [r7, #20]
+		      19c8:   e006          b.n    19d8 <string_print+0x7e>
+		      19ca:   687b          ldr    r3, [r7, #4]
+		      19cc:   3b01          subs   r3, #1
+		      19ce:   607b          str    r3, [r7, #4]
+		--------------------
+	(    19ca,       14)	
+		--------------------
+		      19c0:   68b8          ldr    r0, [r7, #8]
+		      19c2:   f004 f90b     bl 5bdc <strlen>
+		      19c6:   6178          str    r0, [r7, #20]
+		      19c8:   e006          b.n    19d8 <string_print+0x7e>
+		->    19ca:   687b          ldr    r3, [r7, #4]
+		      19cc:   3b01          subs   r3, #1
+		      19ce:   607b          str    r3, [r7, #4]
+		      19d0:   2120          movs   r1, #32
+		      19d2:   68f8          ldr    r0, [r7, #12]
+		--------------------
+	(    19d8,        8)	
+		--------------------
+		      19ce:   607b          str    r3, [r7, #4]
+		      19d0:   2120          movs   r1, #32
+		      19d2:   68f8          ldr    r0, [r7, #12]
+		      19d4:   f7ff ff9d     bl 1912 <buffer_add>
+		->    19d8:   687a          ldr    r2, [r7, #4]
+		      19da:   697b          ldr    r3, [r7, #20]
+		      19dc:   429a          cmp    r2, r3
+		      19de:   d90e          bls.n  19fe <string_print+0xa4>
+		      19e0:   687b          ldr    r3, [r7, #4]
+		--------------------
+	(    1a0a,        8)	
+		--------------------
+		      1a02:   74fb          strb   r3, [r7, #19]
+		      1a04:   7cfb          ldrb   r3, [r7, #19]
+		      1a06:   2b00          cmp    r3, #0
+		      1a08:   d1ee          bne.n  19e8 <string_print+0x8e>
+		->    1a0a:   bf00          nop
+		      1a0c:   3718          adds   r7, #24
+		      1a0e:   46bd          mov    sp, r7
+		      1a10:   bd80          pop    {r7, pc}
+		      ...
+		--------------------
+	(    1f02,       26)	
+		--------------------
+		      1ef8:   2210          movs   r2, #16
+		      1efa:   68f8          ldr    r0, [r7, #12]
+		      1efc:   f7ff fd8a     bl 1a14 <unsigned_print>
+		      1f00:   e02d          b.n    1f5e <nrf_fprintf_fmt+0x2fe>
+		->    1f02:   687b          ldr    r3, [r7, #4]
+		      1f04:   681b          ldr    r3, [r3, #0]
+		      1f06:   1d19          adds   r1, r3, #4
+		      1f08:   687a          ldr    r2, [r7, #4]
+		      1f0a:   6011          str    r1, [r2, #0]
+		--------------------
+	(    1f1c,        2)	
+		--------------------
+		      1f12:   69fa          ldr    r2, [r7, #28]
+		      1f14:   69b9          ldr    r1, [r7, #24]
+		      1f16:   68f8          ldr    r0, [r7, #12]
+		      1f18:   f7ff fd1f     bl 195a <string_print>
+		->    1f1c:   e01f          b.n    1f5e <nrf_fprintf_fmt+0x2fe>
+		      1f1e:   687b          ldr    r3, [r7, #4]
+		      1f20:   681b          ldr    r3, [r3, #0]
+		      1f22:   1d19          adds   r1, r3, #4
+		      1f24:   687a          ldr    r2, [r7, #4]
+		--------------------
+	(    5bdc,        2)	
+		--------------------
+		      5bd8:   d1f9          bne.n  5bce <memcpy+0xe>
+		      5bda:   bd10          pop    {r4, pc}
+		  
+		  00005bdc <strlen>:
+		->    5bdc:   4603          mov    r3, r0
+		      5bde:   f813 2b01     ldrb.w r2, [r3], #1
+		      5be2:   2a00          cmp    r2, #0
+		      5be4:   d1fb          bne.n  5bde <strlen+0x2>
+		      5be6:   1a18          subs   r0, r3, r0
+		--------------------
+	(    5bde,        8)	
+		--------------------
+		      5bda:   bd10          pop    {r4, pc}
+		  
+		  00005bdc <strlen>:
+		      5bdc:   4603          mov    r3, r0
+		->    5bde:   f813 2b01     ldrb.w r2, [r3], #1
+		      5be2:   2a00          cmp    r2, #0
+		      5be4:   d1fb          bne.n  5bde <strlen+0x2>
+		      5be6:   1a18          subs   r0, r3, r0
+		      5be8:   3801          subs   r0, #1
+		--------------------
+	(    5be6,        6)	
+		--------------------
+		      5bdc:   4603          mov    r3, r0
+		      5bde:   f813 2b01     ldrb.w r2, [r3], #1
+		      5be2:   2a00          cmp    r2, #0
+		      5be4:   d1fb          bne.n  5bde <strlen+0x2>
+		->    5be6:   1a18          subs   r0, r3, r0
+		      5be8:   3801          subs   r0, #1
+		      5bea:   4770          bx lr
+		  
+		  00005bec <__register_exitproc>:
+		--------------------
+	(    5f50,        4)	
+		--------------------
+		      5f30:   61786520 656c706d 61747320 64657472      example started
+		      5f40:   0000002e 00000000 00000000 00000000     ................
+		  
+		  00005f50 <delay_machine_code.0>:
+		->    5f50:   d8fd3803                                 .8..pG
+		  
+		  00005f56 <_ctype_>:
+		      5f56:   20202000 20202020 28282020 20282828     .         ((((( 
+		      5f66:   20202020 20202020 20202020 20202020                     
+		--------------------
+
+twi_sensor-o1: 0 | 0
+
+twi_sensor-o2: 0 | 0
+
+twi_sensor-o3: 0 | 0
+
+uart-o0: 17 | 17
+	(     3ce,       16)	
+		--------------------
+		       3ca:   46bd          mov    sp, r7
+		       3cc:   bd80          pop    {r7, pc}
+		  
+		  000003ce <nrf_gpio_pin_clear>:
+		->     3ce:   b580          push   {r7, lr}
+		       3d0:   b084          sub    sp, #16
+		       3d2:   af00          add    r7, sp, #0
+		       3d4:   6078          str    r0, [r7, #4]
+		       3d6:   1d3b          adds   r3, r7, #4
+		--------------------
+	(     3de,       18)	
+		--------------------
+		       3d4:   6078          str    r0, [r7, #4]
+		       3d6:   1d3b          adds   r3, r7, #4
+		       3d8:   4618          mov    r0, r3
+		       3da:   f7ff ff87     bl 2ec <nrf_gpio_pin_port_decode>
+		->     3de:   60f8          str    r0, [r7, #12]
+		       3e0:   687b          ldr    r3, [r7, #4]
+		       3e2:   2201          movs   r2, #1
+		       3e4:   fa02 f303     lsl.w  r3, r2, r3
+		       3e8:   4619          mov    r1, r3
+		--------------------
+	(     3f0,        8)	
+		--------------------
+		       3e4:   fa02 f303     lsl.w  r3, r2, r3
+		       3e8:   4619          mov    r1, r3
+		       3ea:   68f8          ldr    r0, [r7, #12]
+		       3ec:   f000 f826     bl 43c <nrf_gpio_port_out_clear>
+		->     3f0:   bf00          nop
+		       3f2:   3710          adds   r7, #16
+		       3f4:   46bd          mov    sp, r7
+		       3f6:   bd80          pop    {r7, pc}
+		  
+		--------------------
+	(     43c,       30)	
+		--------------------
+		       436:   f85d 7b04     ldr.w  r7, [sp], #4
+		       43a:   4770          bx lr
+		  
+		  0000043c <nrf_gpio_port_out_clear>:
+		->     43c:   b480          push   {r7}
+		       43e:   b083          sub    sp, #12
+		       440:   af00          add    r7, sp, #0
+		       442:   6078          str    r0, [r7, #4]
+		       444:   6039          str    r1, [r7, #0]
+		--------------------
+	(    2ff0,       10)	
+		--------------------
+		      2fe8:   00003187  .word   0x00003187
+		      2fec:   000031ab  .word   0x000031ab
+		  
+		  00002ff0 <stdio_exit_handler>:
+		->    2ff0:   4a02          ldr    r2, [pc, #8]   ; (2ffc <stdio_exit_handler+0xc>)
+		      2ff2:   4903          ldr    r1, [pc, #12]  ; (3000 <stdio_exit_handler+0x10>)
+		      2ff4:   4803          ldr    r0, [pc, #12]  ; (3004 <stdio_exit_handler+0x14>)
+		      2ff6:   f000 b869     b.w    30cc <_fwalk_sglue>
+		      2ffa:   bf00          nop
+		--------------------
+	(    30cc,       12)	
+		--------------------
+		      30c4:   00003009  .word   0x00003009
+		      30c8:   20000468  .word   0x20000468
+		  
+		  000030cc <_fwalk_sglue>:
+		->    30cc:   e92d 43f8     stmdb  sp!, {r3, r4, r5, r6, r7, r8, r9, lr}
+		      30d0:   4607          mov    r7, r0
+		      30d2:   4688          mov    r8, r1
+		      30d4:   4614          mov    r4, r2
+		      30d6:   2600          movs   r6, #0
+		--------------------
+	(    30d8,        4)	
+		--------------------
+		      30d0:   4607          mov    r7, r0
+		      30d2:   4688          mov    r8, r1
+		      30d4:   4614          mov    r4, r2
+		      30d6:   2600          movs   r6, #0
+		->    30d8:   e9d4 9501     ldrd   r9, r5, [r4, #4]
+		      30dc:   f1b9 0901     subs.w r9, r9, #1
+		      30e0:   d505          bpl.n  30ee <_fwalk_sglue+0x22>
+		      30e2:   6824          ldr    r4, [r4, #0]
+		      30e4:   2c00          cmp    r4, #0
+		--------------------
+	(    30dc,        6)	
+		--------------------
+		      30d2:   4688          mov    r8, r1
+		      30d4:   4614          mov    r4, r2
+		      30d6:   2600          movs   r6, #0
+		      30d8:   e9d4 9501     ldrd   r9, r5, [r4, #4]
+		->    30dc:   f1b9 0901     subs.w r9, r9, #1
+		      30e0:   d505          bpl.n  30ee <_fwalk_sglue+0x22>
+		      30e2:   6824          ldr    r4, [r4, #0]
+		      30e4:   2c00          cmp    r4, #0
+		      30e6:   d1f7          bne.n  30d8 <_fwalk_sglue+0xc>
+		--------------------
+	(    30e2,        6)	
+		--------------------
+		      30d6:   2600          movs   r6, #0
+		      30d8:   e9d4 9501     ldrd   r9, r5, [r4, #4]
+		      30dc:   f1b9 0901     subs.w r9, r9, #1
+		      30e0:   d505          bpl.n  30ee <_fwalk_sglue+0x22>
+		->    30e2:   6824          ldr    r4, [r4, #0]
+		      30e4:   2c00          cmp    r4, #0
+		      30e6:   d1f7          bne.n  30d8 <_fwalk_sglue+0xc>
+		      30e8:   4630          mov    r0, r6
+		      30ea:   e8bd 83f8     ldmia.w    sp!, {r3, r4, r5, r6, r7, r8, r9, pc}
+		--------------------
+	(    30e8,        6)	
+		--------------------
+		      30e0:   d505          bpl.n  30ee <_fwalk_sglue+0x22>
+		      30e2:   6824          ldr    r4, [r4, #0]
+		      30e4:   2c00          cmp    r4, #0
+		      30e6:   d1f7          bne.n  30d8 <_fwalk_sglue+0xc>
+		->    30e8:   4630          mov    r0, r6
+		      30ea:   e8bd 83f8     ldmia.w    sp!, {r3, r4, r5, r6, r7, r8, r9, pc}
+		      30ee:   89ab          ldrh   r3, [r5, #12]
+		      30f0:   2b01          cmp    r3, #1
+		      30f2:   d907          bls.n  3104 <_fwalk_sglue+0x38>
+		--------------------
+	(    30ee,        6)	
+		--------------------
+		      30e4:   2c00          cmp    r4, #0
+		      30e6:   d1f7          bne.n  30d8 <_fwalk_sglue+0xc>
+		      30e8:   4630          mov    r0, r6
+		      30ea:   e8bd 83f8     ldmia.w    sp!, {r3, r4, r5, r6, r7, r8, r9, pc}
+		->    30ee:   89ab          ldrh   r3, [r5, #12]
+		      30f0:   2b01          cmp    r3, #1
+		      30f2:   d907          bls.n  3104 <_fwalk_sglue+0x38>
+		      30f4:   f9b5 300e     ldrsh.w    r3, [r5, #14]
+		      30f8:   3301          adds   r3, #1
+		--------------------
+	(    30f4,        8)	
+		--------------------
+		      30ea:   e8bd 83f8     ldmia.w    sp!, {r3, r4, r5, r6, r7, r8, r9, pc}
+		      30ee:   89ab          ldrh   r3, [r5, #12]
+		      30f0:   2b01          cmp    r3, #1
+		      30f2:   d907          bls.n  3104 <_fwalk_sglue+0x38>
+		->    30f4:   f9b5 300e     ldrsh.w    r3, [r5, #14]
+		      30f8:   3301          adds   r3, #1
+		      30fa:   d003          beq.n  3104 <_fwalk_sglue+0x38>
+		      30fc:   4629          mov    r1, r5
+		      30fe:   4638          mov    r0, r7
+		--------------------
+	(    30fc,        6)	
+		--------------------
+		      30f2:   d907          bls.n  3104 <_fwalk_sglue+0x38>
+		      30f4:   f9b5 300e     ldrsh.w    r3, [r5, #14]
+		      30f8:   3301          adds   r3, #1
+		      30fa:   d003          beq.n  3104 <_fwalk_sglue+0x38>
+		->    30fc:   4629          mov    r1, r5
+		      30fe:   4638          mov    r0, r7
+		      3100:   47c0          blx    r8
+		      3102:   4306          orrs   r6, r0
+		      3104:   3568          adds   r5, #104  ; 0x68
+		--------------------
+	(    3102,        2)	
+		--------------------
+		      30fa:   d003          beq.n  3104 <_fwalk_sglue+0x38>
+		      30fc:   4629          mov    r1, r5
+		      30fe:   4638          mov    r0, r7
+		      3100:   47c0          blx    r8
+		->    3102:   4306          orrs   r6, r0
+		      3104:   3568          adds   r5, #104  ; 0x68
+		      3106:   e7e9          b.n    30dc <_fwalk_sglue+0x10>
+		  
+		  00003108 <iprintf>:
+		--------------------
+	(    3104,        4)	
+		--------------------
+		      30fc:   4629          mov    r1, r5
+		      30fe:   4638          mov    r0, r7
+		      3100:   47c0          blx    r8
+		      3102:   4306          orrs   r6, r0
+		->    3104:   3568          adds   r5, #104  ; 0x68
+		      3106:   e7e9          b.n    30dc <_fwalk_sglue+0x10>
+		  
+		  00003108 <iprintf>:
+		      3108:   b40f          push   {r0, r1, r2, r3}
+		--------------------
+	(    4078,       12)	
+		--------------------
+		      4074:   e7fe          b.n    4074 <_exit>
+		      4076:   bf00          nop
+		  
+		  00004078 <_init>:
+		->    4078:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		      407a:   bf00          nop
+		      407c:   bcf8          pop    {r3, r4, r5, r6, r7}
+		      407e:   bc08          pop    {r3}
+		      4080:   469e          mov    lr, r3
+		--------------------
+	(    4084,       12)	
+		--------------------
+		      4080:   469e          mov    lr, r3
+		      4082:   4770          bx lr
+		  
+		  00004084 <_fini>:
+		->    4084:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		      4086:   bf00          nop
+		      4088:   bcf8          pop    {r3, r4, r5, r6, r7}
+		      408a:   bc08          pop    {r3}
+		      408c:   469e          mov    lr, r3
+		--------------------
+
+uart-o1: 13 | 13
+	(    186c,       10)	
+		--------------------
+		      1864:   00001a03  .word   0x00001a03
+		      1868:   00001a27  .word   0x00001a27
+		  
+		  0000186c <stdio_exit_handler>:
+		->    186c:   4a02          ldr    r2, [pc, #8]   ; (1878 <stdio_exit_handler+0xc>)
+		      186e:   4903          ldr    r1, [pc, #12]  ; (187c <stdio_exit_handler+0x10>)
+		      1870:   4803          ldr    r0, [pc, #12]  ; (1880 <stdio_exit_handler+0x14>)
+		      1872:   f000 b869     b.w    1948 <_fwalk_sglue>
+		      1876:   bf00          nop
+		--------------------
+	(    1948,       12)	
+		--------------------
+		      1940:   00001885  .word   0x00001885
+		      1944:   2000046c  .word   0x2000046c
+		  
+		  00001948 <_fwalk_sglue>:
+		->    1948:   e92d 43f8     stmdb  sp!, {r3, r4, r5, r6, r7, r8, r9, lr}
+		      194c:   4607          mov    r7, r0
+		      194e:   4688          mov    r8, r1
+		      1950:   4614          mov    r4, r2
+		      1952:   2600          movs   r6, #0
+		--------------------
+	(    1954,        4)	
+		--------------------
+		      194c:   4607          mov    r7, r0
+		      194e:   4688          mov    r8, r1
+		      1950:   4614          mov    r4, r2
+		      1952:   2600          movs   r6, #0
+		->    1954:   e9d4 9501     ldrd   r9, r5, [r4, #4]
+		      1958:   f1b9 0901     subs.w r9, r9, #1
+		      195c:   d505          bpl.n  196a <_fwalk_sglue+0x22>
+		      195e:   6824          ldr    r4, [r4, #0]
+		      1960:   2c00          cmp    r4, #0
+		--------------------
+	(    1958,        6)	
+		--------------------
+		      194e:   4688          mov    r8, r1
+		      1950:   4614          mov    r4, r2
+		      1952:   2600          movs   r6, #0
+		      1954:   e9d4 9501     ldrd   r9, r5, [r4, #4]
+		->    1958:   f1b9 0901     subs.w r9, r9, #1
+		      195c:   d505          bpl.n  196a <_fwalk_sglue+0x22>
+		      195e:   6824          ldr    r4, [r4, #0]
+		      1960:   2c00          cmp    r4, #0
+		      1962:   d1f7          bne.n  1954 <_fwalk_sglue+0xc>
+		--------------------
+	(    195e,        6)	
+		--------------------
+		      1952:   2600          movs   r6, #0
+		      1954:   e9d4 9501     ldrd   r9, r5, [r4, #4]
+		      1958:   f1b9 0901     subs.w r9, r9, #1
+		      195c:   d505          bpl.n  196a <_fwalk_sglue+0x22>
+		->    195e:   6824          ldr    r4, [r4, #0]
+		      1960:   2c00          cmp    r4, #0
+		      1962:   d1f7          bne.n  1954 <_fwalk_sglue+0xc>
+		      1964:   4630          mov    r0, r6
+		      1966:   e8bd 83f8     ldmia.w    sp!, {r3, r4, r5, r6, r7, r8, r9, pc}
+		--------------------
+	(    1964,        6)	
+		--------------------
+		      195c:   d505          bpl.n  196a <_fwalk_sglue+0x22>
+		      195e:   6824          ldr    r4, [r4, #0]
+		      1960:   2c00          cmp    r4, #0
+		      1962:   d1f7          bne.n  1954 <_fwalk_sglue+0xc>
+		->    1964:   4630          mov    r0, r6
+		      1966:   e8bd 83f8     ldmia.w    sp!, {r3, r4, r5, r6, r7, r8, r9, pc}
+		      196a:   89ab          ldrh   r3, [r5, #12]
+		      196c:   2b01          cmp    r3, #1
+		      196e:   d907          bls.n  1980 <_fwalk_sglue+0x38>
+		--------------------
+	(    196a,        6)	
+		--------------------
+		      1960:   2c00          cmp    r4, #0
+		      1962:   d1f7          bne.n  1954 <_fwalk_sglue+0xc>
+		      1964:   4630          mov    r0, r6
+		      1966:   e8bd 83f8     ldmia.w    sp!, {r3, r4, r5, r6, r7, r8, r9, pc}
+		->    196a:   89ab          ldrh   r3, [r5, #12]
+		      196c:   2b01          cmp    r3, #1
+		      196e:   d907          bls.n  1980 <_fwalk_sglue+0x38>
+		      1970:   f9b5 300e     ldrsh.w    r3, [r5, #14]
+		      1974:   3301          adds   r3, #1
+		--------------------
+	(    1970,        8)	
+		--------------------
+		      1966:   e8bd 83f8     ldmia.w    sp!, {r3, r4, r5, r6, r7, r8, r9, pc}
+		      196a:   89ab          ldrh   r3, [r5, #12]
+		      196c:   2b01          cmp    r3, #1
+		      196e:   d907          bls.n  1980 <_fwalk_sglue+0x38>
+		->    1970:   f9b5 300e     ldrsh.w    r3, [r5, #14]
+		      1974:   3301          adds   r3, #1
+		      1976:   d003          beq.n  1980 <_fwalk_sglue+0x38>
+		      1978:   4629          mov    r1, r5
+		      197a:   4638          mov    r0, r7
+		--------------------
+	(    1978,        6)	
+		--------------------
+		      196e:   d907          bls.n  1980 <_fwalk_sglue+0x38>
+		      1970:   f9b5 300e     ldrsh.w    r3, [r5, #14]
+		      1974:   3301          adds   r3, #1
+		      1976:   d003          beq.n  1980 <_fwalk_sglue+0x38>
+		->    1978:   4629          mov    r1, r5
+		      197a:   4638          mov    r0, r7
+		      197c:   47c0          blx    r8
+		      197e:   4306          orrs   r6, r0
+		      1980:   3568          adds   r5, #104  ; 0x68
+		--------------------
+	(    197e,        2)	
+		--------------------
+		      1976:   d003          beq.n  1980 <_fwalk_sglue+0x38>
+		      1978:   4629          mov    r1, r5
+		      197a:   4638          mov    r0, r7
+		      197c:   47c0          blx    r8
+		->    197e:   4306          orrs   r6, r0
+		      1980:   3568          adds   r5, #104  ; 0x68
+		      1982:   e7e9          b.n    1958 <_fwalk_sglue+0x10>
+		  
+		  00001984 <iprintf>:
+		--------------------
+	(    1980,        4)	
+		--------------------
+		      1978:   4629          mov    r1, r5
+		      197a:   4638          mov    r0, r7
+		      197c:   47c0          blx    r8
+		      197e:   4306          orrs   r6, r0
+		->    1980:   3568          adds   r5, #104  ; 0x68
+		      1982:   e7e9          b.n    1958 <_fwalk_sglue+0x10>
+		  
+		  00001984 <iprintf>:
+		      1984:   b40f          push   {r0, r1, r2, r3}
+		--------------------
+	(    28e8,       12)	
+		--------------------
+		      28e4:   e7fe          b.n    28e4 <_exit>
+		      28e6:   bf00          nop
+		  
+		  000028e8 <_init>:
+		->    28e8:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		      28ea:   bf00          nop
+		      28ec:   bcf8          pop    {r3, r4, r5, r6, r7}
+		      28ee:   bc08          pop    {r3}
+		      28f0:   469e          mov    lr, r3
+		--------------------
+	(    28f4,       12)	
+		--------------------
+		      28f0:   469e          mov    lr, r3
+		      28f2:   4770          bx lr
+		  
+		  000028f4 <_fini>:
+		->    28f4:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		      28f6:   bf00          nop
+		      28f8:   bcf8          pop    {r3, r4, r5, r6, r7}
+		      28fa:   bc08          pop    {r3}
+		      28fc:   469e          mov    lr, r3
+		--------------------
+
+uart-o2: 13 | 13
+	(    1800,       10)	
+		--------------------
+		      17f8:   00001997  .word   0x00001997
+		      17fc:   000019bb  .word   0x000019bb
+		  
+		  00001800 <stdio_exit_handler>:
+		->    1800:   4a02          ldr    r2, [pc, #8]   ; (180c <stdio_exit_handler+0xc>)
+		      1802:   4903          ldr    r1, [pc, #12]  ; (1810 <stdio_exit_handler+0x10>)
+		      1804:   4803          ldr    r0, [pc, #12]  ; (1814 <stdio_exit_handler+0x14>)
+		      1806:   f000 b869     b.w    18dc <_fwalk_sglue>
+		      180a:   bf00          nop
+		--------------------
+	(    18dc,       12)	
+		--------------------
+		      18d4:   00001819  .word   0x00001819
+		      18d8:   2000046c  .word   0x2000046c
+		  
+		  000018dc <_fwalk_sglue>:
+		->    18dc:   e92d 43f8     stmdb  sp!, {r3, r4, r5, r6, r7, r8, r9, lr}
+		      18e0:   4607          mov    r7, r0
+		      18e2:   4688          mov    r8, r1
+		      18e4:   4614          mov    r4, r2
+		      18e6:   2600          movs   r6, #0
+		--------------------
+	(    18e8,        4)	
+		--------------------
+		      18e0:   4607          mov    r7, r0
+		      18e2:   4688          mov    r8, r1
+		      18e4:   4614          mov    r4, r2
+		      18e6:   2600          movs   r6, #0
+		->    18e8:   e9d4 9501     ldrd   r9, r5, [r4, #4]
+		      18ec:   f1b9 0901     subs.w r9, r9, #1
+		      18f0:   d505          bpl.n  18fe <_fwalk_sglue+0x22>
+		      18f2:   6824          ldr    r4, [r4, #0]
+		      18f4:   2c00          cmp    r4, #0
+		--------------------
+	(    18ec,        6)	
+		--------------------
+		      18e2:   4688          mov    r8, r1
+		      18e4:   4614          mov    r4, r2
+		      18e6:   2600          movs   r6, #0
+		      18e8:   e9d4 9501     ldrd   r9, r5, [r4, #4]
+		->    18ec:   f1b9 0901     subs.w r9, r9, #1
+		      18f0:   d505          bpl.n  18fe <_fwalk_sglue+0x22>
+		      18f2:   6824          ldr    r4, [r4, #0]
+		      18f4:   2c00          cmp    r4, #0
+		      18f6:   d1f7          bne.n  18e8 <_fwalk_sglue+0xc>
+		--------------------
+	(    18f2,        6)	
+		--------------------
+		      18e6:   2600          movs   r6, #0
+		      18e8:   e9d4 9501     ldrd   r9, r5, [r4, #4]
+		      18ec:   f1b9 0901     subs.w r9, r9, #1
+		      18f0:   d505          bpl.n  18fe <_fwalk_sglue+0x22>
+		->    18f2:   6824          ldr    r4, [r4, #0]
+		      18f4:   2c00          cmp    r4, #0
+		      18f6:   d1f7          bne.n  18e8 <_fwalk_sglue+0xc>
+		      18f8:   4630          mov    r0, r6
+		      18fa:   e8bd 83f8     ldmia.w    sp!, {r3, r4, r5, r6, r7, r8, r9, pc}
+		--------------------
+	(    18f8,        6)	
+		--------------------
+		      18f0:   d505          bpl.n  18fe <_fwalk_sglue+0x22>
+		      18f2:   6824          ldr    r4, [r4, #0]
+		      18f4:   2c00          cmp    r4, #0
+		      18f6:   d1f7          bne.n  18e8 <_fwalk_sglue+0xc>
+		->    18f8:   4630          mov    r0, r6
+		      18fa:   e8bd 83f8     ldmia.w    sp!, {r3, r4, r5, r6, r7, r8, r9, pc}
+		      18fe:   89ab          ldrh   r3, [r5, #12]
+		      1900:   2b01          cmp    r3, #1
+		      1902:   d907          bls.n  1914 <_fwalk_sglue+0x38>
+		--------------------
+	(    18fe,        6)	
+		--------------------
+		      18f4:   2c00          cmp    r4, #0
+		      18f6:   d1f7          bne.n  18e8 <_fwalk_sglue+0xc>
+		      18f8:   4630          mov    r0, r6
+		      18fa:   e8bd 83f8     ldmia.w    sp!, {r3, r4, r5, r6, r7, r8, r9, pc}
+		->    18fe:   89ab          ldrh   r3, [r5, #12]
+		      1900:   2b01          cmp    r3, #1
+		      1902:   d907          bls.n  1914 <_fwalk_sglue+0x38>
+		      1904:   f9b5 300e     ldrsh.w    r3, [r5, #14]
+		      1908:   3301          adds   r3, #1
+		--------------------
+	(    1904,        8)	
+		--------------------
+		      18fa:   e8bd 83f8     ldmia.w    sp!, {r3, r4, r5, r6, r7, r8, r9, pc}
+		      18fe:   89ab          ldrh   r3, [r5, #12]
+		      1900:   2b01          cmp    r3, #1
+		      1902:   d907          bls.n  1914 <_fwalk_sglue+0x38>
+		->    1904:   f9b5 300e     ldrsh.w    r3, [r5, #14]
+		      1908:   3301          adds   r3, #1
+		      190a:   d003          beq.n  1914 <_fwalk_sglue+0x38>
+		      190c:   4629          mov    r1, r5
+		      190e:   4638          mov    r0, r7
+		--------------------
+	(    190c,        6)	
+		--------------------
+		      1902:   d907          bls.n  1914 <_fwalk_sglue+0x38>
+		      1904:   f9b5 300e     ldrsh.w    r3, [r5, #14]
+		      1908:   3301          adds   r3, #1
+		      190a:   d003          beq.n  1914 <_fwalk_sglue+0x38>
+		->    190c:   4629          mov    r1, r5
+		      190e:   4638          mov    r0, r7
+		      1910:   47c0          blx    r8
+		      1912:   4306          orrs   r6, r0
+		      1914:   3568          adds   r5, #104  ; 0x68
+		--------------------
+	(    1912,        2)	
+		--------------------
+		      190a:   d003          beq.n  1914 <_fwalk_sglue+0x38>
+		      190c:   4629          mov    r1, r5
+		      190e:   4638          mov    r0, r7
+		      1910:   47c0          blx    r8
+		->    1912:   4306          orrs   r6, r0
+		      1914:   3568          adds   r5, #104  ; 0x68
+		      1916:   e7e9          b.n    18ec <_fwalk_sglue+0x10>
+		  
+		  00001918 <iprintf>:
+		--------------------
+	(    1914,        4)	
+		--------------------
+		      190c:   4629          mov    r1, r5
+		      190e:   4638          mov    r0, r7
+		      1910:   47c0          blx    r8
+		      1912:   4306          orrs   r6, r0
+		->    1914:   3568          adds   r5, #104  ; 0x68
+		      1916:   e7e9          b.n    18ec <_fwalk_sglue+0x10>
+		  
+		  00001918 <iprintf>:
+		      1918:   b40f          push   {r0, r1, r2, r3}
+		--------------------
+	(    2888,       12)	
+		--------------------
+		      2884:   e7fe          b.n    2884 <_exit>
+		      2886:   bf00          nop
+		  
+		  00002888 <_init>:
+		->    2888:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		      288a:   bf00          nop
+		      288c:   bcf8          pop    {r3, r4, r5, r6, r7}
+		      288e:   bc08          pop    {r3}
+		      2890:   469e          mov    lr, r3
+		--------------------
+	(    2894,       12)	
+		--------------------
+		      2890:   469e          mov    lr, r3
+		      2892:   4770          bx lr
+		  
+		  00002894 <_fini>:
+		->    2894:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		      2896:   bf00          nop
+		      2898:   bcf8          pop    {r3, r4, r5, r6, r7}
+		      289a:   bc08          pop    {r3}
+		      289c:   469e          mov    lr, r3
+		--------------------
+
+uart-o3: 13 | 13
+	(    1808,       10)	
+		--------------------
+		      1800:   0000199f  .word   0x0000199f
+		      1804:   000019c3  .word   0x000019c3
+		  
+		  00001808 <stdio_exit_handler>:
+		->    1808:   4a02          ldr    r2, [pc, #8]   ; (1814 <stdio_exit_handler+0xc>)
+		      180a:   4903          ldr    r1, [pc, #12]  ; (1818 <stdio_exit_handler+0x10>)
+		      180c:   4803          ldr    r0, [pc, #12]  ; (181c <stdio_exit_handler+0x14>)
+		      180e:   f000 b869     b.w    18e4 <_fwalk_sglue>
+		      1812:   bf00          nop
+		--------------------
+	(    18e4,       12)	
+		--------------------
+		      18dc:   00001821  .word   0x00001821
+		      18e0:   20000474  .word   0x20000474
+		  
+		  000018e4 <_fwalk_sglue>:
+		->    18e4:   e92d 43f8     stmdb  sp!, {r3, r4, r5, r6, r7, r8, r9, lr}
+		      18e8:   4607          mov    r7, r0
+		      18ea:   4688          mov    r8, r1
+		      18ec:   4614          mov    r4, r2
+		      18ee:   2600          movs   r6, #0
+		--------------------
+	(    18f0,        4)	
+		--------------------
+		      18e8:   4607          mov    r7, r0
+		      18ea:   4688          mov    r8, r1
+		      18ec:   4614          mov    r4, r2
+		      18ee:   2600          movs   r6, #0
+		->    18f0:   e9d4 9501     ldrd   r9, r5, [r4, #4]
+		      18f4:   f1b9 0901     subs.w r9, r9, #1
+		      18f8:   d505          bpl.n  1906 <_fwalk_sglue+0x22>
+		      18fa:   6824          ldr    r4, [r4, #0]
+		      18fc:   2c00          cmp    r4, #0
+		--------------------
+	(    18f4,        6)	
+		--------------------
+		      18ea:   4688          mov    r8, r1
+		      18ec:   4614          mov    r4, r2
+		      18ee:   2600          movs   r6, #0
+		      18f0:   e9d4 9501     ldrd   r9, r5, [r4, #4]
+		->    18f4:   f1b9 0901     subs.w r9, r9, #1
+		      18f8:   d505          bpl.n  1906 <_fwalk_sglue+0x22>
+		      18fa:   6824          ldr    r4, [r4, #0]
+		      18fc:   2c00          cmp    r4, #0
+		      18fe:   d1f7          bne.n  18f0 <_fwalk_sglue+0xc>
+		--------------------
+	(    18fa,        6)	
+		--------------------
+		      18ee:   2600          movs   r6, #0
+		      18f0:   e9d4 9501     ldrd   r9, r5, [r4, #4]
+		      18f4:   f1b9 0901     subs.w r9, r9, #1
+		      18f8:   d505          bpl.n  1906 <_fwalk_sglue+0x22>
+		->    18fa:   6824          ldr    r4, [r4, #0]
+		      18fc:   2c00          cmp    r4, #0
+		      18fe:   d1f7          bne.n  18f0 <_fwalk_sglue+0xc>
+		      1900:   4630          mov    r0, r6
+		      1902:   e8bd 83f8     ldmia.w    sp!, {r3, r4, r5, r6, r7, r8, r9, pc}
+		--------------------
+	(    1900,        6)	
+		--------------------
+		      18f8:   d505          bpl.n  1906 <_fwalk_sglue+0x22>
+		      18fa:   6824          ldr    r4, [r4, #0]
+		      18fc:   2c00          cmp    r4, #0
+		      18fe:   d1f7          bne.n  18f0 <_fwalk_sglue+0xc>
+		->    1900:   4630          mov    r0, r6
+		      1902:   e8bd 83f8     ldmia.w    sp!, {r3, r4, r5, r6, r7, r8, r9, pc}
+		      1906:   89ab          ldrh   r3, [r5, #12]
+		      1908:   2b01          cmp    r3, #1
+		      190a:   d907          bls.n  191c <_fwalk_sglue+0x38>
+		--------------------
+	(    1906,        6)	
+		--------------------
+		      18fc:   2c00          cmp    r4, #0
+		      18fe:   d1f7          bne.n  18f0 <_fwalk_sglue+0xc>
+		      1900:   4630          mov    r0, r6
+		      1902:   e8bd 83f8     ldmia.w    sp!, {r3, r4, r5, r6, r7, r8, r9, pc}
+		->    1906:   89ab          ldrh   r3, [r5, #12]
+		      1908:   2b01          cmp    r3, #1
+		      190a:   d907          bls.n  191c <_fwalk_sglue+0x38>
+		      190c:   f9b5 300e     ldrsh.w    r3, [r5, #14]
+		      1910:   3301          adds   r3, #1
+		--------------------
+	(    190c,        8)	
+		--------------------
+		      1902:   e8bd 83f8     ldmia.w    sp!, {r3, r4, r5, r6, r7, r8, r9, pc}
+		      1906:   89ab          ldrh   r3, [r5, #12]
+		      1908:   2b01          cmp    r3, #1
+		      190a:   d907          bls.n  191c <_fwalk_sglue+0x38>
+		->    190c:   f9b5 300e     ldrsh.w    r3, [r5, #14]
+		      1910:   3301          adds   r3, #1
+		      1912:   d003          beq.n  191c <_fwalk_sglue+0x38>
+		      1914:   4629          mov    r1, r5
+		      1916:   4638          mov    r0, r7
+		--------------------
+	(    1914,        6)	
+		--------------------
+		      190a:   d907          bls.n  191c <_fwalk_sglue+0x38>
+		      190c:   f9b5 300e     ldrsh.w    r3, [r5, #14]
+		      1910:   3301          adds   r3, #1
+		      1912:   d003          beq.n  191c <_fwalk_sglue+0x38>
+		->    1914:   4629          mov    r1, r5
+		      1916:   4638          mov    r0, r7
+		      1918:   47c0          blx    r8
+		      191a:   4306          orrs   r6, r0
+		      191c:   3568          adds   r5, #104  ; 0x68
+		--------------------
+	(    191a,        2)	
+		--------------------
+		      1912:   d003          beq.n  191c <_fwalk_sglue+0x38>
+		      1914:   4629          mov    r1, r5
+		      1916:   4638          mov    r0, r7
+		      1918:   47c0          blx    r8
+		->    191a:   4306          orrs   r6, r0
+		      191c:   3568          adds   r5, #104  ; 0x68
+		      191e:   e7e9          b.n    18f4 <_fwalk_sglue+0x10>
+		  
+		  00001920 <iprintf>:
+		--------------------
+	(    191c,        4)	
+		--------------------
+		      1914:   4629          mov    r1, r5
+		      1916:   4638          mov    r0, r7
+		      1918:   47c0          blx    r8
+		      191a:   4306          orrs   r6, r0
+		->    191c:   3568          adds   r5, #104  ; 0x68
+		      191e:   e7e9          b.n    18f4 <_fwalk_sglue+0x10>
+		  
+		  00001920 <iprintf>:
+		      1920:   b40f          push   {r0, r1, r2, r3}
+		--------------------
+	(    2888,       12)	
+		--------------------
+		      2884:   e7fe          b.n    2884 <_exit>
+		      2886:   bf00          nop
+		  
+		  00002888 <_init>:
+		->    2888:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		      288a:   bf00          nop
+		      288c:   bcf8          pop    {r3, r4, r5, r6, r7}
+		      288e:   bc08          pop    {r3}
+		      2890:   469e          mov    lr, r3
+		--------------------
+	(    2894,       12)	
+		--------------------
+		      2890:   469e          mov    lr, r3
+		      2892:   4770          bx lr
+		  
+		  00002894 <_fini>:
+		->    2894:   b5f8          push   {r3, r4, r5, r6, r7, lr}
+		      2896:   bf00          nop
+		      2898:   bcf8          pop    {r3, r4, r5, r6, r7}
+		      289a:   bc08          pop    {r3}
+		      289c:   469e          mov    lr, r3
+		--------------------

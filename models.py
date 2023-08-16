@@ -443,6 +443,20 @@ class BBlock():
         # a basic block is unique and cannot be copied
         return self
 
+    def truncate(self, new_size: int):
+        if new_size >= self.size:
+            return
+        self.size = new_size
+        # truncate instructions
+        keys = list(self.insns.keys())
+        for k in keys:
+            if k >= self.addr + self.size:
+                del self.insns[k]
+        # bblock no longer ends in a branch, so cannot be indirect or return block
+        self.indirect = False
+        self.returns = False
+
+
 NullBlock = BBlock(address=0, size=0, insns={}, fn_addr=0, bytedata=b'')
 
 
@@ -586,18 +600,43 @@ class CFG():
     def split_block(self, bblock : Type[BBlock], subblock : Type[BBlock]):
         """bblock overlaps with subblock. split bblock and make subblock its child"""
         # remove overlap
-        bblock.size = subblock.addr - bblock.addr
-        # bblock no longer ends in a branch, so cannot be indirect or return block
-        bblock.indirect = False
-        bblock.returns = False
+        bblock.truncate(subblock.addr - bblock.addr)
+        
         # bblock now has edge to former subblock
         # subblock's children is union'ed with bblock
         # bblock's only child is now subblock, 
         # add bblock as parent to subblock in addition to existing parents
+        
+        # remove edges to bblock children
+        # since bblock is going to be split
+        # update parents to subblock
+        to_remove = []
+        for e in self.edges:
+            if e[0] == bblock.addr:
+                to_remove.append(e)
+        for e in to_remove:
+            self.edges.remove(e)
+            # print("(0x{:x}, 0x{:x})".format(*e))
+            child = self.bblocks[e[1]]
+            child.parents.remove(bblock)
+            # child.parents.add(subblock)
+            # subblock.children.add(child)
+            # self.edges.add((subblock.addr, child.addr))
+
+        # subblock should inherit children
+        subblock.children.update(bblock.children)
+        
+        # update child parents to subblock
+        for child in subblock.children:
+            if (e := (subblock.addr, child.addr)) not in self.edges:
+                self.edges.add(e)
+                child.parents.add(subblock)
+
+        # bblock has edge to former subblock
         self.edges.add((bblock.addr, subblock.addr))
-        subblock.children.union(
-            set([b for b in bblock.children if b not in subblock.children]))
-        bblock.children = [subblock]
+        # bblock's only child is now subblock
+        bblock.children = set([subblock])
+        # subblock adds bblock as parent
         subblock.parents.add(bblock)
 
     def resolve_blocks(self):

@@ -753,6 +753,7 @@ class FFXEngine():
                     # protect edge from accidental removal
                     self.protected_edges.add((self.context.bblock.addr, address + size))
 
+                context.newblock = True
                 branch = FBranch(
                     addr=address,
                     raw=cs_insn.bytes,
@@ -798,6 +799,7 @@ class FFXEngine():
                     # branch not taken
                     context.pc = target
 
+                context.newblock = True
                 branch = FBranch(
                     addr=address,
                     raw=cs_insn.bytes,
@@ -827,6 +829,7 @@ class FFXEngine():
             # keep track of the explicit target to prevent over-pruning of edges
             self.context.bblock.direct_target = (address + pcrel + cb_insn.imm32) & (~1)
 
+            context.newblock = True
             branch = FBranch(
                 addr=address,
                 raw=cs_insn.bytes,
@@ -905,6 +908,7 @@ class FFXEngine():
                 # create backup context for valid jump target
                 context = self.backup()
                 context.pc = jump_target
+                context.newblock = True
                 self._queue_branch(
                     FBranch(
                         addr=address, 
