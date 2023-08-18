@@ -344,6 +344,10 @@ if __name__ == "__main__":
                                 or '.word' in disasm[edge[1]]['mnemonic']
                                 or '.short' in disasm[edge[1]]['mnemonic']):
                             ffxe_invalid.add(edge)
+                        elif ('nop' in disasm[edge[0]]['mnemonic']
+                                and edge[1] - edge[0] == 2):
+                            # catch nop hazards as invalid
+                            ffxe_invalid.add(node)
 
                     for edge in othr_sampled:
                         # repeat for other engine
@@ -355,6 +359,10 @@ if __name__ == "__main__":
                                 or '.word' in disasm[edge[1]]['mnemonic']
                                 or '.short' in disasm[edge[1]]['mnemonic']):
                             othr_invalid.add(edge)
+                        elif ('nop' in disasm[edge[0]]['mnemonic']
+                                and edge[1] - edge[0] == 2):
+                            # catch nop hazards as invalid
+                            othr_invalid.add(node)
 
                 if fw not in sampled_sets:
                     sampled_sets[fw] = {}
