@@ -1,0 +1,51 @@
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+\multicolumn{2}{l}{\textbf{Firmware}} & angr\_cnnctd & angr\_fast & angr\_emu & ghidra\_cnnctd & ghidra\_simple \\ \midrule
+\multirow{4}{*}{blinky}
+    & -O0 & \texttt{  0/~44|~~0.00} & \texttt{ 37/~82|~45.12} & \texttt{  5/~49|~10.20} & \texttt{ 14/~59|~23.73} & \texttt{ 14/~59|~23.73} \\
+    & -O1 & \texttt{  1/~~1|100.00} & \texttt{ 12/~13|~92.31} & \texttt{ 10/~11|~90.91} & \texttt{ 14/~15|~93.33} & \texttt{ 14/~15|~93.33} \\
+    & -O2 & \texttt{  0/~~0|~-~-~-} & \texttt{ 11/~11|100.00} & \texttt{  5/~~6|~83.33} & \texttt{ 14/~15|~93.33} & \texttt{ 14/~15|~93.33} \\
+    & -O3 & \texttt{  0/~~0|~-~-~-} & \texttt{    8/9|~88.89} & \texttt{  5/~~6|~83.33} & \texttt{ 14/~15|~93.33} & \texttt{ 14/~15|~93.33} \\ \midrule
+\multirow{4}{*}{gpiote}
+    & -O0 & \texttt{  0/~45|~~0.00} & \texttt{ 49/~95|~51.58} & \texttt{  8/~53|~15.09} & \texttt{ 15/~60|~25.00} & \texttt{ 15/~61|~24.59} \\
+    & -O1 & \texttt{  0/~~1|~~0.00} & \texttt{ 18/~20|~90.00} & \texttt{  5/~~6|~83.33} & \texttt{ 13/~14|~92.86} & \texttt{ 13/~15|~86.67} \\
+    & -O2 & \texttt{  0/~~1|~~0.00} & \texttt{ 21/~23|~91.30} & \texttt{  3/~~5|~60.00} & \texttt{ 13/~14|~92.86} & \texttt{ 13/~15|~86.67} \\
+    & -O3 & \texttt{  0/~~1|~~0.00} & \texttt{ 20/~22|~90.91} & \texttt{  5/~~7|~71.43} & \texttt{ 13/~14|~92.86} & \texttt{ 13/~15|~86.67} \\ \midrule
+\multirow{4}{*}{i2s}
+    & -O0 & \texttt{  1/304|~~0.33} & \texttt{ 75/402|~18.66} & \texttt{ 18/162|~11.11} & \texttt{ 14/~59|~23.73} & \texttt{ 15/342|~~4.39} \\
+    & -O1 & \texttt{  0/~~0|~-~-~-} & \texttt{ 38/119|~31.93} & \texttt{  4/~~4|100.00} & \texttt{ 14/~15|~93.33} & \texttt{ 14/~96|~14.58} \\
+    & -O2 & \texttt{  0/~~4|~~0.00} & \texttt{ 57/135|~42.22} & \texttt{  5/~~7|~71.43} & \texttt{ 15/~15|100.00} & \texttt{ 16/~94|~17.02} \\
+    & -O3 & \texttt{  0/~~4|~~0.00} & \texttt{ 52/131|~39.69} & \texttt{  5/~~7|~71.43} & \texttt{ 15/~15|100.00} & \texttt{ 15/~93|~16.13} \\ \midrule
+\multirow{4}{*}{saadc}
+    & -O0 & \texttt{  0/162|~~0.00} & \texttt{ 66/229|~28.82} & \texttt{  19/69|~27.54} & \texttt{ 18/~66|~27.27} & \texttt{ 19/183|~10.38} \\
+    & -O1 & \texttt{  0/~~0|~-~-~-} & \texttt{ 29/~30|~96.67} & \texttt{  7/~~7|100.00} & \texttt{ 13/~13|100.00} & \texttt{ 14/~15|~93.33} \\
+    & -O2 & \texttt{  0/~~1|~~0.00} & \texttt{ 47/~50|~94.00} & \texttt{  5/~~7|~71.43} & \texttt{ 13/~14|~92.86} & \texttt{ 14/~17|~82.35} \\
+    & -O3 & \texttt{  0/~~0|~-~-~-} & \texttt{ 40/~41|~97.56} & \texttt{  5/~~6|~83.33} & \texttt{ 13/~13|100.00} & \texttt{ 14/~15|~93.33} \\ \midrule
+\multirow{4}{*}{simple\_timer}
+    & -O0 & \texttt{  0/~44|~~0.00} & \texttt{ 49/~94|~52.13} & \texttt{ 12/~56|~21.43} & \texttt{ 14/~59|~23.73} & \texttt{ 14/~59|~23.73} \\
+    & -O1 & \texttt{  0/~~0|~-~-~-} & \texttt{ 20/~20|100.00} & \texttt{ 20/~21|~95.24} & \texttt{ 14/~15|~93.33} & \texttt{ 14/~15|~93.33} \\
+    & -O2 & \texttt{  0/~~0|~-~-~-} & \texttt{ 22/~22|100.00} & \texttt{  0/~~0|~-~-~-} & \texttt{ 14/~15|~93.33} & \texttt{ 14/~15|~93.33} \\
+    & -O3 & \texttt{  0/~~0|~-~-~-} & \texttt{ 20/~20|100.00} & \texttt{  0/~~0|~-~-~-} & \texttt{ 14/~15|~93.33} & \texttt{ 14/~15|~93.33} \\ \midrule
+\multirow{4}{*}{spi}
+    & -O0 & \texttt{  0/211|~~0.00} & \texttt{ 71/291|~24.40} & \texttt{  22/69|~31.88} & \texttt{ 19/~67|~28.36} & \texttt{ 19/239|~~7.95} \\
+    & -O1 & \texttt{  0/~~0|~-~-~-} & \texttt{ 37/~77|~48.05} & \texttt{  0/~~0|~-~-~-} & \texttt{ 15/~15|100.00} & \texttt{ 15/~55|~27.27} \\
+    & -O2 & \texttt{  0/~~0|~-~-~-} & \texttt{ 54/~87|~62.07} & \texttt{  6/~~9|~66.67} & \texttt{ 15/~15|100.00} & \texttt{ 15/~48|~31.25} \\
+    & -O3 & \texttt{  0/~~0|~-~-~-} & \texttt{ 48/~82|~58.54} & \texttt{  7/~10|~70.00} & \texttt{ 15/~15|100.00} & \texttt{ 15/~48|~31.25} \\ \midrule
+\multirow{4}{*}{timer}
+    & -O0 & \texttt{  0/~45|~~0.00} & \texttt{ 42/~88|~47.73} & \texttt{  5/~50|~10.00} & \texttt{ 15/~60|~25.00} & \texttt{ 15/~61|~24.59} \\
+    & -O1 & \texttt{  0/~~1|~~0.00} & \texttt{ 15/~17|~88.24} & \texttt{  4/~~5|~80.00} & \texttt{ 13/~14|~92.86} & \texttt{ 13/~15|~86.67} \\
+    & -O2 & \texttt{  0/~~1|~~0.00} & \texttt{ 16/~18|~88.89} & \texttt{  6/~~7|~85.71} & \texttt{ 13/~14|~92.86} & \texttt{ 13/~15|~86.67} \\
+    & -O3 & \texttt{  0/~~1|~~0.00} & \texttt{ 14/~16|~87.50} & \texttt{  6/~~7|~85.71} & \texttt{ 13/~14|~92.86} & \texttt{ 13/~15|~86.67} \\ \midrule
+\multirow{4}{*}{twi\_sensor}
+    & -O0 & \texttt{  2/258|~~0.78} & \texttt{ 81/346|~23.41} & \texttt{ 23/115|~20.00} & \texttt{ 21/110|~19.09} & \texttt{ 21/286|~~7.34} \\
+    & -O1 & \texttt{  0/~~0|~-~-~-} & \texttt{ 37/~77|~48.05} & \texttt{  0/~~0|~-~-~-} & \texttt{ 15/~15|100.00} & \texttt{ 15/~55|~27.27} \\
+    & -O2 & \texttt{  0/~~0|~-~-~-} & \texttt{ 49/~82|~59.76} & \texttt{  6/~~9|~66.67} & \texttt{ 15/~15|100.00} & \texttt{ 15/~48|~31.25} \\
+    & -O3 & \texttt{  0/~~0|~-~-~-} & \texttt{ 46/~81|~56.79} & \texttt{  6/~~9|~66.67} & \texttt{ 15/~15|100.00} & \texttt{ 15/~48|~31.25} \\ \midrule
+\multirow{4}{*}{uart}
+    & -O0 & \texttt{  0/149|~~0.00} & \texttt{ 67/261|~25.67} & \texttt{ 26/135|~19.26} & \texttt{ 15/100|~15.00} & \texttt{ 15/209|~~7.18} \\
+    & -O1 & \texttt{  0/~77|~~0.00} & \texttt{ 37/168|~22.02} & \texttt{  4/~~5|~80.00} & \texttt{ 13/~50|~26.00} & \texttt{ 16/147|~10.88} \\
+    & -O2 & \texttt{  0/~57|~~0.00} & \texttt{ 46/174|~26.44} & \texttt{ 10/~47|~21.28} & \texttt{ 13/~50|~26.00} & \texttt{ 13/139|~~9.35} \\
+    & -O3 & \texttt{  0/~57|~~0.00} & \texttt{ 44/173|~25.43} & \texttt{ 10/~47|~21.28} & \texttt{ 13/~50|~26.00} & \texttt{ 13/139|~~9.35} \\ \midrule
+\multicolumn{2}{l}{\textbf{Average of Error}}
+    & \textbf{4.60\%} & \textbf{62.36\%} & \textbf{58.62\%} & \textbf{72.01\%} & \textbf{48.33\%} \\ \bottomrule
+\end{tabular}

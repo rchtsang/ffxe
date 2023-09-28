@@ -1,0 +1,57 @@
+\begin{tabular}{@{}ll|cccc|cccc@{}}
+\toprule
+    & & \multicolumn{4}{c}{angr\_fast} & \multicolumn{4}{c}{ghidra\_simple} \\
+\multicolumn{2}{l}{\textbf{Firmware}} & \textit{Branch Table} & \textit{Dead Code} & \textit{Sampled} & \textit{Total} & \textit{Branch Table} & \textit{Dead Code} & \textit{Sampled} & \textit{Total} \\ \midrule
+\multirow{4}{*}{blinky}
+    & -O0 & 19 &  0 & 20 &  45 & 19 &  0 & 20 &  45  \\
+    & -O1 &  - &  - &  1 &   1 &  - &  - &  1 &   1  \\
+    & -O2 &  0 &  0 &  0 &   0 &  - &  - &  1 &   1  \\
+    & -O3 &  - &  - &  1 &   1 &  - &  - &  1 &   1  \\ \midrule
+\multirow{4}{*}{gpiote}
+    & -O0 & 19 &  0 & 20 &  46 & 19 &  0 & 20 &  46  \\
+    & -O1 &  - &  - &  2 &   2 &  - &  - &  2 &   2  \\
+    & -O2 &  - &  - &  2 &   2 &  - &  - &  2 &   2  \\
+    & -O3 &  - &  - &  2 &   2 &  - &  - &  2 &   2  \\ \midrule
+\multirow{4}{*}{i2s}
+    & -O0 & 16 & 17 & 33 & 327 & 18 & 15 & 33 & 327  \\
+    & -O1 &  0 & 20 & 20 &  81 &  0 & 19 & 20 &  82  \\
+    & -O2 &  0 & 20 & 20 &  78 &  0 & 20 & 20 &  78  \\
+    & -O3 &  0 & 19 & 20 &  79 &  0 & 20 & 20 &  78  \\ \midrule
+\multirow{4}{*}{saadc}
+    & -O0 & 19 &  0 & 20 & 163 & 19 &  0 & 20 & 164  \\
+    & -O1 &  - &  - &  1 &   1 &  - &  - &  1 &   1  \\
+    & -O2 &  - &  - &  3 &   3 &  - &  - &  3 &   3  \\
+    & -O3 &  - &  - &  1 &   1 &  - &  - &  1 &   1  \\ \midrule
+\multirow{4}{*}{simple\_timer}
+    & -O0 & 19 &  0 & 20 &  45 & 19 &  0 & 20 &  45  \\
+    & -O1 &  0 &  0 &  0 &   0 &  - &  - &  1 &   1  \\
+    & -O2 &  0 &  0 &  0 &   0 &  - &  - &  1 &   1  \\
+    & -O3 &  0 &  0 &  0 &   0 &  - &  - &  1 &   1  \\ \midrule
+\multirow{4}{*}{spi}
+    & -O0 & 17 &  5 & 22 & 220 & 17 &  4 & 22 & 220  \\
+    & -O1 &  0 & 20 & 20 &  40 &  0 & 20 & 20 &  40  \\
+    & -O2 &  0 & 20 & 20 &  33 &  0 & 20 & 20 &  33  \\
+    & -O3 &  0 & 20 & 20 &  34 &  0 & 20 & 20 &  33  \\ \midrule
+\multirow{4}{*}{timer}
+    & -O0 & 20 &  0 & 20 &  46 & 19 &  0 & 20 &  46  \\
+    & -O1 &  - &  - &  2 &   2 &  - &  - &  2 &   2  \\
+    & -O2 &  - &  - &  2 &   2 &  - &  - &  2 &   2  \\
+    & -O3 &  - &  - &  2 &   2 &  - &  - &  2 &   2  \\ \midrule
+\multirow{4}{*}{twi\_sensor}
+    & -O0 & 19 &  6 & 26 & 265 & 10 &  5 & 26 & 265  \\
+    & -O1 &  0 & 20 & 20 &  40 &  0 & 20 & 20 &  40  \\
+    & -O2 &  0 & 20 & 20 &  33 &  0 & 20 & 20 &  33  \\
+    & -O3 &  0 & 19 & 20 &  35 &  0 & 20 & 20 &  33  \\ \midrule
+\multirow{4}{*}{uart}
+    & -O0 &  5 & 13 & 20 & 194 &  5 & 12 & 20 & 194  \\
+    & -O1 &  0 & 15 & 20 & 131 &  0 & 15 & 20 & 131  \\
+    & -O2 &  3 & 14 & 20 & 128 &  0 & 15 & 20 & 126  \\
+    & -O3 &  0 & 18 & 20 & 129 &  0 & 16 & 20 & 126  \\ \midrule
+\multicolumn{2}{l}{\textbf{Total Averages}}
+          & 35.37\% & 60.32\% &&& 32.88\% & 59.18\% &&  \\ \bottomrule
+\end{tabular}
+% angr total sampled == ghidra total sampled = 441
+% angr jump table = 156
+% angr dead code = 266
+% ghidra jump table = 145
+% ghidra dead code = 261

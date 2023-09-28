@@ -8,9 +8,27 @@ Our implementation of the Forced Firmware Execution Engine can be found in the f
 
 ## Setup
 
+### Native
+
 The dependencies can be installed in a conda environment using the provided `environment.yml` file.
 
 After activating the environment, the engine must be installed via pip in developer mode with `pip install -e .` from the project root directory. 
+
+Note that the Ghidra and `angr` scripts will not run correctly as they require additional installation steps. The Ghidra scripts depend on Ghidrathon and `angr` needs to be installed in a separate conda environment, as it uses an incompatible version of Unicorn.
+
+### Docker
+
+Alternatively, we provide a complete Docker environment capable of running all relevant scripts. The Docker image can be built with the provided Makefile on Mac and Linux by running `make build`, then logged in with `make ssh`, both from this directory.
+
+The correct conda environment must be activated for each script:
+	- `angr`	environment for angr-related scripts
+	- `ghidra`	environment for ghidra-related scripts
+	- `ffxe`	environment for ffxe install and ffxe-related scripts
+	- `plot`	environment for plotting and visualization scripts
+
+**NOTE: You must still manually install ffxe on the `ffxe` environment with `pip install -e .`**
+
+_Note: `visualize-cfg.py` requires `ffxe` environment, not `plot` environment_
 
 ## Duplicating FFXE Experiments
 

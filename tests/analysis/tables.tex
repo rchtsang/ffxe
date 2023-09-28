@@ -1,0 +1,79 @@
+\documentclass{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{pslatex}
+\usepackage{pgffor}
+\usepackage{etoolbox}
+\usepackage[
+	paperheight=20in,
+	paperwidth=8.5in,
+	margin=0.5in,
+	heightrounded
+]{geometry}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{multirow}
+
+
+\begin{document}
+
+\begin{table*}[h!]
+	\centering
+    \caption{Automated Static Block Analysis}
+	\label{tab:auto-block-analysis}
+    \vspace{0.5ex}
+	\resizebox{0.9\textwidth}{!}{%
+    % \resizebox{!}{0.4\textheight}{%
+		\small
+		% \lstset{basicstyle=\ttfamily, columns=fullflexible, keepspaces=true}
+		\input{audit-unit-nodes}
+    } \\
+    \vspace{1ex}
+    Formatted as \texttt{<num invalid>/<num sampled>| <\% invalid>}
+\end{table*}
+
+\begin{table*}[h!]
+	\centering
+    \caption{Automated Static Edge Analysis}
+	\label{tab:auto-edge-analysis}
+    \vspace{0.5ex}
+	\resizebox{0.9\textwidth}{!}{%
+    % \resizebox{!}{0.4\textheight}{%
+		\small
+		% \lstset{basicstyle=\ttfamily, columns=fullflexible, keepspaces=true}
+		\input{audit-unit-edges}
+    } \\
+    \vspace{1ex}
+    Formatted as \texttt{<num invalid>/<num sampled>| <\% invalid>}
+\end{table*}
+
+\begin{table*}[h!]
+	\centering
+    \caption{Manual Static Block Analysis}
+	\label{tab:man-block-analysis}
+    \vspace{0.5ex}
+	\resizebox{0.9\textwidth}{!}{%
+		\small
+		\input{man-audit-unit-nodes}
+    } \\
+    \vspace{1ex}
+    Note \textit{Total} refers to the total not automatically marked invalid.
+\end{table*}
+
+\begin{table*}[h!]
+	\centering
+    \caption{Manual Static Edge Analysis}
+	\label{tab:man-edge-analysis}
+    \vspace{0.5ex}
+	\resizebox{0.9\textwidth}{!}{%
+		\small
+		\input{man-audit-unit-edges}
+    } \\
+    \vspace{1ex}
+    Note \textit{Total} refers to the total not automatically marked invalid.
+\end{table*}
+
+\end{document}
