@@ -44,10 +44,12 @@ container: start-docker        ## start container if not yet running
 			--name=ffxe-workspace 					\
 			--rm=$(CLEANUP) 						\
 			--entrypoint=bash 						\
-			-e DISPLAY=$(DISPLAY)				 	\
 			-v `pwd`:$(WORKDIR) 					\
 			ffxe/workspace:dev;						\
 	fi
+
+# add this for x11 forwarding on linux
+# -e DISPLAY=$(DISPLAY)				 	\
 
 .PHONY: ssh
 ssh: container               ## ssh into docker image

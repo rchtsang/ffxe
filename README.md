@@ -16,6 +16,8 @@ After activating the environment, the engine must be installed via pip in develo
 
 Note that the Ghidra and `angr` scripts will not run correctly as they require additional installation steps. The Ghidra scripts depend on Ghidrathon and `angr` needs to be installed in a separate conda environment, as it uses an incompatible version of Unicorn.
 
+Other conda environments can be installed from the corresponding `docker/envs/<env>.yml` file. See below for usage details.
+
 ### Docker
 
 Alternatively, we provide a complete Docker environment capable of running all relevant scripts. The Docker image can be built with the provided Makefile on Mac and Linux by running `make build`, then logged in with `make ssh`, both from this directory.

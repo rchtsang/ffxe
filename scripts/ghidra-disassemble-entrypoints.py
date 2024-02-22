@@ -53,7 +53,7 @@ def load_pd(path):
 
 def get_entrypoints(pd=None, base_addr=None, vtbases=[0]):
     """utility for getting firmware entrypoints from vector table"""
-    filepath = currentProgram.getExecutablePath()
+    filepath = currentProgram().getExecutablePath()
     base = 0        # assume flash base address is 0
     vtsize = 8      # this gets only the entrypoint at offset 0x4
 
@@ -110,7 +110,7 @@ if __name__ == "__main__":
     cfg_dir.mkdir(parents=True, exist_ok=True)
 
     # name cfg
-    fw_filename = currentProgram.getName()
+    fw_filename = currentProgram().getName()
     (fw_name, ext) = splitext(fw_filename)
     simple_cfg_name = f"{fw_name}-simple-ghidra-cfg"
     cnnctd_cfg_name = f"{fw_name}-connected-ghidra-cfg"
@@ -126,7 +126,7 @@ if __name__ == "__main__":
     for entry in entrypoints:
         print(hex(entry))
 
-    currentProgram.setImageBase(toAddr(base), True)
+    currentProgram().setImageBase(toAddr(base), True)
 
     t = perf_counter()
     disassemble_entrypoints(entrypoints)

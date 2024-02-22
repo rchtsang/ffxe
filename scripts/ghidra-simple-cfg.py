@@ -53,7 +53,7 @@ def load_pd(path):
 
 def get_entrypoints(pd=None, base_addr=None, vtbases=[0]):
     """utility for getting firmware entrypoints from vector table"""
-    filepath = currentProgram.getExecutablePath()
+    filepath = currentProgram().getExecutablePath()
     base = 0        # assume flash base address is 0
     vtsize = 8      # this gets only the entrypoint at offset 0x4
 
@@ -86,7 +86,7 @@ def buildCFG(program):
     exclude any blocks that have no incoming or outgoing edges
     """
     sbmodel = SimpleBlockModel(program)
-    # listing = currentProgram.getListing()
+    # listing = currentProgram().getListing()
 
     cfg = {
         'nodes': set(),
@@ -94,11 +94,11 @@ def buildCFG(program):
     }
 
     # iterate over all the simple blocks found in the model
-    blockIterator = sbmodel.getCodeBlocks(monitor)
+    blockIterator = sbmodel.getCodeBlocks(monitor())
     for block in iterate(blockIterator):
         # if block is isolated (no sources or destinations)
         # do not include it in the cfg
-        if (block.getNumSources(monitor) == block.getNumDestinations(monitor) == 0):
+        if (block.getNumSources(monitor()) == block.getNumDestinations(monitor()) == 0):
             continue
 
         # add block to cfg
@@ -108,14 +108,14 @@ def buildCFG(program):
         ))
 
         # get insn edges (CodeBlockReferences)
-        for cbref in iterate(block.getDestinations(monitor)):
+        for cbref in iterate(block.getDestinations(monitor())):
             cfg['edges'].add((
                 cbref.getReferent().getOffset(),
                 cbref.getReference().getOffset()
             ))
 
         # # get block edges (CodeBlockReferences)
-        # for cbref in iterate(block.getDestinations(monitor)):
+        # for cbref in iterate(block.getDestinations(monitor())):
         #   cfg['edges'].add((
         #       cbref.getSourceAddress().getOffset(),
         #       cbref.getDestinationAddress().getOffset()
@@ -138,10 +138,10 @@ def buildConnectedCFG(program, entrypoints):
 
     # starting at each entrypoint, do bfs to get all reachable nodes
     for entrypoint in entrypoints:
-        start = sbmodel.getCodeBlockAt(toAddr(entrypoint & (~1)), monitor)
+        start = sbmodel.getCodeBlockAt(toAddr(entrypoint & (~1)), monitor())
         print("start:", start)
         if not start:
-            start = sbmodel.getCodeBlockAt(toAddr(entrypoint), monitor)
+            start = sbmodel.getCodeBlockAt(toAddr(entrypoint), monitor())
             print("new start:", start)
         queue = [start]
 
@@ -162,7 +162,7 @@ def buildConnectedCFG(program, entrypoints):
 
             cfg['nodes'].add(blocktuple)
 
-            for cbref in iterate(block.getDestinations(monitor)):
+            for cbref in iterate(block.getDestinations(monitor())):
                 cfg['edges'].add((
                     cbref.getReferent().getOffset(),
                     cbref.getReference().getOffset()
@@ -194,7 +194,7 @@ if __name__ == "__main__":
     cfg_dir.mkdir(parents=True, exist_ok=True)
 
     # name cfg
-    fw_filename = currentProgram.getName()
+    fw_filename = currentProgram().getName()
     (fw_name, ext) = splitext(fw_filename)
     simple_cfg_name = f"{fw_name}-ghidra_simple-cfg"
     cnnctd_cfg_name = f"{fw_name}-ghidra_cnnctd-cfg"
@@ -208,16 +208,16 @@ if __name__ == "__main__":
     for entry in entrypoints:
         print(hex(entry))
 
-    currentProgram.setImageBase(toAddr(base), True)
+    currentProgram().setImageBase(toAddr(base), True)
 
-    simple_cfg = buildCFG(currentProgram)
+    simple_cfg = buildCFG(currentProgram())
     print("simple cfg: {:>5d} blocks {:>5d} edges".format(
         len(simple_cfg['nodes']), len(simple_cfg['edges'])))
 
     with open(f"{str(cfg_dir)}/{simple_cfg_name}.pkl", 'wb') as pklfile:
         dill.dump(simple_cfg, pklfile)
 
-    connected_cfg = buildConnectedCFG(currentProgram, entrypoints)
+    connected_cfg = buildConnectedCFG(currentProgram(), entrypoints)
     print("connected cfg: {:>5d} blocks {:>5d} edges".format(
         len(connected_cfg['nodes']), len(connected_cfg['edges'])))
 

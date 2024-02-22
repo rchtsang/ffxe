@@ -312,6 +312,9 @@ RUN echo "===> Clear conda cache..." \
 	&& mamba clean -t -y \
 	&& mamba init
 
+RUN echo "Xvfb :99 &" >> /root/.bashrc \
+	&& echo "export DISPLAY=:99" >> /root/.bashrc
+
 # RUN echo "===> Clean up unnecessary files..." \
 #     && apt-get purge -y --auto-remove unzip curl \
 #     && apt-get clean \

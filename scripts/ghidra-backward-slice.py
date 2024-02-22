@@ -74,7 +74,7 @@ def getFunctionInputVarnodes(func, sbmodel, listing):
     # used (sequentially)
     # exclude any intermediate varnodes (varnodes that have previously appeared as outputs)
     func_addresses = func.getBody()
-    func_blocks = list(iterate(sbmodel.getCodeBlocksContaining(func_addresses, monitor)))
+    func_blocks = list(iterate(sbmodel.getCodeBlocksContaining(func_addresses, monitor())))
     SearchState = namedtuple('SearchState', ['block', 'outputs'])
 
     # initialize DFS with function entry block
@@ -82,7 +82,7 @@ def getFunctionInputVarnodes(func, sbmodel, listing):
     inputs = set()
     queue = [
         SearchState(
-            sbmodel.getCodeBlockAt(func.getEntryPoint(), monitor),
+            sbmodel.getCodeBlockAt(func.getEntryPoint(), monitor()),
             set(),
         )
     ]
@@ -103,7 +103,7 @@ def getFunctionInputVarnodes(func, sbmodel, listing):
                     outputs.add(pcode_op.getOutput())
 
         # add successor blocks to search list
-        for block_ref in iterate(state.block.getDestinations(monitor)):
+        for block_ref in iterate(state.block.getDestinations(monitor())):
             successor_block = block_ref.getDestinationBlock()
             if (successor_block in func_blocks
                     and successor_block not in visited):
@@ -153,16 +153,16 @@ if __name__ == '__main__':
         ['blockPath', 'currentInsn', 'currentInputs', 'dataPath'])
 
     sink_function = getFunctionAt(args.fn_start_address)
-    sbmodel = SimpleBlockModel(currentProgram, True)
-    listing = currentProgram.getListing()
+    sbmodel = SimpleBlockModel(currentProgram(), True)
+    listing = currentProgram().getListing()
 
     sink_inputs = getFunctionInputVarnodes(sink_function, sbmodel, listing)
-    sink_entry_block = sbmodel.getCodeBlockAt(sink_function.getEntryPoint(), monitor)
+    sink_entry_block = sbmodel.getCodeBlockAt(sink_function.getEntryPoint(), monitor())
 
     calling_blocks = []
-    for ref in iterate(sink_entry_block.getSources(monitor)):
+    for ref in iterate(sink_entry_block.getSources(monitor())):
         calling_blocks.append(
-            sbmodel.getFirstCodeBlockContaining(ref.getReferent(), monitor))
+            sbmodel.getFirstCodeBlockContaining(ref.getReferent(), monitor()))
 
     # conduct BFS to generate backward slice
     initial_states = [
@@ -221,7 +221,7 @@ if __name__ == '__main__':
                                     print("Found data reference!", data_ref)
                                     new_path = copy(state.blockPath)
                                     new_path.insert(0, 
-                                        sbmodel.getFirstCodeBlockContaining(data_ref.getFromAddress(), monitor))
+                                        sbmodel.getFirstCodeBlockContaining(data_ref.getFromAddress(), monitor()))
                                     queue.insert(0, SearchState(
                                         new_path,
                                         getInstructionAt(data_ref.getFromAddress()),
@@ -251,7 +251,7 @@ if __name__ == '__main__':
         if inputsResolved(state.currentInputs):
             slices.append(copy(state))
         else:
-            for source_block_ref in iterate(state.blockPath[0].getSources(monitor)):
+            for source_block_ref in iterate(state.blockPath[0].getSources(monitor())):
                 source_block = source_block_ref.getSourceBlock()
                 if source_block in state.blockPath:
                     continue
