@@ -2,6 +2,22 @@ FROM ubuntu:22.04
 
 WORKDIR /root
 
+ARG DEBIAN_FRONTEND=noninteractive
+ENV TZ=
+
+# fix all the hash sum errors
+# potential solutions:
+# [failed] https://stackoverflow.com/questions/48645936/
+# [worked] https://stackoverflow.com/questions/67732260/
+RUN echo "Acquire::http::Pipeline-Depth 0;" > /etc/apt/apt.conf.d/99custom  \
+    && echo "Acquire::http::No-Cache true;" >> /etc/apt/apt.conf.d/99custom \
+    && echo "Acquire::BrokenProxy    true;" >> /etc/apt/apt.conf.d/99custom
+
+RUN set -eux \
+	&& apt-get clean \
+	&& rm -rf /var/lib/apt/lists/* \
+	&& apt-get update -o Acquire::CompressionTypes::Order::=gz --fix-missing
+
 ##################################################
 # install eclipse temurin and gradle
 # dockerfile source url (eclipse-temurin:17-jdk-jammy):
@@ -17,8 +33,7 @@ ENV PATH=${JAVA_HOME}/bin:$PATH
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
 # install dependencies
-RUN apt-get update \
-	&& DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+RUN apt-get install -y --no-install-recommends \
 		tzdata \
 		curl \
 		wget \
@@ -243,22 +258,12 @@ SHELL [ "conda", "run", "-n", "ghidra", "/bin/bash", "-c" ]
 # install ghidrathon
 RUN set -eux \
 	# && conda activate ghidra \
-	&& git clone https://github.com/mandiant/Ghidrathon.git \
-	&& cd Ghidrathon \
-	&& gradle -PGHIDRA_INSTALL_DIR=$GHIDRA_HOME \
-	&& mv dist ${GHIDRATHON_HOME}/ \
-	&& cd .. \
-	&& rm -rf Ghidrathon \
+	&& wget -O Ghidrathon.zip "https://github.com/mandiant/Ghidrathon/releases/download/v4.0.0/Ghidrathon-v4.0.0.zip" \
+	&& unzip -d $GHIDRATHON_HOME Ghidrathon.zip \
+	&& rm Ghidrathon.zip \
+	&& cd $GHIDRATHON_HOME \
+	&& python ghidrathon_configure.py $GHIDRA_HOME \
 	&& unzip -d ${GHIDRA_HOME}/Ghidra/Extensions ${GHIDRATHON_HOME}/\*.zip \
-	&& ARCH="$(dpkg --print-architecture)" && \
-    case "${ARCH}" in \
-		aarch64|arm64) \
-			mv ${GHIDRA_HOME}/Ghidra/Extensions/Ghidrathon/os/linux_x86_64 \
-				${GHIDRA_HOME}/Ghidra/Extensions/Ghidrathon/os/linux_arm_64 \
-			;; \
-		*) \
-			;; \
-	esac \
 	&& echo "ghidrathon install complete."
 
 SHELL ["/bin/bash", "--login", "-c"]
@@ -304,7 +309,8 @@ RUN set -eux \
 # cleanup 
 
 RUN echo "===> Clear conda cache..." \
-	&& mamba clean -t -y
+	&& mamba clean -t -y \
+	&& mamba init
 
 # RUN echo "===> Clean up unnecessary files..." \
 #     && apt-get purge -y --auto-remove unzip curl \
