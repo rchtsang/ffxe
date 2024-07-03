@@ -249,14 +249,16 @@ class FXEngine():
 
         try:
             # check if all block instructions valid
-            insns = [ins for ins in self.cs.disasm(
-                uc.mem_read(address, size), offset=address)]
+            insns = {
+                insn.address: insn for insn in self.cs.disasm(
+                uc.mem_read(address, size), offset=address) 
+            }
         except StopIteration as e:
             raise UcError(UC_ERR_INSN_INVALID)
 
         # check if block is at a data location
         # check if block is in vector table
-        if (any([insn.address in self.mem_reads for insn in insns])
+        if (any([insn.address in self.mem_reads for insn in insns.values()])
                 or (address < 0x200)):
             raise UcError(UC_ERR_FETCH_PROT)
 

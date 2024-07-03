@@ -71,7 +71,7 @@ Running the other recovery methods is somewhat more involved as additional depen
 
 The script `scripts/angr-analyze.py` will run angr's static and emulated recovery methods on all `.bin` images in the `examples/unit-tests` folder, but must be run from an environment that has angr installed.
 
-The scripts `script/ghidra-analyze.py` requires a working installation of [Ghidrathon](https://github.com/mandiant/Ghidrathon) to work, for which we do not yet have a quick install method. We will try to upload a Dockerfile that contains a working version if time permits.
+The scripts `script/ghidra-analyze.py` requires a working installation of [Ghidrathon](https://github.com/mandiant/Ghidrathon) to work. Please visit their GitHub for install instructions.
 
 Scripts `scripts/angr-analyze-real.py` and `scripts/ghidra-analyze-real.py` can be used for analyzing the real-world set but have the same requirements as already stipulated.
 
