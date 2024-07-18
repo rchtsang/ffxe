@@ -67,11 +67,13 @@ $ python tests/fxe-all.py
 ```
 This has the same behavior as `test-unit.py` except that it invokes FXE instead.
 
+_Scripts for other recovery methods can be found in the `scripts` directory_.
+
 Running the other recovery methods is somewhat more involved as additional dependencies must be installed for our provided scripts to work. Moreover, other dependencies must be installed in different environments to avoid package conflicts. (There is a known conflict between the version of Unicorn we use, and the version that angr uses)
 
 The script `scripts/angr-analyze.py` will run angr's static and emulated recovery methods on all `.bin` images in the `examples/unit-tests` folder, but must be run from an environment that has angr installed.
 
-The scripts `script/ghidra-analyze.py` requires a working installation of [Ghidrathon](https://github.com/mandiant/Ghidrathon) to work. Please visit their GitHub for install instructions.
+The scripts `scripts/ghidra-analyze.py` requires a working installation of [Ghidrathon](https://github.com/mandiant/Ghidrathon) to work. Please visit their GitHub for install instructions.
 
 Scripts `scripts/angr-analyze-real.py` and `scripts/ghidra-analyze-real.py` can be used for analyzing the real-world set but have the same requirements as already stipulated.
 
